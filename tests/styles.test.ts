@@ -16,7 +16,7 @@ describe('getMapStyle', () => {
     expect(style.metadata.source).toBe('IGN');
   });
 
-  it('should return IGN aerial style', () => {
+  it('should return IGN aerial photography style', () => {
     const style = getMapStyle('aerial', 'ign');
     expect(style).toBeDefined();
     expect(style.name).toBe('Aerial photography');
@@ -29,9 +29,15 @@ describe('getMapStyle', () => {
     }).toThrow('Provider unsupported not supported');
   });
 
-  it('should throw error for OSM provider (not implemented)', () => {
+  it('should throw error for non-existent style type', () => {
+    expect(() => {
+      getMapStyle('nonexistent' as MapStyleType, 'ign');
+    }).toThrow('Style nonexistent not found for provider ign');
+  });
+
+  it('should throw error for OSM provider (empty provider)', () => {
     expect(() => {
       getMapStyle('standard', 'osm');
-    }).toThrow('OSM styles not implemented yet');
+    }).toThrow('Style standard not found for provider osm');
   });
 });

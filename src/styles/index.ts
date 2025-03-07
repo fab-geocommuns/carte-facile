@@ -1,17 +1,23 @@
 import { ignStyles } from './ign';
 import { MapStyle, MapStyleType, MapProvider } from '../types/map';
 
-// Fonction utilitaire pour obtenir un style par type et fournisseur
+const stylesByProvider: Record<MapProvider, Record<string, MapStyle>> = {
+  ign: ignStyles,
+  osm: {} // Préparé pour l'implémentation future
+};
+
 export function getMapStyle(type: MapStyleType, provider: MapProvider = 'ign'): MapStyle {
-  switch (provider) {
-    case 'ign':
-      return ignStyles[type];
-    case 'osm':
-      // TODO: Implémenter les styles OSM
-      throw new Error('OSM styles not implemented yet');
-    default:
-      throw new Error(`Provider ${provider} not supported`);
+  const providerStyles = stylesByProvider[provider];
+  if (!providerStyles) {
+    throw new Error(`Provider ${provider} not supported`);
   }
+
+  const style = providerStyles[type];
+  if (!style) {
+    throw new Error(`Style ${type} not found for provider ${provider}`);
+  }
+
+  return style;
 }
 
 // Export des types
