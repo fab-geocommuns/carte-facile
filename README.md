@@ -4,8 +4,14 @@ Une librairie de styles de cartes et composants clés en main, pour ajouter des 
 
 ## Installation
 
+1. Installer la librairie (en beta)
 ```bash
-npm install carte-facile
+npm install carte-facile@beta
+```
+
+2. Installer MapLibre GL JS
+```bash
+npm install maplibre-gl
 ```
 
 ## Utilisation
