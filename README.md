@@ -20,12 +20,12 @@ npm install maplibre-gl
 import { getMapStyle } from 'carte-facile';
 
 // Obtenir un style de carte
-const style = getMapStyle('desaturated', 'ign');
+const mapStyle = getMapStyle('desaturated', 'ign');
 
 // Utiliser le style avec MapLibre
 const map = new maplibregl.Map({
   container: 'map',
-  style: style.style,
+  style: mapStyle.style,
 });
 ```
 
