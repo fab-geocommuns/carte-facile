@@ -1,6 +1,7 @@
 # Carte Facile
 
-Une librairie de styles de cartes et composants clés en main, pour ajouter des cartes rapidement à votre application avec MapLibre.
+Une librairie de styles de cartes et composants clés en main, pour ajouter des cartes rapidement à votre application.
+Cette librairie fonctionne avec MapLibre GL JS.
 
 ## Installation
 
