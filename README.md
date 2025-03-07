@@ -26,8 +26,6 @@ const style = getMapStyle('desaturated', 'ign');
 const map = new maplibregl.Map({
   container: 'map',
   style: style.style,
-  center: [2.3522, 48.8566], // Paris
-  zoom: 12
 });
 ```
 

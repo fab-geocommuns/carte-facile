@@ -22,7 +22,7 @@ interface StyleMetadata {
 
 export interface MapStyle {
   name: string;
-  style: any; // Le style JSON de MapLibre
+  style: unknown; // Le style JSON de MapLibre
   provider: MapProvider;
   metadata: StyleMetadata;
 } 
