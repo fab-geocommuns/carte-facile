@@ -3,12 +3,9 @@ name: Tests
 on:
   pull_request:
     branches: [ main ]
-  push:
-    branches: [ development ]
 
 jobs:
   test:
-    name: ${{ github.event_name == 'pull_request' && 'PR Tests' || 'Push Tests' }}
     runs-on: ubuntu-latest
 
     strategy:
