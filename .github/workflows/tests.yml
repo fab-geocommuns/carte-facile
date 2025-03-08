@@ -8,6 +8,7 @@ on:
 
 jobs:
   test:
+    name: ${{ github.event_name == 'pull_request' && 'PR Tests' || 'Push Tests' }}
     runs-on: ubuntu-latest
 
     strategy:
