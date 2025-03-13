@@ -1,13 +1,13 @@
 import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import { ignStyles } from './ign';
-import type { MapStyle, MapStyleType, MapProvider } from './types';
+import type { MapConfig, MapType, MapProvider } from './types';
 
-const stylesByProvider: Record<MapProvider, Record<string, MapStyle>> = {
+const stylesByProvider: Record<MapProvider, Record<string, MapConfig>> = {
   ign: ignStyles,
   osm: {} // Préparé pour l'implémentation future
 };
 
-export function getMapStyle(type: MapStyleType, provider: MapProvider = 'ign'): MapStyle {
+export function getMap(type: MapType, provider: MapProvider = 'ign'): MapConfig {
   const providerStyles = stylesByProvider[provider];
   if (!providerStyles) {
     throw new Error(`Provider ${provider} not supported`);
@@ -22,21 +22,21 @@ export function getMapStyle(type: MapStyleType, provider: MapProvider = 'ign'): 
 }
 
 export interface CarteFacileMapOptions extends Omit<maplibregl.MapOptions, 'style'> {
-  style: MapStyleType;
+  style: MapType;
   provider?: MapProvider;
 }
 
 export class Map extends maplibregl.Map {
   constructor(options: CarteFacileMapOptions) {
     const { style, provider = 'ign', ...mapOptions } = options;
-    const mapStyle = getMapStyle(style, provider);
+    const map = getMap(style, provider);
 
     super({
       ...mapOptions,
-      style: mapStyle.style as StyleSpecification,
+      style: map.style as StyleSpecification,
     });
   }
 }
 
 // Export des types
-export type { MapStyle, MapStyleType, MapProvider }; 
+export type { MapConfig, MapType, MapProvider }; 

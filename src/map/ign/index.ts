@@ -1,9 +1,9 @@
 import desaturated from './desaturated_ign.json';
 import standard from './standard_ign.json';
 import aerial from './aerial-photography_ign.json';
-import { MapStyle } from '../types';
+import { MapConfig } from '../types';
 
-export const ignStyles: Record<string, MapStyle> = {
+export const ignStyles: Record<string, MapConfig> = {
   desaturated: {
     name: desaturated.name,
     style: desaturated,

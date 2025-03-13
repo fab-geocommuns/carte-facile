@@ -1,7 +1,7 @@
-export type MapStyleType = 'desaturated' | 'standard' | 'aerial';
+export type MapType = 'desaturated' | 'standard' | 'aerial';
 export type MapProvider = 'ign' | 'osm';
 
-interface StyleMetadata {
+interface MapMetadata {
   fr: {
     name: string;
     description: string;
@@ -20,9 +20,9 @@ interface StyleMetadata {
   version: string;
 }
 
-export interface MapStyle {
+export interface MapConfig {
   name: string;
   style: unknown; // Le style JSON de MapLibre
   provider: MapProvider;
-  metadata: StyleMetadata;
+  metadata: MapMetadata;
 } 
