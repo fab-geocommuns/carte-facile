@@ -115,3 +115,101 @@ interface MapConfig {
 ## Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou un pull request.
+
+## Développement
+
+### Mise en place de l'environnement de développement
+
+1. Cloner le dépôt :
+```bash
+git clone https://github.com/votre-username/carte-facile.git
+cd carte-facile
+```
+
+2. Installer les dépendances :
+```bash
+npm install
+```
+
+3. Lancer les tests :
+```bash
+npm test
+```
+
+4. Compiler le projet :
+```bash
+npm run build
+```
+
+### Structure du projet
+
+```
+src/
+├── map/              # Styles de cartes et configuration
+│   ├── types.ts      # Types communs
+│   ├── index.ts      # Point d'entrée principal
+│   └── providers/    # Styles par fournisseur
+│       └── ign/      # Styles IGN
+├── components/       # Composants React (si applicable)
+├── hooks/           # Hooks React (si applicable)
+└── utils/           # Utilitaires
+```
+
+### Scripts disponibles
+
+- `npm run build` : Compile le projet
+- `npm run test` : Lance les tests
+- `npm run lint` : Vérifie le code avec ESLint
+- `npm run format` : Formate le code avec Prettier
+- `npm run dev` : Lance le mode développement avec hot-reload
+
+### Publication
+
+1. Mettre à jour la version dans `package.json` :
+```bash
+npm version patch|minor|major
+```
+
+2. Construire le projet :
+```bash
+npm run build
+```
+
+3. Publier sur npm :
+```bash
+npm publish
+```
+
+### Tests
+
+Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
+
+1. Créer un fichier de test dans le dossier `__tests__`
+2. Utiliser la convention de nommage `*.test.ts`
+3. Lancer les tests avec `npm test`
+
+### Contribution au code
+
+1. Créer une branche pour votre fonctionnalité :
+```bash
+git checkout -b feature/nouvelle-fonctionnalite
+```
+
+2. Commiter vos changements :
+```bash
+git commit -m "feat: ajout d'une nouvelle fonctionnalité"
+```
+
+3. Pousser vers GitHub :
+```bash
+git push origin feature/nouvelle-fonctionnalite
+```
+
+4. Créer une Pull Request sur GitHub
+
+### Standards de code
+
+- Utiliser TypeScript pour tout nouveau code
+- Suivre les conventions de commit [Conventional Commits](https://www.conventionalcommits.org/)
+- Documenter les nouvelles fonctionnalités dans le README
+- Ajouter des tests pour les nouvelles fonctionnalités
