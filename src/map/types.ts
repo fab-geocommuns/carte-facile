@@ -22,7 +22,7 @@ interface MapMetadata {
 
 export interface MapConfig {
   name: string;
-  style: unknown; // Le style JSON de MapLibre
+  style: unknown; // Le style JSON de la bibliothèque de carte
   provider: MapProvider;
   metadata: MapMetadata;
 } 

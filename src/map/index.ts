@@ -1,4 +1,3 @@
-import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import { ignStyles } from './ign';
 import type { MapConfig, MapType, MapProvider } from './types';
 
@@ -19,23 +18,6 @@ export function getMap(type: MapType, provider: MapProvider = 'ign'): MapConfig 
   }
 
   return style;
-}
-
-export interface CarteFacileMapOptions extends Omit<maplibregl.MapOptions, 'style'> {
-  style: MapType;
-  provider?: MapProvider;
-}
-
-export class Map extends maplibregl.Map {
-  constructor(options: CarteFacileMapOptions) {
-    const { style, provider = 'ign', ...mapOptions } = options;
-    const map = getMap(style, provider);
-
-    super({
-      ...mapOptions,
-      style: map.style as StyleSpecification,
-    });
-  }
 }
 
 // Export des types

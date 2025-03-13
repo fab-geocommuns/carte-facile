@@ -7,5 +7,5 @@ export * from './hooks';
 // Export des utilitaires
 export * from './utils';
 
-export { Map, getMap } from './map';
-export type { MapConfig, MapType, MapProvider, CarteFacileMapOptions } from './map'; 
+export { getMap } from './map';
+export type { MapConfig, MapType, MapProvider } from './map'; 
