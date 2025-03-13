@@ -24,4 +24,4 @@ export interface MapConfig {
   name: string;
   provider: MapProvider;
   metadata: MapMetadata;
-} 
+}
