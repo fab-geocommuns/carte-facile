@@ -1,6 +1,3 @@
-// Export des styles
-export * from './styles';
-
 // Export des composants
 export * from './components';
 
@@ -10,5 +7,6 @@ export * from './hooks';
 // Export des utilitaires
 export * from './utils';
 
-// Export des types
-export * from './types'; 
+// Export de la fonction getMap et des types associés
+export { getMap } from './map';
+export type { MapConfig, MapType, MapProvider } from './map'; 

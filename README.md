@@ -1,51 +1,152 @@
 # Carte Facile
 
-Une librairie de styles de cartes et composants clés en main, pour ajouter des cartes rapidement à votre application.
-Cette librairie fonctionne avec MapLibre GL JS.
+Une bibliothèque simple pour gérer les styles de cartes, compatible avec différentes bibliothèques de cartographie (MapLibre, Leaflet, OpenLayers).
 
 ## Installation
 
-1. Installer la librairie (en beta)
 ```bash
-npm install carte-facile@beta
+npm install carte-facile
 ```
 
-2. Installer MapLibre GL JS
+## Prérequis
+
+En plus de `carte-facile`, vous devez installer la bibliothèque de cartographie que vous souhaitez utiliser :
+* Si vous ne savez pas quelle librairie choisir, nous vous conseillons d'utiliser maplibre-gl par défaut. *
+
 ```bash
+# Pour MapLibre
 npm install maplibre-gl
+
+# Pour Leaflet
+npm install leaflet
+
+# Pour OpenLayers
+npm install ol
 ```
 
 ## Utilisation
 
+### Styles disponibles
+
+La bibliothèque fournit différents styles de cartes :
+
+- `standard` : Style standard
+- `desaturated` : Style désaturé
+- `aerial` : Photographie aérienne
+
+### Fournisseurs de cartes
+
+- `ign` : Institut Géographique National (par défaut)
+- `osm` : OpenStreetMap (à venir)
+
+### Exemples d'utilisation
+
+Créer un conteneur html pour la carte:
+
+```html
+<!-- HTML nécessaire -->
+<div id="map" style="height: 500px; width: 100%;"></div>
+```
+
+#### Avec MapLibre
+
 ```typescript
-import { getMapStyle } from 'carte-facile';
+import { getMap } from 'carte-facile';
+import maplibregl from 'maplibre-gl';
 
-// Obtenir un style de carte
-let mapStyle = getMapStyle('standard', 'ign');
-
-// Utiliser le style avec MapLibre
 const map = new maplibregl.Map({
   container: 'map',
-  style: mapStyle.style,
+  style: getMap('standard', 'ign').style,
 });
 ```
 
-## Styles disponibles
+#### Avec Leaflet
 
-### IGN
-- `desaturated` : Style désaturé pour la datavisualisation
-- `standard` : Style standard
-- `aerial` : Style photographique aérien
+#### Avec OpenLayers
+
+
+## Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou un pull request.
 
 ## Développement
 
+### Mise en place de l'environnement de développement
+
+1. Cloner le dépôt :
 ```bash
-# Installer les dépendances
-npm install
-
-# Compiler
-npm run build
-
-# Mode développement
-npm run dev
+git clone https://github.com/votre-username/carte-facile.git
+cd carte-facile
 ```
+
+2. Installer les dépendances :
+```bash
+npm install
+```
+
+3. Lancer les tests :
+```bash
+npm test
+```
+
+4. Compiler le projet :
+```bash
+npm run build
+```
+
+### Structure du projet
+
+```
+src/
+├── map/              # Styles de cartes et configuration
+│   ├── types.ts      # Types communs
+│   ├── index.ts      # Point d'entrée principal
+│   └── providers/    # Styles par fournisseur
+│       └── ign/      # Styles IGN
+├── components/       # Composants React (si applicable)
+├── hooks/           # Hooks React (si applicable)
+└── utils/           # Utilitaires
+```
+
+### Scripts disponibles
+
+- `npm run build` : Compile le projet
+- `npm run test` : Lance les tests
+- `npm run lint` : Vérifie le code avec ESLint
+- `npm run format` : Formate le code avec Prettier
+- `npm run dev` : Lance le mode développement avec hot-reload
+
+### Tests
+
+Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
+
+1. Créer un fichier de test dans le dossier `__tests__`
+2. Utiliser la convention de nommage `*.test.ts`
+3. Lancer les tests avec `npm test`
+
+### Contribution au code
+
+1. Créer une branche pour votre fonctionnalité :
+```bash
+git checkout -b feature/nouvelle-fonctionnalite
+```
+
+2. Commiter vos changements :
+```bash
+git commit -m "feat: ajout d'une nouvelle fonctionnalité"
+```
+
+3. Pousser vers GitHub :
+```bash
+git push origin feature/nouvelle-fonctionnalite
+```
+
+4. Créer une Pull Request sur GitHub
+
+### Standards de code
+
+- Utiliser TypeScript pour tout nouveau code
+- Suivre les conventions de commit [Conventional Commits](https://www.conventionalcommits.org/)
+- Documenter les nouvelles fonctionnalités dans le README
+- Ajouter des tests pour les nouvelles fonctionnalités
+
