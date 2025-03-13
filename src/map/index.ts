@@ -1,8 +1,8 @@
-import { ignStyles } from './ign';
+import { ignMaps } from './ign';
 import type { MapConfig, MapType, MapProvider } from './types';
 
-const stylesByProvider: Record<MapProvider, Record<string, MapConfig>> = {
-  ign: ignStyles,
+const mapsByProvider: Record<MapProvider, Record<string, MapConfig>> = {
+  ign: ignMaps,
   osm: {} // Préparé pour l'implémentation future
 };
 
@@ -13,18 +13,15 @@ const stylesByProvider: Record<MapProvider, Record<string, MapConfig>> = {
  * @returns La configuration complète du style de carte
  */
 export function getMap(type: MapType, provider: MapProvider = 'ign'): MapConfig {
-  const providerStyles = stylesByProvider[provider];
-  if (!providerStyles) {
+  const providerMaps = mapsByProvider[provider];
+  if (!providerMaps) {
     throw new Error(`Provider ${provider} not supported`);
   }
 
-  const style = providerStyles[type];
-  if (!style) {
-    throw new Error(`Style ${type} not found for provider ${provider}`);
+  const map = providerMaps[type];
+  if (!map) {
+    throw new Error(`Map ${type} not found for provider ${provider}`);
   }
 
-  return style;
-}
-
-// Export des types
-export type { MapConfig, MapType, MapProvider }; 
+  return map;
+} 
