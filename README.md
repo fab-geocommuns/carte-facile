@@ -1,63 +1,117 @@
 # Carte Facile
 
-Une librairie de styles de cartes et composants clés en main, pour ajouter des cartes rapidement à votre application.
-Cette librairie fonctionne avec MapLibre GL JS.
+Une bibliothèque simple pour gérer les styles de cartes, compatible avec différentes bibliothèques de cartographie (MapLibre, Leaflet, OpenLayers).
 
 ## Installation
 
-1. Installer la librairie (en beta)
 ```bash
-npm install carte-facile@beta
+npm install carte-facile
 ```
 
-2. Installer MapLibre GL JS
+## Prérequis
+
+En plus de `carte-facile`, vous devez installer la bibliothèque de cartographie que vous souhaitez utiliser :
+* Si vous ne savez pas quelle librairie choisir, nous vous conseillons d'utiliser maplibre-gl par défaut. *
+
 ```bash
+# Pour MapLibre
 npm install maplibre-gl
+
+# Pour Leaflet
+npm install leaflet
+
+# Pour OpenLayers
+npm install ol
 ```
 
 ## Utilisation
 
-### Méthode simple (recommandée)
+### Styles disponibles
+
+La bibliothèque fournit différents styles de cartes :
+
+- `standard` : Style standard
+- `desaturated` : Style désaturé
+- `aerial` : Photographie aérienne
+
+### Fournisseurs de cartes
+
+- `ign` : Institut Géographique National (par défaut)
+- `osm` : OpenStreetMap (à venir)
+
+### Exemples d'utilisation
+
+#### Avec MapLibre
+
 ```typescript
-import { Map } from 'carte-facile';
+import { getMap } from 'carte-facile';
+import maplibregl from 'maplibre-gl';
 
-// Créer une carte avec le style standard IGN
-const map = new Map({
-  container: 'map',
-  style: 'standard'
-});
-```
-
-### Méthode avancée
-```typescript
-import { getMapStyle } from 'carte-facile';
-
-// Obtenir un style de carte spécifique
-let mapStyle = getMapStyle('standard', 'ign');
-
-// Utiliser le style avec MapLibre
 const map = new maplibregl.Map({
   container: 'map',
-  style: mapStyle.style,
+  style: getMap('standard', 'ign').style,
 });
 ```
 
-## Styles disponibles
+#### Avec Leaflet
 
-### IGN
-- `desaturated` : Style désaturé pour la datavisualisation
-- `standard` : Style standard
-- `aerial` : Style photographique aérien
+```typescript
+import { getMap } from 'carte-facile';
+import L from 'leaflet';
 
-## Développement
+const map = L.map('map', {
 
-```bash
-# Installer les dépendances
-npm install
+});
 
-# Compiler
-npm run build
-
-# Mode développement
-npm run dev
 ```
+
+#### Avec OpenLayers
+
+```typescript
+import { getMap } from 'carte-facile';
+import Map from 'ol/Map';
+
+const map = new Map({
+  target: 'map'
+});
+
+```
+
+## API
+
+### Fonction `getMap`
+
+```typescript
+function getMap(type: MapType, provider?: MapProvider): MapConfig
+```
+
+#### Paramètres
+
+- `type` : Le type de carte (`'standard' | 'desaturated' | 'aerial'`)
+- `provider` : Le fournisseur de carte (`'ign' | 'osm'`, par défaut `'ign'`)
+
+#### Retour
+
+Un objet `MapConfig` contenant :
+- `name` : Nom du style
+- `style` : Configuration du style au format JSON
+- `provider` : Fournisseur de la carte
+- `metadata` : Métadonnées du style (nom, description, etc.)
+
+## Types
+
+```typescript
+type MapType = 'desaturated' | 'standard' | 'aerial';
+type MapProvider = 'ign' | 'osm';
+
+interface MapConfig {
+  name: string;
+  style: unknown;
+  provider: MapProvider;
+  metadata: MapMetadata;
+}
+```
+
+## Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une issue ou un pull request.

@@ -6,6 +6,12 @@ const stylesByProvider: Record<MapProvider, Record<string, MapConfig>> = {
   osm: {} // Préparé pour l'implémentation future
 };
 
+/**
+ * Récupère la configuration d'un style de carte
+ * @param type Le type de carte (standard, desaturated, aerial)
+ * @param provider Le fournisseur de carte (ign, osm)
+ * @returns La configuration complète du style de carte
+ */
 export function getMap(type: MapType, provider: MapProvider = 'ign'): MapConfig {
   const providerStyles = stylesByProvider[provider];
   if (!providerStyles) {
