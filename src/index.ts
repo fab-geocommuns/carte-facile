@@ -1,6 +1,3 @@
-// Export des styles
-export * from './map/styles';
-
 // Export des composants
 export * from './components';
 
@@ -13,7 +10,5 @@ export * from './utils';
 // Export des types
 export * from './types';
 
-export { getMapStyle } from './map/styles';
-export type { MapStyle, MapStyleType, MapProvider } from './types/map';
-export { Map } from './map';
-export type { CarteFacileMapOptions } from './map'; 
+export { Map, getMapStyle } from './map';
+export type { MapStyle, MapStyleType, MapProvider, CarteFacileMapOptions } from './map'; 
