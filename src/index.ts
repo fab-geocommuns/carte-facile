@@ -9,4 +9,4 @@ export * from './utils';
 
 // Export de la fonction getMap et des types associés
 export { getMap } from './map';
-export type { MapConfig, MapType, MapProvider } from './map'; 
+export * from './map/types'; 

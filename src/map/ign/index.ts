@@ -3,23 +3,17 @@ import standard from './standard_ign.json';
 import aerial from './aerial-photography_ign.json';
 import { MapConfig } from '../types';
 
-export const ignStyles: Record<string, MapConfig> = {
+export const ignMaps: Record<string, MapConfig> = {
   desaturated: {
-    name: desaturated.name,
-    style: desaturated,
-    provider: 'ign',
-    metadata: desaturated.metadata
+    ...desaturated,
+    provider: 'ign'
   },
   standard: {
-    name: standard.name,
-    style: standard,
-    provider: 'ign',
-    metadata: standard.metadata
+    ...standard,
+    provider: 'ign'
   },
   aerial: {
-    name: aerial.name,
-    style: aerial,
-    provider: 'ign',
-    metadata: aerial.metadata
+    ...aerial,
+    provider: 'ign'
   }
 }; 
