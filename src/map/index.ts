@@ -1,6 +1,6 @@
 import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import { ignStyles } from './ign';
-import type { MapStyle, MapStyleType, MapProvider } from '../types/map';
+import type { MapStyle, MapStyleType, MapProvider } from './types';
 
 const stylesByProvider: Record<MapProvider, Record<string, MapStyle>> = {
   ign: ignStyles,

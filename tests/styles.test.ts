@@ -1,5 +1,5 @@
 import { getMapStyle } from '../src/map';
-import type { MapStyleType, MapProvider } from '../src/types/map';
+import type { MapStyleType, MapProvider } from '../src/map/types';
 
 describe('getMapStyle', () => {
   it('should return IGN standard style by default', () => {
