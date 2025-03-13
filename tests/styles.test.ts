@@ -1,4 +1,4 @@
-import { getMapStyle } from '../src/styles';
+import { getMapStyle } from '../src/map/styles';
 import type { MapStyleType, MapProvider } from '../src/types/map';
 
 describe('getMapStyle', () => {

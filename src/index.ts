@@ -11,4 +11,9 @@ export * from './hooks';
 export * from './utils';
 
 // Export des types
-export * from './types'; 
+export * from './types';
+
+export { getMapStyle } from './styles';
+export type { MapStyle, MapStyleType, MapProvider } from './types/map';
+export { Map } from './map';
+export type { CarteFacileMapOptions } from './map'; 

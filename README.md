@@ -17,10 +17,22 @@ npm install maplibre-gl
 
 ## Utilisation
 
+### Méthode simple (recommandée)
+```typescript
+import { Map } from 'carte-facile';
+
+// Créer une carte avec le style standard IGN
+const map = new Map({
+  container: 'map',
+  style: 'standard'
+});
+```
+
+### Méthode avancée
 ```typescript
 import { getMapStyle } from 'carte-facile';
 
-// Obtenir un style de carte
+// Obtenir un style de carte spécifique
 let mapStyle = getMapStyle('standard', 'ign');
 
 // Utiliser le style avec MapLibre

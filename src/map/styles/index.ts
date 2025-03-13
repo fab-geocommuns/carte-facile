@@ -1,5 +1,5 @@
 import { ignStyles } from './ign';
-import { MapStyle, MapStyleType, MapProvider } from '../types/map';
+import { MapStyle, MapStyleType, MapProvider } from '../../types/map';
 
 const stylesByProvider: Record<MapProvider, Record<string, MapStyle>> = {
   ign: ignStyles,
