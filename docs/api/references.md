@@ -2,7 +2,7 @@
 
 Cette documentation détaille l'API des styles disponible dans Carte Facile.
 
-## Fonction principale
+***
 
 ### getMap(style, provider)
 
@@ -54,3 +54,6 @@ const map = new maplibregl.Map({
   style: getMap('standard', 'ign'),
   // ...
 });
+```
+
+***
