@@ -9,6 +9,10 @@ Si vous débutez avec Carte Facile, commencez par ces guides :
 1. [Installation](getting-started/installation.md)
 2. [Guide de démarrage rapide](getting-started/quick-start.md)
 
+## 📖 Documentation de l'API
+
+- [Références de l'API](api/references.md)
+
 ## 📚 Guides par bibliothèque
 
 Choisissez votre bibliothèque de cartographie préférée :
@@ -17,13 +21,9 @@ Choisissez votre bibliothèque de cartographie préférée :
 - Leaflet (À venir)
 - OpenLayers (À venir)
 
-## 📖 Documentation de l'API
-
-- [Références de l'API](api/references.md)
-
 ## 💡 Exemples
 
-- [Exemples d'utilisation basique avec MapLibre](examples/basic-usage.md)
+*Exemples à venir*
 
 ## 🤝 Contribution
 
@@ -34,7 +34,7 @@ Nous accueillons toutes les contributions ! Voici comment vous pouvez nous aider
 3. Contribuer au code
 4. Améliorer la documentation
 
-Pour plus d'informations, consultez notre [guide de contribution](../CONTRIBUTING.md).
+Pour plus d'informations, consultez notre [guide de contribution](CONTRIBUTING.md).
 
 ## 📋 Compatibilité
 
