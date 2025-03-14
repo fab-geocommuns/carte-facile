@@ -1,10 +1,3 @@
----
-layout: default
-title: Accueil
-nav_order: 1
-permalink: /
----
-
 # Documentation Carte Facile
 
 Bienvenue dans la documentation officielle de Carte Facile, une bibliothèque JavaScript/TypeScript pour la gestion simplifiée des styles de cartes.
@@ -15,7 +8,6 @@ Si vous débutez avec Carte Facile, commencez par ces guides :
 
 1. [Installation](getting-started/installation.md)
 2. [Guide de démarrage rapide](getting-started/quick-start.md)
-3. [Configuration](getting-started/configuration.md)
 
 ## 📚 Guides par bibliothèque
 
@@ -27,24 +19,11 @@ Choisissez votre bibliothèque de cartographie préférée :
 
 ## 📖 Documentation de l'API
 
-- [API des Styles](api/styles.md)
-  - Fonction `getMap()`
-  - Personnalisation des styles
-  - Types et interfaces
+- [Références de l'API](api/references.md)
 
 ## 💡 Exemples
 
-- [Exemples d'utilisation basique](examples/basic-usage.md)
-  - Exemples MapLibre
-  - Exemples Leaflet
-  - Exemples React/Vue.js
-
-## 🔧 Guides avancés
-
-- Personnalisation des styles
-- Gestion des performances
-- Bonnes pratiques
-- Migration depuis d'autres bibliothèques
+- [Exemples d'utilisation basique avec MapLibre](examples/basic-usage.md)
 
 ## 🤝 Contribution
 
@@ -82,13 +61,6 @@ Pour plus d'informations, consultez notre [guide de contribution](../CONTRIBUTIN
 
 ## 📅 Feuille de route
 
-- [x] Support de MapLibre GL
-- [ ] Support complet de Leaflet
-- [ ] Support d'OpenLayers
-- [ ] Styles personnalisables avancés
-- [ ] Assistant de configuration visuel
-- [ ] Plus d'exemples et de templates
-
-## 📝 Notes de version
-
-Pour les dernières mises à jour et changements, consultez nos [notes de version](https://github.com/votre-username/carte-facile/releases). 
+- [x]  Support de MapLibre GL
+- [ ]  Support d'OpenLayers
+- [ ]  Support de Leaflet
