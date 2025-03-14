@@ -1,0 +1,28 @@
+remote_theme: just-the-docs/just-the-docs
+title: Carte Facile
+description: Documentation de la bibliothèque Carte Facile
+baseurl: "/carte-facile"
+url: "https://fab-geocommuns.github.io"
+
+# Configuration du thème
+search_enabled: true
+heading_anchors: true
+
+# Navigation
+nav_external_links:
+  - title: GitHub
+    url: https://github.com/fab-geocommuns/carte-facile
+    hide_icon: false
+
+# Configuration de la recherche
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s/]+/
+  rel_url: true
+  button: true
+
+# Personnalisation
+color_scheme: light 

@@ -1,19 +1,24 @@
 import desaturated from './desaturated_ign.json';
 import standard from './standard_ign.json';
 import aerial from './aerial-photography_ign.json';
-import { MapConfig } from '../types';
+import { MapConfig, MapType, MapProvider } from '../types';
+import { mapThumbnails } from '../thumbnails';
 
+// Maps for IGN provider
 export const ignMaps: Record<string, MapConfig> = {
-  desaturated: {
+  [MapType.desaturated]: {
     ...desaturated,
-    provider: 'ign'
+    provider: MapProvider.ign,
+    thumbnail: mapThumbnails[MapType.desaturated]
   },
-  standard: {
+  [MapType.standard]: {
     ...standard,
-    provider: 'ign'
+    provider: MapProvider.ign,
+    thumbnail: mapThumbnails[MapType.standard]
   },
-  aerial: {
+  [MapType.aerial]: {
     ...aerial,
-    provider: 'ign'
+    provider: MapProvider.ign,
+    thumbnail: mapThumbnails[MapType.aerial]
   }
-}; 
+};

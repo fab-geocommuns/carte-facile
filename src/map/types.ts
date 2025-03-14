@@ -1,6 +1,17 @@
-export type MapType = 'desaturated' | 'standard' | 'aerial';
-export type MapProvider = 'ign' | 'osm';
+//Card types available. Used as a single source of truth for card identifiers 
+export enum MapType {
+  desaturated = 'desaturated',
+  standard = 'standard',
+  aerial = 'aerial'
+}
 
+// Card providers available. Used as a single source of truth for provider identifiers 
+export enum MapProvider {
+  ign = 'ign',
+  osm = 'osm'
+}
+
+// Map metadata, availables in JSON map style files
 interface MapMetadata {
   fr: {
     name: string;
@@ -20,8 +31,10 @@ interface MapMetadata {
   version: string;
 }
 
+// Merge all elements of the map configuration
 export interface MapConfig {
   name: string;
   provider: MapProvider;
   metadata: MapMetadata;
-} 
+  thumbnail: string;
+}
