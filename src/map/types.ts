@@ -1,5 +1,21 @@
-export type MapType = 'desaturated' | 'standard' | 'aerial';
-export type MapProvider = 'ign' | 'osm';
+/**
+ * Types de cartes disponibles
+ * Utilisé comme source unique de vérité pour les identifiants de cartes
+ */
+export enum MapType {
+  desaturated = 'desaturated',
+  standard = 'standard',
+  aerial = 'aerial'
+}
+
+/**
+ * Fournisseurs de cartes disponibles
+ * Utilisé comme source unique de vérité pour les identifiants de providers
+ */
+export enum MapProvider {
+  ign = 'ign',
+  osm = 'osm'
+}
 
 interface MapMetadata {
   fr: {
