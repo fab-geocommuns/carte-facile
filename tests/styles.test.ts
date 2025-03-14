@@ -1,6 +1,11 @@
 import { getMap } from '../src/map';
 import type { MapType, MapProvider } from '../src/map/types';
 
+/*
+  * Test suite for the getMap function
+  * This test suite ensures that the getMap function returns the correct map style configuration
+  * for the given map type and provider.
+*/
 describe('getMap', () => {
   it('should return IGN standard style by default', () => {
     const map = getMap('standard');

@@ -1,22 +1,17 @@
-/**
- * Types de cartes disponibles
- * Utilisé comme source unique de vérité pour les identifiants de cartes
- */
+//Card types available. Used as a single source of truth for card identifiers 
 export enum MapType {
   desaturated = 'desaturated',
   standard = 'standard',
   aerial = 'aerial'
 }
 
-/**
- * Fournisseurs de cartes disponibles
- * Utilisé comme source unique de vérité pour les identifiants de providers
- */
+// Card providers available. Used as a single source of truth for provider identifiers 
 export enum MapProvider {
   ign = 'ign',
   osm = 'osm'
 }
 
+// Map metadata, availables in JSON map style files
 interface MapMetadata {
   fr: {
     name: string;
@@ -36,6 +31,7 @@ interface MapMetadata {
   version: string;
 }
 
+// Merge all elements of the map configuration
 export interface MapConfig {
   name: string;
   provider: MapProvider;

@@ -4,6 +4,7 @@ import aerial from './aerial-photography_ign.json';
 import { MapConfig, MapType, MapProvider } from '../types';
 import { mapThumbnails } from '../thumbnails';
 
+// Maps for IGN provider
 export const ignMaps: Record<string, MapConfig> = {
   [MapType.desaturated]: {
     ...desaturated,

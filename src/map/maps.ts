@@ -1,17 +1,18 @@
 import { ignMaps } from './ign';
 import { MapConfig, MapType, MapProvider } from './types';
 
+// Maps by provider. Each provider has its own map style JSON files
 const mapsByProvider: Record<MapProvider, Record<string, MapConfig>> = {
   [MapProvider.ign]: ignMaps,
-  [MapProvider.osm]: {} // Préparé pour l'implémentation future
+  [MapProvider.osm]: {} // Prepared for future implementation
 };
 
 /**
- * Récupère la configuration d'un style de carte
- * @param type Le type de carte ('standard', 'desaturated', 'aerial')
- * @param provider Le fournisseur de carte ('ign', 'osm')
- * @returns La configuration complète du style de carte
- */
+ * Retrieves map style configuration
+ * @param type Map type ('standard', 'desaturated', 'aerial’)
+ * @param provider The map provider ('ign', 'osm') 
+ * @returns The complete map style configuration
+*/
 export function getMap(
   type: `${MapType}`,
   provider: `${MapProvider}` = 'ign'
