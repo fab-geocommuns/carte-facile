@@ -1,3 +1,10 @@
+---
+layout: default
+title: Accueil
+nav_order: 1
+permalink: /
+---
+
 # Documentation Carte Facile
 
 Bienvenue dans la documentation officielle de Carte Facile, une bibliothèque JavaScript/TypeScript pour la gestion simplifiée des styles de cartes.
