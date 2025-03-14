@@ -18,12 +18,18 @@ export function getMap(
 ): MapConfig {
   const providerMaps = mapsByProvider[provider as MapProvider];
   if (!providerMaps) {
-    throw new Error(`Provider ${provider} not supported`);
+    const availableProviders = Object.values(MapProvider).join(', ');
+    throw new Error(
+      `Provider "${provider}" not supported. Available providers are: ${availableProviders}`
+    );
   }
 
   const map = providerMaps[type as MapType];
   if (!map) {
-    throw new Error(`Map ${type} not found for provider ${provider}`);
+    const availableTypes = Object.values(MapType).join(', ');
+    throw new Error(
+      `Map type "${type}" not found for provider "${provider}". Available map types are: ${availableTypes}`
+    );
   }
 
   return map;

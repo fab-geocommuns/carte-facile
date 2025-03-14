@@ -26,18 +26,18 @@ describe('getMap', () => {
   it('should throw error for unsupported provider', () => {
     expect(() => {
       getMap('standard', 'unsupported' as MapProvider);
-    }).toThrow('Provider unsupported not supported');
+    }).toThrow('Provider "unsupported" not supported. Available providers are: ign, osm');
   });
 
   it('should throw error for non-existent style type', () => {
     expect(() => {
       getMap('nonexistent' as MapType, 'ign');
-    }).toThrow('Map nonexistent not found for provider ign');
+    }).toThrow('Map type "nonexistent" not found for provider "ign". Available map types are: desaturated, standard, aerial');
   });
 
   it('should throw error for OSM provider (empty provider)', () => {
     expect(() => {
       getMap('standard', 'osm');
-    }).toThrow('Map standard not found for provider osm');
+    }).toThrow('Map type "standard" not found for provider "osm". Available map types are: desaturated, standard, aerial');
   });
 });
