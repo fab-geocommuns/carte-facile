@@ -27,7 +27,6 @@ interface MapMetadata {
   };
   source: string;
   url: string;
-  thumbnail: string;
   version: string;
 }
 
