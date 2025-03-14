@@ -59,6 +59,6 @@ Les cartes puevent fonctionner avec différentes sources de données :
 
 ## Prochaines étapes
 
-- Consultez la [documentation complète de l'API](/docs/api/styles.md)
+- Consultez la [documentation complète de l'API](/docs/api/)
 <!-- - Explorez les [exemples](/docs/examples/basique-usage.md) -->
-- Découvrez les [guides spécifiques](/docs/guides/) pour chaque bibliothèque de cartographie 
+<!-- - Découvrez les [guides spécifiques](/docs/guides/maplibre.md) pour chaque bibliothèque de cartographie  -->
