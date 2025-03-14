@@ -1,6 +1,34 @@
 # Carte Facile
 
+[![npm version](https://img.shields.io/npm/v/carte-facile.svg)](https://www.npmjs.com/package/carte-facile)
+[![License](https://img.shields.io/npm/l/carte-facile.svg)](https://github.com/votre-username/carte-facile/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/npm/dm/carte-facile.svg)](https://www.npmjs.com/package/carte-facile)
+[![Tests](https://github.com/votre-username/carte-facile/workflows/Tests/badge.svg)](https://github.com/votre-username/carte-facile/actions)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 Une bibliothèque simple pour gérer les styles de cartes, compatible avec différentes bibliothèques de cartographie (MapLibre, Leaflet, OpenLayers).
+
+## Table des matières
+
+- [Carte Facile](#carte-facile)
+  - [Table des matières](#table-des-matières)
+  - [Installation](#installation)
+  - [Prérequis](#prérequis)
+  - [Utilisation](#utilisation)
+    - [Styles disponibles](#styles-disponibles)
+    - [Fournisseurs de cartes](#fournisseurs-de-cartes)
+    - [Exemples d'utilisation](#exemples-dutilisation)
+      - [Avec MapLibre](#avec-maplibre)
+      - [Avec Leaflet](#avec-leaflet)
+      - [Avec OpenLayers](#avec-openlayers)
+  - [Contribution](#contribution)
+  - [Développement](#développement)
+    - [Mise en place de l'environnement de développement](#mise-en-place-de-lenvironnement-de-développement)
+    - [Structure du projet](#structure-du-projet)
+    - [Scripts disponibles](#scripts-disponibles)
+    - [Tests](#tests)
+    - [Contribution au code](#contribution-au-code)
+    - [Standards de code](#standards-de-code)
 
 ## Installation
 
