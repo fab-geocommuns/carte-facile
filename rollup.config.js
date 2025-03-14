@@ -33,7 +33,7 @@ export default {
     commonjs(),
     json(),
     image({
-      include: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg', '**/*.webp'],
+      include: ['**/*.webp'],
       exclude: 'node_modules/**',
       dom: true,
     }),
