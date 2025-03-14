@@ -1,10 +1,11 @@
 remote_theme: just-the-docs/just-the-docs
 title: Carte Facile
 description: Documentation de la bibliothèque Carte Facile
-baseurl: "/carte-facile"
-url: "https://fab-geocommuns.github.io"
+baseurl: "/"
+url: "https://github.com/fab-geocommuns/carte-facile"
 
 # Configuration du thème
+theme: jekyll-theme-minimal
 search_enabled: true
 heading_anchors: true
 
@@ -23,6 +24,3 @@ search:
   tokenizer_separator: /[\s/]+/
   rel_url: true
   button: true
-
-# Personnalisation
-color_scheme: light 
