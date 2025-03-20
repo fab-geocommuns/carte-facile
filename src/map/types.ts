@@ -24,20 +24,15 @@ export enum Overlay {
 }
 
 /**
- * Layer metadata following Mapbox/Maplibre specification
- */
-export interface LayerMetadata {
-  overlay?: string;
-  [key: string]: unknown;
-}
-
-/**
  * Layer configuration following Mapbox/Maplibre specification
  */
-export interface Layer {
+export interface LayerConfig {
   id: string;
   type: string;
-  metadata?: LayerMetadata;
+  metadata?: {
+    overlay?: string;
+    [key: string]: unknown;
+  };
   layout?: {
     visibility?: string;
     [key: string]: unknown;
@@ -76,6 +71,6 @@ export interface MapConfig {
   sources?: Record<string, unknown>;
   sprite?: string;
   glyphs?: string;
-  layers: Layer[];
+  layers: LayerConfig[];
   [key: string]: unknown;
 }
