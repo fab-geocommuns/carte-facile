@@ -11,6 +11,12 @@ export enum MapProvider {
   osm = 'osm'
 }
 
+// Available overlay types. Used as a single source of truth for overlay identifiers
+export enum Overlay {
+  adminLimits = 'admin-limits',
+  cadastre = 'cadastre',
+}
+
 // Map metadata, availables in JSON map style files
 interface MapMetadata {
   fr: {
@@ -30,10 +36,33 @@ interface MapMetadata {
   version: string;
 }
 
+// Layer metadata for overlays
+export interface LayerMetadata {
+  overlay?: Overlay;
+}
+
+// Layer configuration
+export interface Layer {
+  id: string;
+  type: string;
+  metadata?: LayerMetadata;
+  layout: {
+    visibility?: 'visible' | 'none';
+  };
+  // Allows any other properties from the map style specification
+  [key: string]: unknown;
+}
+
+// Configuration des overlays
+export type OverlayState = Record<Overlay, boolean>;
+
 // Merge all elements of the map configuration
 export interface MapConfig {
   name: string;
   provider: MapProvider;
   metadata: MapMetadata;
   thumbnail: string;
+  style: {
+    layers: Layer[];
+  };
 }
