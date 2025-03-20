@@ -1,68 +1,81 @@
-//Card types available. Used as a single source of truth for card identifiers 
+/**
+ * Available map types
+ */
 export enum MapType {
   desaturated = 'desaturated',
   standard = 'standard',
   aerial = 'aerial'
 }
 
-// Card providers available. Used as a single source of truth for provider identifiers 
+/**
+ * Available map providers
+ */
 export enum MapProvider {
   ign = 'ign',
   osm = 'osm'
 }
 
-// Available overlay types. Used as a single source of truth for overlay identifiers
+/**
+ * Available map overlays
+ */
 export enum Overlay {
-  adminLimits = 'admin-limits',
+  adminLimits = 'admin_limits',
   cadastre = 'cadastre',
 }
 
-// Map metadata, availables in JSON map style files
-interface MapMetadata {
-  fr: {
-    name: string;
-    description: string;
-    use: string;
-    accessibility: string;
-  };
-  en: {
-    name: string;
-    description: string;
-    use: string;
-    accessibility: string;
-  };
-  source: string;
-  url: string;
-  version: string;
-}
-
-// Layer metadata for overlays
+/**
+ * Layer metadata following Mapbox/Maplibre specification
+ */
 export interface LayerMetadata {
-  overlay?: Overlay;
+  overlay?: string;
+  [key: string]: unknown;
 }
 
-// Layer configuration
+/**
+ * Layer configuration following Mapbox/Maplibre specification
+ */
 export interface Layer {
   id: string;
   type: string;
   metadata?: LayerMetadata;
-  layout: {
-    visibility?: 'visible' | 'none';
+  layout?: {
+    visibility?: string;
+    [key: string]: unknown;
   };
-  // Allows any other properties from the map style specification
   [key: string]: unknown;
 }
 
-// Configuration des overlays
-export type OverlayState = Record<Overlay, boolean>;
-
-// Merge all elements of the map configuration
+/**
+ * Map configuration following Mapbox/Maplibre specification
+ */
 export interface MapConfig {
+  version: number;
   name: string;
   provider: MapProvider;
-  metadata: MapMetadata;
-  thumbnail: string;
-  style: {
-    layers: Layer[];
+  metadata: {
+    fr: {
+      name: string;
+      description: string;
+      use: string;
+      accessibility: string;
+    };
+    en: {
+      name: string;
+      description: string;
+      use: string;
+      accessibility: string;
+    };
+    source: string;
+    url: string;
+    version: string;
+    [key: string]: unknown;
   };
+  thumbnail: string;
+  center?: number[];
+  zoom?: number;
+  sources?: Record<string, unknown>;
+  sprite?: string;
+  glyphs?: string;
+  layers: Layer[];
+  [key: string]: unknown;
 }

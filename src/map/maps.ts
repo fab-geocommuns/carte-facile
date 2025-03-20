@@ -37,18 +37,17 @@ export function getMap(
 }
 
 /**
- * Controls the visibility of a map overlay by creating a new style configuration.
- * All layers tagged with the specified overlay in their metadata will be shown or hidden.
+ * Returns a new style with modified overlay visibility
  * @param style Map style configuration
- * @param overlay Overlay to show or hide
+ * @param overlay Overlay to modify
  * @param visible true to show, false to hide
  * @returns New style configuration with updated layer visibility
  */
 export function setOverlayVisibility(
-  style: MapConfig['style'],
+  style: MapConfig,
   overlay: Overlay,
   visible: boolean
-): MapConfig['style'] {
+): MapConfig {
   return {
     ...style,
     layers: style.layers.map(layer => {
