@@ -16,14 +16,6 @@ export enum MapProvider {
 }
 
 /**
- * Available map overlays
- */
-export enum Overlay {
-  adminLimits = 'admin_limits',
-  cadastre = 'cadastre',
-}
-
-/**
  * Layer configuration following Mapbox/Maplibre specification
  */
 export interface LayerConfig {
