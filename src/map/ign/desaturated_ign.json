@@ -14,12 +14,6 @@
       "use": "Recommended for datavisualization applications and overlaying thematic data, especially flat colors. The map's unobtrusive appearance allows you to highlight your data without visual interference.",
       "accessibility": "Soft contrasts make your superimposed data clearly visible. Toponym legibility is preserved."
     },
-    "source": "IGN",
-    "url": "https://betagouv.github.io/styles-de-cartes/maps/desaturated_ign.json",
-    "thumbnail": "https://betagouv.github.io/styles-de-cartes/thumbnails/thumbnail_desaturated_ign.webp",
-    "version": "0.9.0",
-    "contact": "fonds-de-cartes@beta.gouv.fr",
-    "license": "Etalab 2.0",
     "maputnik:renderer": "mlgljs"
   },
   "center": [2.5, 47],
@@ -28,7 +22,8 @@
     "plan_ign": {
       "type": "vector",
       "tiles": ["https://data.geopf.fr/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf"],
-      "maxzoom": 18.9
+      "maxzoom": 18.9,
+      "attribution": "© IGN"
     },
     "admin_express": {
       "type": "vector",
@@ -37,7 +32,8 @@
       ],
       "minzoom": 0,
       "maxzoom": 24,
-      "scheme": "xyz"
+      "scheme": "xyz",
+      "attribution": "© IGN"
     }
   },
   "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
