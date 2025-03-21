@@ -1,39 +1,77 @@
-//Card types available. Used as a single source of truth for card identifiers 
-export enum MapType {
-  desaturated = 'desaturated',
-  standard = 'standard',
-  aerial = 'aerial'
-}
 
-// Card providers available. Used as a single source of truth for provider identifiers 
-export enum MapProvider {
-  ign = 'ign',
-  osm = 'osm'
-}
-
-// Map metadata, availables in JSON map style files
-interface MapMetadata {
-  fr: {
-    name: string;
-    description: string;
-    use: string;
-    accessibility: string;
+/**
+ * Layer configuration following Mapbox/Maplibre specification
+ */
+export interface LayerConfig {
+  id: string;
+  type: string;
+  metadata?: {
+    group?: string;
+    [key: string]: unknown;
   };
-  en: {
-    name: string;
-    description: string;
-    use: string;
-    accessibility: string;
+  layout?: {
+    visibility?: string;
+    [key: string]: unknown;
   };
-  source: string;
-  url: string;
-  version: string;
+  [key: string]: unknown;
 }
 
-// Merge all elements of the map configuration
-export interface MapConfig {
+/**
+ * Map configuration following Mapbox/Maplibre specification
+ */
+export interface StyleConfig {
+  version: number;
   name: string;
-  provider: MapProvider;
-  metadata: MapMetadata;
-  thumbnail: string;
+  metadata: {
+    fr: {
+      name: string;
+      description: string;
+      use: string;
+      accessibility: string;
+    };
+    en: {
+      name: string;
+      description: string;
+      use: string;
+      accessibility: string;
+    };
+    source: string;
+    url: string;
+    version: string;
+    [key: string]: unknown;
+  };
+  thumbnail?: string;
+  center?: number[];
+  zoom?: number;
+  sources?: Record<string, unknown>;
+  sprite?: string;
+  glyphs?: string;
+  layers: LayerConfig[];
+  [key: string]: unknown;
 }
+
+/**
+ * Map style configuration
+ */
+export type MapStyle = {
+  ign: {
+    desaturated: StyleConfig;
+    standard: StyleConfig;
+    aerialPhotography: StyleConfig;
+  }
+/*   osm: {
+    standard: MapConfig;
+    desaturated: MapConfig;
+    aerial: MapConfig;
+  } */
+}
+
+/**
+ * Map thumbnails configuration
+ */
+export type MapThumbnails = {
+  desaturated: string;
+  standard: string;
+  aerialPhotography: string;
+}
+
