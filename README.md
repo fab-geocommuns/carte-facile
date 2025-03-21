@@ -122,6 +122,8 @@ npm run test
 npm run build
 ```
 
+> **Note**: Si vous modifiez le code source, n'oubliez pas de relancer `npm run build` pour mettre à jour le dossier `dist`. Vous pouvez aussi utiliser `npm run dev` pour un mode développement avec recompilation automatique.
+
 ### Tests
 
 Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
