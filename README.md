@@ -8,6 +8,8 @@
 
 Une bibliothèque simple pour gérer les styles de cartes, compatible avec différentes bibliothèques de cartographie (MapLibre, Leaflet, OpenLayers).
 
+La documentation officielle est disponible sur le site dédié : [Documentation de Carte facile](https://fab-geocommuns.github.io/carte-facile-site/)
+
 ## Table des matières
 
 - [Carte Facile](#carte-facile)
