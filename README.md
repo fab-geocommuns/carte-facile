@@ -24,6 +24,7 @@ La documentation officielle est disponible sur le site dédié : [Documentation 
   - [Développement](#développement)
     - [Mise en place de l'environnement de développement](#mise-en-place-de-lenvironnement-de-développement)
     - [Tests](#tests)
+    - [Publication](#publication)
     - [Standards de code](#standards-de-code)
 
 ## Installation
@@ -129,6 +130,28 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 2. Utiliser la convention de nommage `*.test.ts`
 3. Lancer les tests avec `npm run test`
 
+### Publication
+
+Pour publier une nouvelle version du package :
+
+1. Mettre à jour la version :
+```bash
+npm version patch  # pour un bugfix (0.0.X)
+# ou
+npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
+# ou
+npm version major  # pour un changement majeur (X.0.0)
+```
+
+2. Pousser les changements :
+```bash
+git push origin main
+git push origin --tags
+```
+
+Le workflow GitHub Actions va automatiquement :
+- Publier le package sur npm
+- Créer une release sur GitHub avec les notes de release générées automatiquement
 
 ### Standards de code
 
