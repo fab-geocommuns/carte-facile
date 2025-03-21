@@ -134,7 +134,12 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 Pour publier une nouvelle version du package :
 
-1. Mettre à jour la version :
+1. S'assurer que votre branche locale est à jour :
+```bash
+git pull origin main
+```
+
+2. Mettre à jour la version :
 ```bash
 npm version patch  # pour un bugfix (0.0.X)
 # ou
@@ -143,11 +148,13 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-2. Pousser les changements :
+3. Pousser les changements :
 ```bash
 git push origin main
 git push origin --tags
 ```
+
+> **Note**: Après un merge avec main, assurez-vous que votre branche est bien à jour avant de procéder à la publication. Vous pouvez vérifier l'état de votre branche avec `git status`.
 
 Le workflow GitHub Actions va automatiquement :
 - Publier le package sur npm
