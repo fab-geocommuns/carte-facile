@@ -59,7 +59,7 @@ export type MapStyle = {
   ign: {
     desaturated: StyleConfig;
     standard: StyleConfig;
-    aerial: StyleConfig;
+    aerialPhotography: StyleConfig;
   }
 /*   osm: {
     standard: MapConfig;
@@ -74,6 +74,6 @@ export type MapStyle = {
 export type MapThumbnails = {
   desaturated: string;
   standard: string;
-  aerial: string;
+  aerialPhotography: string;
 }
 
