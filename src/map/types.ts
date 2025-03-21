@@ -1,6 +1,4 @@
 
-// créer un enum des layers -> permet aussi de créer de la doc dessus en hover par exemple -> voir comment ajouter de la doc dans les enums.
-
 /**
  * Layer configuration following Mapbox/Maplibre specification
  */

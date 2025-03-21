@@ -79,12 +79,12 @@ Créer un conteneur html pour la carte:
 #### Avec MapLibre
 
 ```typescript
-import { getMap } from 'carte-facile';
+import { mapStyle } from 'carte-facile';
 import maplibregl from 'maplibre-gl';
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: getMap('standard', 'ign').style,
+  style: mapStyle.ign.standard,
 });
 ```
 

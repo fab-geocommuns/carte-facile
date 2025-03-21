@@ -36,4 +36,3 @@ describe('mapThumbnails', () => {
     expect(mapThumbnails.aerialPhotography).toBeDefined();
   });
 });
-
