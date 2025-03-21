@@ -22,7 +22,7 @@ export interface LayerConfig {
   id: string;
   type: string;
   metadata?: {
-    overlay?: string;
+    group?: string;
     [key: string]: unknown;
   };
   layout?: {

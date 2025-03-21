@@ -3792,7 +3792,7 @@
     {
       "id": "Limites - Region",
       "type": "line",
-      "metadata": {"overlay": "admin_limits"},
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "region",
       "minzoom": 6,
@@ -3807,7 +3807,7 @@
     {
       "id": "Limites - Departement",
       "type": "line",
-      "metadata": {"overlay": "admin_limits"},
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "departement",
       "minzoom": 7.5,
@@ -3822,7 +3822,7 @@
     {
       "id": "Limites - EPCI",
       "type": "line",
-      "metadata": {"overlay": "admin_limits"},
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "epci",
       "minzoom": 10,
@@ -3837,7 +3837,7 @@
     {
       "id": "Limites - Commune",
       "type": "line",
-      "metadata": {"overlay": "admin_limits"},
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "commune",
       "minzoom": 12,
