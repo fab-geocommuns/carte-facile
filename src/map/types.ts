@@ -1,19 +1,5 @@
-/**
- * Available map types
- */
-export enum MapType {
-  desaturated = 'desaturated',
-  standard = 'standard',
-  aerial = 'aerial'
-}
 
-/**
- * Available map providers
- */
-export enum MapProvider {
-  ign = 'ign',
-  osm = 'osm'
-}
+// créer un enum des layers -> permet aussi de créer de la doc dessus en hover par exemple -> voir comment ajouter de la doc dans les enums.
 
 /**
  * Layer configuration following Mapbox/Maplibre specification
@@ -35,10 +21,9 @@ export interface LayerConfig {
 /**
  * Map configuration following Mapbox/Maplibre specification
  */
-export interface MapConfig {
+export interface StyleConfig {
   version: number;
   name: string;
-  provider: MapProvider;
   metadata: {
     fr: {
       name: string;
@@ -57,7 +42,7 @@ export interface MapConfig {
     version: string;
     [key: string]: unknown;
   };
-  thumbnail: string;
+  thumbnail?: string;
   center?: number[];
   zoom?: number;
   sources?: Record<string, unknown>;
@@ -66,3 +51,29 @@ export interface MapConfig {
   layers: LayerConfig[];
   [key: string]: unknown;
 }
+
+/**
+ * Map style configuration
+ */
+export type MapStyle = {
+  ign: {
+    desaturated: StyleConfig;
+    standard: StyleConfig;
+    aerial: StyleConfig;
+  }
+/*   osm: {
+    standard: MapConfig;
+    desaturated: MapConfig;
+    aerial: MapConfig;
+  } */
+}
+
+/**
+ * Map thumbnails configuration
+ */
+export type MapThumbnails = {
+  desaturated: string;
+  standard: string;
+  aerial: string;
+}
+
