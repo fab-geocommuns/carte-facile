@@ -20,7 +20,6 @@ export interface LayerConfig {
  * Map configuration following Mapbox/Maplibre specification
  */
 export interface StyleConfig {
-  version: number;
   name: string;
   metadata: {
     fr: {
@@ -35,12 +34,8 @@ export interface StyleConfig {
       use: string;
       accessibility: string;
     };
-    source: string;
-    url: string;
-    version: string;
     [key: string]: unknown;
   };
-  thumbnail?: string;
   center?: number[];
   zoom?: number;
   sources?: Record<string, unknown>;
@@ -56,8 +51,8 @@ export interface StyleConfig {
 export type MapStyle = {
   ign: {
     desaturated: StyleConfig;
-    standard: StyleConfig;
-    aerialPhotography: StyleConfig;
+    simple: StyleConfig;
+    aerial: StyleConfig;
   }
 /*   osm: {
     standard: MapConfig;
@@ -71,7 +66,7 @@ export type MapStyle = {
  */
 export type MapThumbnails = {
   desaturated: string;
-  standard: string;
-  aerialPhotography: string;
+  simple: string;
+  aerial: string;
 }
 
