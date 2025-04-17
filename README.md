@@ -159,7 +159,7 @@ git push origin development
 
 ### Standards de code
 
-- Utiliser TypeScript pour tout nouveau code
-- Documenter les nouvelles fonctionnalités dans le README
-- Ajouter des tests pour les nouvelles fonctionnalités
+- Utiliser TypeScript pour tout nouveau code.
+- Documenter les nouvelles fonctionnalités dans la documentation de la librairie : [Documentation de Carte facile](https://fab-geocommuns.github.io/carte-facile-site/).
+- Ajouter des tests pour les nouvelles fonctionnalités.
 
