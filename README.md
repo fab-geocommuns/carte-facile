@@ -158,6 +158,13 @@ git push origin --tags
 > - Publier le package sur npm
 > - Créer une release sur GitHub avec les notes de release générées automatiquement
 
+> **Note**: Après chaque publication, il est recommandé de mettre à jour la branche development avec les changements de main :
+> ```bash
+> git checkout development
+> git merge origin/main
+> git push origin development
+> ```
+
 ### Standards de code
 
 - Utiliser TypeScript pour tout nouveau code.
