@@ -61,15 +61,10 @@ La bibliothèque fournit différents styles de cartes :
 - `desaturated` : Style désaturé
 - `aerialPhotography` : Photographie aérienne
 
-Avec différents fournisseurs de données : 
-
-- `ign` : Institut Géographique National (par défaut)
-- `osm` : OpenStreetMap (à venir, pas encore disponible)
-
 Pour récupérer une carte :
 
 ```typescript
-mapStyle.ign.simple
+mapStyle.simple
 ```
 
 ### Exemples d'utilisation
@@ -89,7 +84,7 @@ import maplibregl from 'maplibre-gl';
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: mapStyle.ign.simple,
+  style: mapStyle.simple,
 });
 ```
 
@@ -136,9 +131,10 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 Pour publier une nouvelle version du package :
 
-1. S'assurer que votre branche locale est à jour :
+1. S'assurer que votre branche `dev` est à jour et que tous les changements sont commités :
 ```bash
-git pull origin main
+git checkout dev
+git status  # vérifier que tout est commité
 ```
 
 2. Mettre à jour la version :
@@ -150,17 +146,17 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-3. Pousser les changements :
+3. Fusionner les changements dans main :
 ```bash
+git checkout main
+git merge dev
 git push origin main
 git push origin --tags
 ```
 
-> **Note**: Après un merge avec main, assurez-vous que votre branche est bien à jour avant de procéder à la publication. Vous pouvez vérifier l'état de votre branche avec `git status`.
-
-Le workflow GitHub Actions va automatiquement :
-- Publier le package sur npm
-- Créer une release sur GitHub avec les notes de release générées automatiquement
+> **Note**: Le workflow GitHub Actions va automatiquement :
+> - Publier le package sur npm
+> - Créer une release sur GitHub avec les notes de release générées automatiquement
 
 ### Standards de code
 
