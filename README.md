@@ -140,9 +140,10 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-2. Pousser les changements sur development :
+2. Pousser les changements et le tag sur development :
 ```bash
 git push origin development
+git push origin --tags
 ```
 
 3. Créer une Pull Request pour fusionner development dans main :
