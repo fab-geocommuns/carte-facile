@@ -148,7 +148,8 @@ npm version major  # pour un changement majeur (X.0.0)
 
 3. Pousser les changements sur main pour déclencher le déploiement :
 ```bash
-git merge main
+git checkout main
+git merge development
 git push origin main
 git push origin --tags
 ```
