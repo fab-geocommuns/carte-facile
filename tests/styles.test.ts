@@ -7,21 +7,21 @@ import { mapStyle, mapThumbnails } from '../src/map/maps';
 */
 describe('mapStyle', () => {
   it('should have IGN simple style', () => {
-    const map = mapStyle.ign.simple;
+    const map = mapStyle.simple;
     expect(map).toBeDefined();
     expect(map.name).toBe('Simple');
     expect(map.id).toBe('simple_ign');
   });
 
   it('should have IGN desaturated style', () => {
-    const map = mapStyle.ign.desaturated;
+    const map = mapStyle.desaturated;
     expect(map).toBeDefined();
     expect(map.name).toBe('Desaturated');
     expect(map.id).toBe('desaturated_ign');
   });
 
   it('should have IGN aerial style', () => {
-    const map = mapStyle.ign.aerial;
+    const map = mapStyle.aerial;
     expect(map).toBeDefined();
     expect(map.name).toBe('Aerial');
     expect(map.id).toBe('aerial_ign');

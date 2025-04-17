@@ -57,19 +57,14 @@ npm install ol
 
 La bibliothèque fournit différents styles de cartes :
 
-- `standard` : Style standard
+- `simple` : Style classique
 - `desaturated` : Style désaturé
 - `aerialPhotography` : Photographie aérienne
-
-Avec différents fournisseurs de données : 
-
-- `ign` : Institut Géographique National (par défaut)
-- `osm` : OpenStreetMap (à venir, pas encore disponible)
 
 Pour récupérer une carte :
 
 ```typescript
-mapStyle.ign.standard
+mapStyle.simple
 ```
 
 ### Exemples d'utilisation
@@ -89,7 +84,7 @@ import maplibregl from 'maplibre-gl';
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: mapStyle.ign.standard,
+  style: mapStyle.simple,
 });
 ```
 
@@ -136,12 +131,7 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 Pour publier une nouvelle version du package :
 
-1. S'assurer que votre branche locale est à jour :
-```bash
-git pull origin main
-```
-
-2. Mettre à jour la version :
+1. Mettre à jour la version sur la branche development :
 ```bash
 npm version patch  # pour un bugfix (0.0.X)
 # ou
@@ -150,21 +140,26 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-3. Pousser les changements :
+2. Pousser les changements sur development :
 ```bash
-git push origin main
-git push origin --tags
+git push origin development
 ```
 
-> **Note**: Après un merge avec main, assurez-vous que votre branche est bien à jour avant de procéder à la publication. Vous pouvez vérifier l'état de votre branche avec `git status`.
+3. Créer une Pull Request pour fusionner development dans main :
+```bash
+# Aller sur https://github.com/fab-geocommuns/carte-facile/pulls
+# Cliquer sur "New pull request"
+# Sélectionner development comme branche source et main comme branche cible
+# Attendre que les checks passent et merger la PR
+```
 
-Le workflow GitHub Actions va automatiquement :
-- Publier le package sur npm
-- Créer une release sur GitHub avec les notes de release générées automatiquement
+> **Note**: Une fois la PR mergée, le workflow GitHub Actions va automatiquement :
+> - Publier le package sur npm
+> - Créer une release sur GitHub avec les notes de release générées automatiquement
 
 ### Standards de code
 
-- Utiliser TypeScript pour tout nouveau code
-- Documenter les nouvelles fonctionnalités dans le README
-- Ajouter des tests pour les nouvelles fonctionnalités
+- Utiliser TypeScript pour tout nouveau code.
+- Documenter les nouvelles fonctionnalités dans la documentation de la librairie : [Documentation de Carte facile](https://fab-geocommuns.github.io/carte-facile-site/).
+- Ajouter des tests pour les nouvelles fonctionnalités.
 
