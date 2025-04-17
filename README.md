@@ -131,7 +131,7 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 Pour publier une nouvelle version du package :
 
-1. S'assurer que votre branche `dev` est à jour et que tous les changements sont commités :
+1. S'assurer que votre branche `development` est à jour et que tous les changements sont commités :
 ```bash
 git checkout development
 git status  # vérifier que tout est commité
@@ -146,10 +146,9 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-3. Fusionner les changements dans main :
+3. Pousser les changements sur main pour déclencher le déploiement :
 ```bash
-git checkout main
-git merge development
+git merge main
 git push origin main
 git push origin --tags
 ```
