@@ -133,7 +133,7 @@ Pour publier une nouvelle version du package :
 
 1. S'assurer que votre branche `dev` est à jour et que tous les changements sont commités :
 ```bash
-git checkout dev
+git checkout development
 git status  # vérifier que tout est commité
 ```
 
@@ -149,7 +149,7 @@ npm version major  # pour un changement majeur (X.0.0)
 3. Fusionner les changements dans main :
 ```bash
 git checkout main
-git merge dev
+git merge development
 git push origin main
 git push origin --tags
 ```
