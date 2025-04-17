@@ -131,13 +131,7 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 Pour publier une nouvelle version du package :
 
-1. S'assurer que votre branche `development` est à jour et que tous les changements sont commités :
-```bash
-git checkout development
-git status  # vérifier que tout est commité
-```
-
-2. Mettre à jour la version :
+1. Mettre à jour la version sur la branche development :
 ```bash
 npm version patch  # pour un bugfix (0.0.X)
 # ou
@@ -146,15 +140,18 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-3. Pousser les changements sur main pour déclencher le déploiement :
+2. Pousser les changements sur development :
 ```bash
-git checkout main
-git merge development
-git push origin main
-git push origin --tags
+git push origin development
 ```
 
-> **Note**: Le workflow GitHub Actions va automatiquement :
+3. Créer une Pull Request pour fusionner development dans main :
+```bash
+# Créer une Pull Request sur GitHub depuis development vers main
+# Attendre que les checks passent et merger la PR
+```
+
+> **Note**: Une fois la PR mergée, le workflow GitHub Actions va automatiquement :
 > - Publier le package sur npm
 > - Créer une release sur GitHub avec les notes de release générées automatiquement
 
