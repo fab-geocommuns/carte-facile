@@ -147,7 +147,9 @@ git push origin development
 
 3. Créer une Pull Request pour fusionner development dans main :
 ```bash
-# Créer une Pull Request sur GitHub depuis development vers main
+# Aller sur https://github.com/fab-geocommuns/carte-facile/pulls
+# Cliquer sur "New pull request"
+# Sélectionner development comme branche source et main comme branche cible
 # Attendre que les checks passent et merger la PR
 ```
 
