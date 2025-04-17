@@ -1,4 +1,3 @@
-
 /**
  * Layer configuration following Mapbox/Maplibre specification
  */
@@ -49,16 +48,9 @@ export interface StyleConfig {
  * Map style configuration
  */
 export type MapStyle = {
-  ign: {
-    desaturated: StyleConfig;
-    simple: StyleConfig;
-    aerial: StyleConfig;
-  }
-/*   osm: {
-    standard: MapConfig;
-    desaturated: MapConfig;
-    aerial: MapConfig;
-  } */
+  simple: StyleConfig;
+  desaturated: StyleConfig;
+  aerial: StyleConfig;
 }
 
 /**

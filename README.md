@@ -57,7 +57,7 @@ npm install ol
 
 La bibliothèque fournit différents styles de cartes :
 
-- `standard` : Style standard
+- `simple` : Style classique
 - `desaturated` : Style désaturé
 - `aerialPhotography` : Photographie aérienne
 
@@ -69,7 +69,7 @@ Avec différents fournisseurs de données :
 Pour récupérer une carte :
 
 ```typescript
-mapStyle.ign.standard
+mapStyle.ign.simple
 ```
 
 ### Exemples d'utilisation
@@ -89,7 +89,7 @@ import maplibregl from 'maplibre-gl';
 
 const map = new maplibregl.Map({
   container: 'map',
-  style: mapStyle.ign.standard,
+  style: mapStyle.ign.simple,
 });
 ```
 
