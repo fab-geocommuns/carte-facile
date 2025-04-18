@@ -1,9 +1,9 @@
 import { MapStyle, MapThumbnails } from './types';
 
 // Map styles import for IGN
-import desaturatedIgn from './ign/desaturated_ign.json';
-import simpleIgn from './ign/simple_ign.json';
-import aerialIgn from './ign/aerial_ign.json';
+import desaturatedIgn from './desaturated.json';
+import simpleIgn from './simple.json';
+import aerialIgn from './aerial.json';
 
 // Map styles import for OSM
 /* import simpleOsm from './osm/standard_osm.json';
