@@ -41,6 +41,8 @@ export interface StyleConfig {
   sprite?: string;
   glyphs?: string;
   layers: LayerConfig[];
+  id: string;
+  owner: string;
   [key: string]: unknown;
 }
 
