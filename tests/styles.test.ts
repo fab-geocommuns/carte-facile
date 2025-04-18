@@ -6,25 +6,25 @@ import { mapStyle, mapThumbnails } from '../src/map/maps';
   * and thumbnails for the given map type and provider.
 */
 describe('mapStyle', () => {
-  it('should have IGN simple style', () => {
+  it('should have simple style', () => {
     const map = mapStyle.simple;
     expect(map).toBeDefined();
     expect(map.name).toBe('Simple');
-    expect(map.id).toBe('simple_ign');
+    expect(map.id).toBe('simple');
   });
 
-  it('should have IGN desaturated style', () => {
+  it('should have desaturated style', () => {
     const map = mapStyle.desaturated;
     expect(map).toBeDefined();
     expect(map.name).toBe('Desaturated');
-    expect(map.id).toBe('desaturated_ign');
+    expect(map.id).toBe('desaturated');
   });
 
-  it('should have IGN aerial style', () => {
+  it('should have aerial style', () => {
     const map = mapStyle.aerial;
     expect(map).toBeDefined();
     expect(map.name).toBe('Aerial');
-    expect(map.id).toBe('aerial_ign');
+    expect(map.id).toBe('aerial');
   });
 });
 
