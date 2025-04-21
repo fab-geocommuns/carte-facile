@@ -59,7 +59,7 @@ La bibliothèque fournit différents styles de cartes :
 
 - `simple` : Style classique
 - `desaturated` : Style désaturé
-- `aerialPhotography` : Photographie aérienne
+- `aerial` : Photographie aérienne
 
 Pour récupérer une carte :
 
