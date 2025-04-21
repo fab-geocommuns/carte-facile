@@ -1,11 +1,14 @@
 /**
- * Test suite for the map styles and thumbnails
- * These tests verify that all map styles and thumbnails are properly defined and accessible
+ * Test suite for the map module
+ * These tests verify the core map functionality including:
+ * - Map styles configuration and properties
+ * - Map thumbnails availability
+ * - Style metadata and accessibility
  */
 import { mapStyle, mapThumbnails } from '../src/map/maps';
 
 describe('mapStyle', () => {
-  // Test each map style configuration
+  // Test each map style configuration and its properties
   it('should have simple style', () => {
     const map = mapStyle.simple;
     expect(map).toBeDefined();
