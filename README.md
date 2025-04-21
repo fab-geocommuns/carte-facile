@@ -154,9 +154,10 @@ git push origin --tags
 # Attendre que les checks passent et merger la PR
 ```
 
-> **Note**: Une fois la PR mergée, le workflow GitHub Actions va automatiquement :
+> **Note**: Une fois la PR mergée sur main, le workflow GitHub Actions va automatiquement :
+> - Exécuter les tests
 > - Publier le package sur npm
-> - Créer une release sur GitHub avec les notes de release générées automatiquement
+> - Créer une release sur GitHub
 
 > **Note**: Après chaque publication, il est recommandé de mettre à jour la branche development avec les changements de main :
 > ```bash
