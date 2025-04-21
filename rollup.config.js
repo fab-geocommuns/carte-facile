@@ -8,19 +8,14 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      file: 'dist/index.esm.js',
-      format: 'es',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/index.umd.js',
+      file: 'dist/index.js',
       format: 'umd',
       name: 'CarteFacile',
       sourcemap: true,
       globals: {
         'maplibre-gl': 'maplibregl',
       },
-    },
+    }
   ],
   external: ['maplibre-gl'],
   plugins: [
