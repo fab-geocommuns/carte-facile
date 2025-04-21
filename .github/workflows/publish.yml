@@ -10,7 +10,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref_type == 'tag'
+    if: |
+      github.event_name == 'push' && 
+      github.ref == 'refs/heads/main' &&
+      contains(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
         with:

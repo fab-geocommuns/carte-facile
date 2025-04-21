@@ -9,23 +9,13 @@ export default {
   output: [
     {
       file: 'dist/index.js',
-      format: 'cjs',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/index.esm.js',
-      format: 'es',
-      sourcemap: true,
-    },
-    {
-      file: 'dist/index.umd.js',
       format: 'umd',
       name: 'CarteFacile',
       sourcemap: true,
       globals: {
         'maplibre-gl': 'maplibregl',
       },
-    },
+    }
   ],
   external: ['maplibre-gl'],
   plugins: [
