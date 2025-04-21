@@ -1,6 +1,6 @@
 {
   "name": "carte-facile",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Une librairie de styles de cartes et surcouches prêtes à l'emploi, pour ajouter des cartes rapidement à votre application avec MapLibre ou d'autres librairies cartographiques.",
   "type": "module",
   "main": "dist/index.umd.js",
