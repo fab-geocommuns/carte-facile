@@ -9,9 +9,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: |
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.head.ref, 'v')
+    if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,6 +32,10 @@ jobs:
       - name: Build
         run: npm run build
       
+      - name: Get package version
+        id: package-version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      
       - name: Publish to NPM
         run: npm publish
         env:
@@ -42,7 +44,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.pull_request.head.ref }}
+          tag_name: v${{ steps.package-version.outputs.version }}
           generate_release_notes: true
           draft: false
           prerelease: false
