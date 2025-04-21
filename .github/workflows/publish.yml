@@ -1,19 +1,17 @@
 name: Publish Package
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
-    tags:
-      - 'v*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'push' && 
-      github.ref == 'refs/heads/main' &&
-      contains(github.ref, 'refs/tags/v')
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.head.ref, 'v')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,7 +42,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.event.pull_request.head.ref }}
           generate_release_notes: true
           draft: false
           prerelease: false
