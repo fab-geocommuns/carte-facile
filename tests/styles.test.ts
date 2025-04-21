@@ -1,11 +1,11 @@
+/**
+ * Test suite for the map styles and thumbnails
+ * These tests verify that all map styles and thumbnails are properly defined and accessible
+ */
 import { mapStyle, mapThumbnails } from '../src/map/maps';
 
-/*
-  * Test suite for the mapStyle and mapThumbnails functions
-  * This test suite ensures that the mapStyle and mapThumbnails functions return the correct map style configuration
-  * and thumbnails for the given map type and provider.
-*/
 describe('mapStyle', () => {
+  // Test each map style configuration
   it('should have simple style', () => {
     const map = mapStyle.simple;
     expect(map).toBeDefined();
@@ -29,6 +29,7 @@ describe('mapStyle', () => {
 });
 
 describe('mapThumbnails', () => {
+  // Verify that thumbnails are available for all map styles
   it('should have all required thumbnails', () => {
     expect(mapThumbnails.simple).toBeDefined();
     expect(mapThumbnails.desaturated).toBeDefined();
