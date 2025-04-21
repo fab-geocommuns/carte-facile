@@ -8,7 +8,7 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      file: 'dist/cartefacile.js',
+      file: 'dist/carte-facile.js',
       format: 'umd',
       name: 'CarteFacile',
       sourcemap: true,
