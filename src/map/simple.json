@@ -53,8 +53,8 @@
           "stops": [
             [4, "rgba(229, 229, 217, 1)"],
             [5, "rgba(214, 234, 209, 1)"],
-            [13, "rgba(214, 234, 209, 1)"],
-            [14, "rgba(240, 240, 237, 1)"]
+            [12, "rgba(214, 234, 209, 1)"],
+            [13, "rgba(240, 240, 237, 1)"]
           ]
         },
         "fill-opacity": 1
@@ -209,7 +209,7 @@
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)"}
     },
     {
       "id": "ocs - vegetation - vigne",
@@ -352,7 +352,7 @@
         ]
       ],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)", "fill-opacity": 1}
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
     },
     {
       "id": "bati ZAI - Gris Bleu Elec",
@@ -380,19 +380,7 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "fill-color": "rgba(240, 240, 237, 1)",
-        "fill-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          7,
-          0,
-          8,
-          1,
-          14,
-          1,
-          15,
-          0
-        ]
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1, 14, 1]
       }
     },
     {
@@ -1602,7 +1590,7 @@
         "NECROPOLE_NATIONALE"
       ],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)", "fill-opacity": 1}
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
     },
     {
       "id": "bati sportif surfacique fond",
@@ -4039,12 +4027,7 @@
       "source-layer": "limite_lin",
       "minzoom": 0,
       "maxzoom": 24,
-      "filter": [
-        "in",
-        "symbo",
-        "LIM_ETAT",
-        "LIM_ETAT_ETRANGER"
-      ],
+      "filter": ["in", "symbo", "LIM_ETAT", "LIM_ETAT_ETRANGER"],
       "layout": {
         "visibility": "visible",
         "line-cap": "butt",
@@ -4060,13 +4043,11 @@
     {
       "id": "Limites - Region",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "region",
       "minzoom": 6,
       "maxzoom": 8,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4077,13 +4058,11 @@
     {
       "id": "Limites - Departement",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "departement",
       "minzoom": 7.5,
       "maxzoom": 10.5,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4094,13 +4073,11 @@
     {
       "id": "Limites - EPCI",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "epci",
       "minzoom": 10,
       "maxzoom": 12.5,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4111,12 +4088,10 @@
     {
       "id": "Limites - Commune",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "commune",
       "minzoom": 12,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
