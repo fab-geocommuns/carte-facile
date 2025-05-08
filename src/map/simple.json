@@ -53,8 +53,8 @@
           "stops": [
             [4, "rgba(229, 229, 217, 1)"],
             [5, "rgba(214, 234, 209, 1)"],
-            [13, "rgba(214, 234, 209, 1)"],
-            [14, "rgba(240, 240, 237, 1)"]
+            [12, "rgba(214, 234, 209, 1)"],
+            [13, "rgba(240, 240, 237, 1)"]
           ]
         },
         "fill-opacity": 1
@@ -174,6 +174,56 @@
       }
     },
     {
+      "id": "bati ZAI - Vert",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "bati_zai",
+      "minzoom": 0,
+      "maxzoom": 24,
+      "filter": [
+        "any",
+        [
+          "in",
+          "nature",
+          "Golf",
+          "Hippodrome",
+          "Piscine",
+          "Sports mécaniques",
+          "Equipement de cyclisme",
+          "Autre équipement sportif",
+          "Centre équestre",
+          "Haras",
+          "Stade"
+        ],
+        ["in", "nature", "Espace public Vert"],
+        [
+          "in",
+          "nature",
+          "Aire de détente",
+          "Camping",
+          "Parc de loisirs",
+          "Parc zoologique"
+        ]
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
+    },
+    {
+      "id": "bati surfacique cimetière",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "bati_surf",
+      "filter": [
+        "in",
+        "symbo",
+        "CIMETIERE_SURF",
+        "CIMETIERE_MILI_SURF",
+        "NECROPOLE_NATIONALE"
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
+    },
+    {
       "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
       "type": "fill",
       "source": "plan_ign",
@@ -209,7 +259,7 @@
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)"}
     },
     {
       "id": "ocs - vegetation - vigne",
@@ -320,41 +370,6 @@
       "paint": {"fill-opacity": 1, "fill-color": "rgba(255, 255, 255, 1)"}
     },
     {
-      "id": "bati ZAI - Vert",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "bati_zai",
-      "minzoom": 0,
-      "maxzoom": 24,
-      "filter": [
-        "any",
-        [
-          "in",
-          "nature",
-          "Golf",
-          "Hippodrome",
-          "Piscine",
-          "Sports mécaniques",
-          "Equipement de cyclisme",
-          "Autre équipement sportif",
-          "Centre équestre",
-          "Haras",
-          "Stade"
-        ],
-        ["in", "nature", "Espace public Vert"],
-        [
-          "in",
-          "nature",
-          "Aire de détente",
-          "Camping",
-          "Parc de loisirs",
-          "Parc zoologique"
-        ]
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)", "fill-opacity": 1}
-    },
-    {
       "id": "bati ZAI - Gris Bleu Elec",
       "type": "fill",
       "source": "plan_ign",
@@ -380,19 +395,7 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "fill-color": "rgba(240, 240, 237, 1)",
-        "fill-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          7,
-          0,
-          8,
-          1,
-          14,
-          1,
-          15,
-          0
-        ]
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1, 14, 1]
       }
     },
     {
@@ -1588,21 +1591,6 @@
           10
         ]
       }
-    },
-    {
-      "id": "bati surfacique cimetière",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "bati_surf",
-      "filter": [
-        "in",
-        "symbo",
-        "CIMETIERE_SURF",
-        "CIMETIERE_MILI_SURF",
-        "NECROPOLE_NATIONALE"
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)", "fill-opacity": 1}
     },
     {
       "id": "bati sportif surfacique fond",
@@ -4046,29 +4034,20 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(75, 75, 75, 1)",
-        "line-width": [
-          "interpolate",
-          ["exponential", 0.8],
-          ["zoom"],
-          5,
-          1,
-          14,
-          3.5
-        ],
-        "line-opacity": 0.3
+        "line-color": "rgba(141, 141, 141, 1)",
+        "line-width": 1,
+        "line-opacity": 1,
+        "line-dasharray": [1, 1]
       }
     },
     {
       "id": "Limites - Region",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "region",
       "minzoom": 6,
       "maxzoom": 8,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4079,13 +4058,11 @@
     {
       "id": "Limites - Departement",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "departement",
       "minzoom": 7.5,
       "maxzoom": 10.5,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4096,13 +4073,11 @@
     {
       "id": "Limites - EPCI",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "epci",
       "minzoom": 10,
       "maxzoom": 12.5,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -4113,12 +4088,10 @@
     {
       "id": "Limites - Commune",
       "type": "line",
+      "metadata": {"group": "admin_limits"},
       "source": "admin_express",
       "source-layer": "commune",
       "minzoom": 12,
-      "metadata": {
-        "group": "admin_limits"
-      },
       "layout": {"visibility": "none"},
       "paint": {
         "line-color": "rgba(165, 165, 165, 1)",
@@ -6957,5 +6930,5 @@
     }
   ],
   "id": "simple",
-  "owner": "© IGN"
+  "owner": "Carte Facile (IGN)"
 }

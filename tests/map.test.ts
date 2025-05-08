@@ -1,11 +1,14 @@
+/**
+ * Test suite for the map module
+ * These tests verify the core map functionality including:
+ * - Map styles configuration and properties
+ * - Map thumbnails availability
+ * - Style metadata and accessibility
+ */
 import { mapStyle, mapThumbnails } from '../src/map/maps';
 
-/*
-  * Test suite for the mapStyle and mapThumbnails functions
-  * This test suite ensures that the mapStyle and mapThumbnails functions return the correct map style configuration
-  * and thumbnails for the given map type and provider.
-*/
 describe('mapStyle', () => {
+  // Test each map style configuration and its properties
   it('should have simple style', () => {
     const map = mapStyle.simple;
     expect(map).toBeDefined();
@@ -26,12 +29,21 @@ describe('mapStyle', () => {
     expect(map.name).toBe('Aerial');
     expect(map.id).toBe('aerial');
   });
+
+  it('should have simple OSM style', () => {
+    const map = mapStyle.simpleOsm;
+    expect(map).toBeDefined();
+    expect(map.name).toBe('Simple (OSM)');
+    expect(map.id).toBe('simple-osm');
+  });
 });
 
 describe('mapThumbnails', () => {
+  // Verify that thumbnails are available for all map styles
   it('should have all required thumbnails', () => {
     expect(mapThumbnails.simple).toBeDefined();
     expect(mapThumbnails.desaturated).toBeDefined();
     expect(mapThumbnails.aerial).toBeDefined();
+    expect(mapThumbnails.simpleOsm).toBeDefined();
   });
 });
