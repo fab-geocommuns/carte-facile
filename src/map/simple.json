@@ -4039,24 +4039,22 @@
       "source-layer": "limite_lin",
       "minzoom": 0,
       "maxzoom": 24,
-      "filter": ["in", "symbo", "LIM_ETAT", "LIM_ETAT_ETRANGER"],
+      "filter": [
+        "in",
+        "symbo",
+        "LIM_ETAT",
+        "LIM_ETAT_ETRANGER"
+      ],
       "layout": {
         "visibility": "visible",
         "line-cap": "butt",
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(75, 75, 75, 1)",
-        "line-width": [
-          "interpolate",
-          ["exponential", 0.8],
-          ["zoom"],
-          5,
-          1,
-          14,
-          3.5
-        ],
-        "line-opacity": 0.3
+        "line-color": "rgba(141, 141, 141, 1)",
+        "line-width": 1,
+        "line-opacity": 1,
+        "line-dasharray": [1, 1]
       }
     },
     {
