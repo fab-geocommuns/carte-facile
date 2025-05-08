@@ -51,6 +51,7 @@ export type MapStyle = {
   simple: StyleConfig;
   desaturated: StyleConfig;
   aerial: StyleConfig;
+  simpleOsm: StyleConfig;
 }
 
 /**
@@ -60,5 +61,6 @@ export type MapThumbnails = {
   desaturated: string;
   simple: string;
   aerial: string;
+  simpleOsm: string;
 }
 

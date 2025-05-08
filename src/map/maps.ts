@@ -6,9 +6,8 @@ import simpleIgn from './simple.json';
 import aerialIgn from './aerial.json';
 
 // Map styles import for OSM
-/* import simpleOsm from './osm/standard_osm.json';
-import desaturatedOsm from './osm/desaturated_osm.json';
-import aerialOsm from './osm/aerial-photography_osm.json'; */
+import simpleOsm from './simple-osm.json';
+/* import desaturatedOsm from './desaturated-osm.json';*/
 
 // Map thumbnails import
 import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
@@ -19,7 +18,8 @@ import aerialThumb from '../assets/thumbnails/aerial.webp';
 export const mapStyle: MapStyle = {
   simple: simpleIgn,
   desaturated: desaturatedIgn,
-  aerial: aerialIgn
+  aerial: aerialIgn,
+  simpleOsm: simpleOsm
 }
 
 /* export const osmMapStyle = {
@@ -32,5 +32,6 @@ export const mapStyle: MapStyle = {
 export const mapThumbnails: MapThumbnails = {
   desaturated: desaturatedThumb,
   simple: simpleThumb,
-  aerial: aerialThumb
+  aerial: aerialThumb,
+  simpleOsm: simpleThumb,
 }

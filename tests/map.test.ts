@@ -29,6 +29,13 @@ describe('mapStyle', () => {
     expect(map.name).toBe('Aerial');
     expect(map.id).toBe('aerial');
   });
+
+  it('should have simple OSM style', () => {
+    const map = mapStyle.simpleOsm;
+    expect(map).toBeDefined();
+    expect(map.name).toBe('Simple (OSM)');
+    expect(map.id).toBe('simple-osm');
+  });
 });
 
 describe('mapThumbnails', () => {
@@ -37,5 +44,6 @@ describe('mapThumbnails', () => {
     expect(mapThumbnails.simple).toBeDefined();
     expect(mapThumbnails.desaturated).toBeDefined();
     expect(mapThumbnails.aerial).toBeDefined();
+    expect(mapThumbnails.simpleOsm).toBeDefined();
   });
 });
