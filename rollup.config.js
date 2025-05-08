@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import image from '@rollup/plugin-image';
+import css from 'rollup-plugin-css-only';
 
 export default {
   input: 'src/index.ts',
@@ -22,6 +23,9 @@ export default {
     resolve(),
     commonjs(),
     json(),
+    css({
+      output: 'carte-facile.css'
+    }),
     image({
       include: ['**/*.webp'],
       exclude: 'node_modules/**',
