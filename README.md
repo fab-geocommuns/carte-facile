@@ -81,6 +81,7 @@ Créer un conteneur html pour la carte:
 ```typescript
 import { mapStyle } from 'carte-facile';
 import maplibregl from 'maplibre-gl';
+import 'carte-facile/dist/carte-facile.css'; // Import du CSS pour les composants
 
 const map = new maplibregl.Map({
   container: 'map',
