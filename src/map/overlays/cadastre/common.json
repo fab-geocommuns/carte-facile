@@ -1,9 +1,5 @@
 {
   "sources": {
-    "cadastre": {
-      "type": "vector",
-      "url": "https://api.example.com/cadastre"
-    }
   },
   "metadata": {
     "name": "Cadastre",

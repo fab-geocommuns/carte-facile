@@ -1,7 +1,14 @@
 {
   "metadata": {
-    "name": "Limites administratives",
-    "description": "Surcouche des limites administratives"
+    "fr": {
+      "name": "Limites administratives",
+      "description": "Surcouche des limites administratives"
+    },
+    "en": {
+      "name": "Administrative boundaries",
+      "description": "Overlay of administrative boundaries"
+    },
+    "maputnik:renderer": "mlgljs"
   },
   "sources": {
     "admin_express": {

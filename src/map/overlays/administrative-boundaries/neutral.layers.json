@@ -1,12 +1,57 @@
 [
   {
-    "id": "admin-boundary",
+    "id": "Limites - Region",
     "type": "line",
-    "source": "admin",
-    "source-layer": "boundary",
+    "metadata": {"group": "admin_limits"},
+    "source": "admin_express",
+    "source-layer": "region",
+    "minzoom": 6,
+    "maxzoom": 8,
     "paint": {
-      "line-color": "#888888",
-      "line-width": 1.5
+      "line-color": "rgba(165, 165, 165, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0, 6.3, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+    }
+  },
+  {
+    "id": "Limites - Departement",
+    "type": "line",
+    "metadata": {"group": "admin_limits"},
+    "source": "admin_express",
+    "source-layer": "departement",
+    "minzoom": 7.5,
+    "maxzoom": 10.5,
+    "paint": {
+      "line-color": "rgba(165, 165, 165, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 7.5, 0, 7.8, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+    }
+  },
+  {
+    "id": "Limites - EPCI",
+    "type": "line",
+    "metadata": {"group": "admin_limits"},
+    "source": "admin_express",
+    "source-layer": "epci",
+    "minzoom": 10,
+    "maxzoom": 12.5,
+    "paint": {
+      "line-color": "rgba(165, 165, 165, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 10, 0, 10.3, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+    }
+  },
+  {
+    "id": "Limites - Commune",
+    "type": "line",
+    "metadata": {"group": "admin_limits"},
+    "source": "admin_express",
+    "source-layer": "commune",
+    "minzoom": 12,
+    "paint": {
+      "line-color": "rgba(165, 165, 165, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.3, 1],
+      "line-width": 2
     }
   }
 ] 
