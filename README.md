@@ -20,6 +20,7 @@ La documentation officielle est disponible sur le site dédié : [Documentation 
     - [Styles disponibles](#styles-disponibles)
     - [Exemples d'utilisation](#exemples-dutilisation)
       - [Ajouter une carte avec MapLibre](#ajouter-une-carte-avec-maplibre)
+    - [Ajouter une surcouche (overlay)](#ajouter-une-surcouche-overlay)
   - [Contribution](#contribution)
   - [Développement](#développement)
     - [Mise en place de l'environnement de développement](#mise-en-place-de-lenvironnement-de-développement)
@@ -87,6 +88,26 @@ const map = new maplibregl.Map({
   container: 'map',
   style: mapStyles.simple,
 });
+```
+
+### Ajouter une surcouche (overlay)
+
+Vous pouvez ajouter une surcouche (par exemple le cadastre ou les limites administratives) à votre carte :
+
+```typescript
+import { addOverlay } from 'carte-facile';
+
+addOverlay(map, 'cadastre');
+addOverlay(map, 'administrative-boundaries');
+```
+> Le style de la surcouche s'adapte automatiquement au fond de carte utilisé.
+
+Pour retirer une surcouche :
+
+```typescript
+import { removeOverlay } from 'carte-facile';
+
+removeOverlay(map, 'cadastre');
 ```
 
 ## Contribution
