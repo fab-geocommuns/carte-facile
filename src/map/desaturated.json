@@ -24,16 +24,6 @@
       "tiles": ["https://data.geopf.fr/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf"],
       "maxzoom": 18.9,
       "attribution": "© IGN"
-    },
-    "admin_express": {
-      "type": "vector",
-      "tiles": [
-        "https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf"
-      ],
-      "minzoom": 0,
-      "maxzoom": 24,
-      "scheme": "xyz",
-      "attribution": "© IGN"
     }
   },
   "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
