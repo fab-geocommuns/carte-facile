@@ -1,0 +1,12 @@
+[
+  {
+    "id": "admin-boundary",
+    "type": "line",
+    "source": "admin",
+    "source-layer": "boundary",
+    "paint": {
+      "line-color": "#888888",
+      "line-width": 1.5
+    }
+  }
+] 

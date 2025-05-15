@@ -1,0 +1,12 @@
+[
+  {
+    "id": "cadastre-boundary",
+    "type": "line",
+    "source": "cadastre",
+    "source-layer": "boundary",
+    "paint": {
+      "line-color": "#FF0000",
+      "line-width": 2
+    }
+  }
+] 

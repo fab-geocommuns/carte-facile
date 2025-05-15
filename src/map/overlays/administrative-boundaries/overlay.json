@@ -1,0 +1,12 @@
+{
+  "sources": {
+    "admin": {
+      "type": "vector",
+      "url": "https://api.example.com/administrative"
+    }
+  },
+  "metadata": {
+    "name": "Limites administratives",
+    "description": "Surcouche des limites administratives"
+  }
+} 
