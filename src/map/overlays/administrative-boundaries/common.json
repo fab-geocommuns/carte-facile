@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "fr": {
+      "name": "Limites administratives",
+      "description": "Surcouche des limites administratives"
+    },
+    "en": {
+      "name": "Administrative boundaries",
+      "description": "Overlay of administrative boundaries"
+    },
+    "maputnik:renderer": "mlgljs"
+  },
+  "sources": {
+    "admin_express": {
+      "type": "vector",
+      "tiles": [
+        "https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf"
+      ],
+      "minzoom": 0,
+      "maxzoom": 20,
+      "scheme": "xyz",
+      "attribution": "© IGN"
+    }
+  }
+} 

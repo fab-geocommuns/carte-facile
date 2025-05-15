@@ -5,33 +5,34 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyle, mapThumbnails } from '../src/map/maps';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay } from '../src/map/maps';
+import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
   // Test each map style configuration and its properties
   it('should have simple style', () => {
-    const map = mapStyle.simple;
+    const map = mapStyles.simple;
     expect(map).toBeDefined();
     expect(map.name).toBe('Simple');
     expect(map.id).toBe('simple');
   });
 
   it('should have desaturated style', () => {
-    const map = mapStyle.desaturated;
+    const map = mapStyles.desaturated;
     expect(map).toBeDefined();
     expect(map.name).toBe('Desaturated');
     expect(map.id).toBe('desaturated');
   });
 
   it('should have aerial style', () => {
-    const map = mapStyle.aerial;
+    const map = mapStyles.aerial;
     expect(map).toBeDefined();
     expect(map.name).toBe('Aerial');
     expect(map.id).toBe('aerial');
   });
 
   it('should have simple OSM style', () => {
-    const map = mapStyle.simpleOsm;
+    const map = mapStyles.simpleOsm;
     expect(map).toBeDefined();
     expect(map.name).toBe('Simple (OSM)');
     expect(map.id).toBe('simple-osm');
@@ -45,5 +46,53 @@ describe('mapThumbnails', () => {
     expect(mapThumbnails.desaturated).toBeDefined();
     expect(mapThumbnails.aerial).toBeDefined();
     expect(mapThumbnails.simpleOsm).toBeDefined();
+  });
+});
+
+describe('mapOverlays', () => {
+  let map: maplibregl.Map;
+
+  beforeEach(() => {
+    // Create a mock MapLibre map instance with all required methods
+    map = {
+      getStyle: jest.fn().mockReturnValue({ name: 'simple' }),
+      getSource: jest.fn().mockReturnValue(false),
+      getLayer: jest.fn().mockReturnValue(false),
+      addSource: jest.fn(),
+      addLayer: jest.fn(),
+      removeLayer: jest.fn(),
+      removeSource: jest.fn()
+    } as unknown as maplibregl.Map;
+  });
+
+  it('should get style when removing overlay', () => {
+    // Ensure getStyle is called when removing an overlay
+    removeOverlay(map, 'cadastre');
+    expect(map.getStyle).toHaveBeenCalled();
+  });
+
+  it('should not add duplicate sources or layers', () => {
+    // Simulate that all sources and layers already exist
+    map.getSource = jest.fn().mockReturnValue(true);
+    map.getLayer = jest.fn().mockReturnValue(true);
+
+    addOverlay(map, 'cadastre');
+
+    // No new sources or layers should be added
+    expect(map.addSource).not.toHaveBeenCalled();
+    expect(map.addLayer).not.toHaveBeenCalled();
+  });
+
+  it('should add all layers from the neutral variant for simple style', () => {
+    // For simple style, all neutral layers should be added
+    addOverlay(map, 'administrative-boundaries');
+    expect(map.addLayer).toHaveBeenCalledTimes(4);
+  });
+
+  it('should add all layers from the color variant for aerial style', () => {
+    // For aerial style, all color layers should be added
+    map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
+    addOverlay(map, 'administrative-boundaries');
+    expect(map.addLayer).toHaveBeenCalledTimes(4);
   });
 });

@@ -3,13 +3,13 @@
   "name": "Simple (OSM)",
   "metadata": {
     "fr": {
-      "name": "Simple",
+      "name": "Simple (OSM)",
       "description": "Une carte couleur de contextualisation géographique, adaptée à la plupart des usages.",
       "use": "Recommandé pour les applications cartographiques générales. Ses couleurs légères permettent une superposition d'éléments, comme des marqueurs et différents types de données.",
       "accessibility": "Les contrastes entre les toponymes et les différents aplats des zones géographiques sont travaillés ain d'être bien perceptibles selon une diversité de perceptions visuelles."
     },
     "en": {
-      "name": "Simple",
+      "name": "Simple (OSM)",
       "description": "A colorful map for geographic contextualization, suitable for most uses.",
       "use": "Recommended for general cartographic applications. Its light colors allow elements such as markers and different types of data to be superimposed.",
       "accessibility": "Contrasts between toponyms and the different flat areas of the geographical zones are worked on so as to be clearly perceptible according to a diversity of visual perceptions."

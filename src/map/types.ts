@@ -47,7 +47,7 @@ export interface StyleConfig {
 /**
  * Map style configuration
  */
-export type MapStyle = {
+export type MapStyles = {
   simple: StyleConfig;
   desaturated: StyleConfig;
   aerial: StyleConfig;
@@ -63,4 +63,20 @@ export type MapThumbnails = {
   aerial: string;
   simpleOsm: string;
 }
+
+// Types pour la gestion mutualisée des overlays (refonte sémantique)
+export type OverlayVariant = 'neutral' | 'color';
+export type OverlayType = 'cadastre' | 'administrative-boundaries';
+
+export interface OverlayConfig {
+  sources: Record<string, any>;
+  metadata?: Record<string, any>;
+  layers: LayerConfig[];
+}
+
+export type MapOverlays = {
+  [key in OverlayType]: {
+    [variant in OverlayVariant]: OverlayConfig
+  }
+};
 
