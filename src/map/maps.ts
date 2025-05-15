@@ -80,17 +80,21 @@ function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
  * @param type - The type of overlay to add (cadastre or administrative-boundaries)
  */
 export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
-  const overlay = mapOverlays[type][getOverlayVariant(map)];
+  if (map.loaded()) {
+    const overlay = mapOverlays[type][getOverlayVariant(map)];
 
-  // Add data sources first
-  Object.entries(overlay.sources).forEach(([id, source]) => {
-    if (!map.getSource(id)) map.addSource(id, source as any);
-  });
+    // Add data sources first
+    Object.entries(overlay.sources).forEach(([id, source]) => {
+      if (!map.getSource(id)) map.addSource(id, source as any);
+    });
 
-  // Then add style layers
-  overlay.layers.forEach(layer => {
-    if (!map.getLayer(layer.id)) map.addLayer(layer as any);
-  });
+    // Then add style layers
+    overlay.layers.forEach(layer => {
+      if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+    });
+  } else {
+    map.once('load', () => addOverlay(map, type));
+  }
 }
 
 /**
@@ -99,15 +103,19 @@ export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
  * @param type - The type of overlay to remove (cadastre or administrative-boundaries)
  */
 export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
-  const overlay = mapOverlays[type][getOverlayVariant(map)];
+  if (map.loaded()) {
+    const overlay = mapOverlays[type][getOverlayVariant(map)];
 
-  // Remove layers first
-  overlay.layers.forEach(layer => {
-    if (map.getLayer(layer.id)) map.removeLayer(layer.id);
-  });
+    // Remove layers first
+    overlay.layers.forEach(layer => {
+      if (map.getLayer(layer.id)) map.removeLayer(layer.id);
+    });
 
-  // Then remove sources
-  Object.keys(overlay.sources).forEach(id => {
-    if (map.getSource(id)) map.removeSource(id);
-  });
+    // Then remove sources
+    Object.keys(overlay.sources).forEach(id => {
+      if (map.getSource(id)) map.removeSource(id);
+    });
+  } else {
+    map.once('load', () => removeOverlay(map, type));
+  }
 }

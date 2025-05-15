@@ -61,7 +61,8 @@ describe('mapOverlays', () => {
       addSource: jest.fn(),
       addLayer: jest.fn(),
       removeLayer: jest.fn(),
-      removeSource: jest.fn()
+      removeSource: jest.fn(),
+      loaded: jest.fn().mockReturnValue(true)
     } as unknown as maplibregl.Map;
   });
 
