@@ -34,12 +34,12 @@ export const mapThumbnails: MapThumbnails = {
   simpleOsm: simpleThumb,
 }
 
-// Overlays mutualisés (cadastre et limites administratives)
-import cadastreCommon from './overlays/cadastre/overlay.json';
+// Shared overlays (cadastre and administrative boundaries)
+import cadastreCommon from './overlays/cadastre/common.json';
 import cadastreNeutralLayers from './overlays/cadastre/neutral.layers.json';
 import cadastreColorLayers from './overlays/cadastre/color.layers.json';
 
-import adminCommon from './overlays/administrative-boundaries/overlay.json';
+import adminCommon from './overlays/administrative-boundaries/common.json';
 import adminNeutralLayers from './overlays/administrative-boundaries/neutral.layers.json';
 import adminColorLayers from './overlays/administrative-boundaries/color.layers.json';
 
