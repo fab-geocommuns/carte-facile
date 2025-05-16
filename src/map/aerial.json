@@ -35,16 +35,6 @@
       "tiles": ["https://data.geopf.fr/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf"],
       "maxzoom": 18.9,
       "attribution": "© IGN"
-    },
-    "admin_express": {
-      "type": "vector",
-      "tiles": [
-        "https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf"
-      ],
-      "minzoom": 0,
-      "maxzoom": 24,
-      "scheme": "xyz",
-      "attribution": "© IGN"
     }
   },
   "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
@@ -2867,65 +2857,6 @@
           17,
           0
         ]
-      }
-    },
-    {
-      "id": "Limites - Region",
-      "type": "line",
-      "metadata": {"group": "admin_limits"},
-      "source": "admin_express",
-      "source-layer": "region",
-      "minzoom": 6,
-      "maxzoom": 8,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "line-color": "rgba(255, 241, 203, 1)",
-        "line-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0, 6.3, 1],
-        "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
-      }
-    },
-    {
-      "id": "Limites - Departement",
-      "type": "line",
-      "metadata": {"group": "admin_limits"},
-      "source": "admin_express",
-      "source-layer": "departement",
-      "minzoom": 7.5,
-      "maxzoom": 10.5,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "line-color": "rgba(255, 241, 203, 1)",
-        "line-opacity": ["interpolate", ["linear"], ["zoom"], 7.5, 0, 7.8, 1],
-        "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
-      }
-    },
-    {
-      "id": "Limites - EPCI",
-      "type": "line",
-      "metadata": {"group": "admin_limits"},
-      "source": "admin_express",
-      "source-layer": "epci",
-      "minzoom": 10,
-      "maxzoom": 12.5,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "line-color": "rgba(255, 241, 203, 1)",
-        "line-opacity": ["interpolate", ["linear"], ["zoom"], 10, 0, 10.3, 1],
-        "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
-      }
-    },
-    {
-      "id": "Limites - Commune",
-      "type": "line",
-      "metadata": {"group": "admin_limits"},
-      "source": "admin_express",
-      "source-layer": "commune",
-      "minzoom": 12,
-      "layout": {"visibility": "none"},
-      "paint": {
-        "line-color": "rgba(255, 241, 203, 1)",
-        "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.3, 1],
-        "line-width": 2
       }
     },
     {
