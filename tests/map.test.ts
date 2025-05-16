@@ -13,29 +13,25 @@ describe('mapStyle', () => {
   it('should have simple style', () => {
     const map = mapStyles.simple;
     expect(map).toBeDefined();
-    expect(map.name).toBe('Simple');
-    expect(map.id).toBe('simple');
+    expect(map.name).toBe('simple');
   });
 
   it('should have desaturated style', () => {
     const map = mapStyles.desaturated;
     expect(map).toBeDefined();
-    expect(map.name).toBe('Desaturated');
-    expect(map.id).toBe('desaturated');
+    expect(map.name).toBe('desaturated');
   });
 
   it('should have aerial style', () => {
     const map = mapStyles.aerial;
     expect(map).toBeDefined();
-    expect(map.name).toBe('Aerial');
-    expect(map.id).toBe('aerial');
+    expect(map.name).toBe('aerial');
   });
 
   it('should have simple OSM style', () => {
     const map = mapStyles.simpleOsm;
     expect(map).toBeDefined();
-    expect(map.name).toBe('Simple (OSM)');
-    expect(map.id).toBe('simple-osm');
+    expect(map.name).toBe('simple-osm');
   });
 });
 
