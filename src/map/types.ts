@@ -49,9 +49,9 @@ export interface StyleConfig {
  */
 export type MapStyles = {
   simple: StyleConfig;
+  simpleOsm: StyleConfig;
   desaturated: StyleConfig;
   aerial: StyleConfig;
-  simpleOsm: StyleConfig;
 }
 
 /**
@@ -59,9 +59,9 @@ export type MapStyles = {
  */
 export type MapThumbnails = {
   desaturated: string;
+  simpleOsm: string;
   simple: string;
   aerial: string;
-  simpleOsm: string;
 }
 
 // Types pour la gestion mutualisée des overlays (refonte sémantique)

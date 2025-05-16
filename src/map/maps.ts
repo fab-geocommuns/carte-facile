@@ -14,9 +14,9 @@ import simpleOsm from './simple-osm.json';
  */
 export const mapStyles: MapStyles = {
   simple: simpleIgn,
+  simpleOsm: simpleOsm,
   desaturated: desaturatedIgn,
-  aerial: aerialIgn,
-  simpleOsm: simpleOsm
+  aerial: aerialIgn
 }
 
 /**
