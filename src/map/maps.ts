@@ -70,8 +70,7 @@ export const mapOverlays: MapOverlays = {
  * Gets the appropriate overlay variant based on the current map style
  */
 function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
-  const baseMapType = map.getStyle().name as 'simple' | 'desaturated' | 'aerial' | 'simpleOsm';
-  return baseMapType === 'aerial' ? 'color' : 'neutral';
+  return map.getStyle().name === 'aerial' ? 'color' : 'neutral';
 }
 
 /**
