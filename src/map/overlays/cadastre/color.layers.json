@@ -1,2 +1,87 @@
 [
+  {
+    "id": "Cadastre - Feuilles - Bordures",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "feuille",
+    "minzoom": 15,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-opacity": 1,
+      "line-width": {"stops": [[14, 4], [19, 9]]}
+    }
+  },
+  {
+    "id": "Cadastre - Feuilles",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "feuille",
+    "minzoom": 15,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgb(255,202,0)",
+      "line-opacity": 1,
+      "line-width": {"stops": [[14, 2], [19, 6]]}
+    }
+  },
+  {
+    "id": "Cadastre - Parcelles - Contours",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "parcelle",
+    "minzoom": 17,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-width": {"stops": [[17, 3], [19, 4.6]]}
+    }
+  },
+  {
+    "id": "Cadastre - Parcelles",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "parcelle",
+    "minzoom": 17,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgb(255,202,0)",
+      "line-width": {"stops": [[17, 1.4], [19, 3]]}
+    }
+  },
+  {
+    "id": "Cadastre - Parcelles - Label",
+    "type": "symbol",
+    "source": "pci_express",
+    "source-layer": "parcelle",
+    "minzoom": 18,
+    "layout": {
+      "text-field": "{numero}",
+      "text-font": ["Source Sans Pro Bold"],
+      "text-size": {"stops": [[17, 12], [20, 16]]}
+    },
+    "paint": {
+      "text-color": "rgb(255,202,0)",
+      "text-halo-color": "rgba(40, 40, 40, 1)",
+      "text-halo-width": 1.4,
+      "text-halo-blur": 0.4
+    }
+  },
+  {
+    "id": "Cadastre - Feuilles - Label",
+    "type": "symbol",
+    "source": "pci_express",
+    "source-layer": "feuille",
+    "minzoom": 15,
+    "layout": {
+      "text-field": "{section}",
+      "text-font": ["Source Sans Pro Bold"]
+    },
+    "paint": {
+      "text-color": "rgb(255,202,0)",
+      "text-halo-color": "rgba(40, 40, 40, 1)",
+      "text-halo-width": 2,
+      "text-halo-blur": 0.4
+    }
+  }
 ] 
