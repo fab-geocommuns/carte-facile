@@ -1,28 +1,42 @@
 [
   {
-    "id": "Limites - Region",
+    "id": "Limites - Commune - Bordures",
     "type": "line",
     "source": "admin_express",
-    "source-layer": "region",
-    "minzoom": 6,
-    "maxzoom": 8,
+    "source-layer": "commune",
+    "minzoom": 12,
+    "layout": {"line-cap": "round"},
     "paint": {
-      "line-color": "rgb(255,202,0)",
-      "line-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0, 6.3, 1],
-      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.3, 1],
+      "line-width": 4
     }
   },
   {
-    "id": "Limites - Departement",
+    "id": "Limites - Commune",
     "type": "line",
     "source": "admin_express",
-    "source-layer": "departement",
-    "minzoom": 7.5,
-    "maxzoom": 10.5,
+    "source-layer": "commune",
+    "minzoom": 12,
+    "layout": {"line-cap": "round"},
     "paint": {
       "line-color": "rgb(255,202,0)",
-      "line-opacity": ["interpolate", ["linear"], ["zoom"], 7.5, 0, 7.8, 1],
-      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.3, 1],
+      "line-width": 2
+    }
+  },
+  {
+    "id": "Limites - EPCI - Bordures",
+    "type": "line",
+    "source": "admin_express",
+    "source-layer": "epci",
+    "minzoom": 10,
+    "maxzoom": 12.5,
+    "layout": {"line-cap": "round"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 10, 0, 10.3, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 2, 12, 4]
     }
   },
   {
@@ -32,6 +46,7 @@
     "source-layer": "epci",
     "minzoom": 10,
     "maxzoom": 12.5,
+    "layout": {"line-cap": "round"},
     "paint": {
       "line-color": "rgb(255,202,0)",
       "line-opacity": ["interpolate", ["linear"], ["zoom"], 10, 0, 10.3, 1],
@@ -39,15 +54,59 @@
     }
   },
   {
-    "id": "Limites - Commune",
+    "id": "Limites - Departement - Bordures",
     "type": "line",
     "source": "admin_express",
-    "source-layer": "commune",
-    "minzoom": 12,
+    "source-layer": "departement",
+    "minzoom": 7.5,
+    "maxzoom": 10.5,
+    "layout": {"line-cap": "round"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 7.5, 0, 7.8, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 2, 12, 4]
+    }
+  },
+  {
+    "id": "Limites - Departement",
+    "type": "line",
+    "source": "admin_express",
+    "source-layer": "departement",
+    "minzoom": 7.5,
+    "maxzoom": 10.5,
+    "layout": {"line-cap": "round"},
     "paint": {
       "line-color": "rgb(255,202,0)",
-      "line-opacity": ["interpolate", ["linear"], ["zoom"], 12, 0, 12.3, 1],
-      "line-width": 2
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 7.5, 0, 7.8, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
+    }
+  },
+  {
+    "id": "Limites - Region - Bordures",
+    "type": "line",
+    "source": "admin_express",
+    "source-layer": "region",
+    "minzoom": 6,
+    "maxzoom": 8,
+    "layout": {"line-cap": "round"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0, 6.3, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 2, 12, 4]
+    }
+  },
+  {
+    "id": "Limites - Region",
+    "type": "line",
+    "source": "admin_express",
+    "source-layer": "region",
+    "minzoom": 6,
+    "maxzoom": 8,
+    "layout": {"line-cap": "round"},
+    "paint": {
+      "line-color": "rgb(255,202,0)",
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 6, 0, 6.3, 1],
+      "line-width": ["interpolate", ["linear"], ["zoom"], 6, 1, 12, 2]
     }
   }
 ] 

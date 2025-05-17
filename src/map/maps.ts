@@ -14,9 +14,9 @@ import simpleOsm from './simple-osm.json';
  */
 export const mapStyles: MapStyles = {
   simple: simpleIgn,
-  desaturated: desaturatedIgn,
+  simpleOsm: simpleOsm,
   aerial: aerialIgn,
-  simpleOsm: simpleOsm
+  desaturated: desaturatedIgn
 }
 
 /**
@@ -25,19 +25,19 @@ export const mapStyles: MapStyles = {
 export const mapStyle = mapStyles;
 
 // Import map thumbnails
-import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
 import simpleThumb from '../assets/thumbnails/simple.webp';
 import aerialThumb from '../assets/thumbnails/aerial.webp';
+import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
 
 /**
  * Map thumbnails configuration
  * Used for style selection UI
  */
 export const mapThumbnails: MapThumbnails = {
-  desaturated: desaturatedThumb,
   simple: simpleThumb,
-  aerial: aerialThumb,
   simpleOsm: simpleThumb,
+  aerial: aerialThumb,
+  desaturated: desaturatedThumb,
 }
 
 // Import shared overlay configurations

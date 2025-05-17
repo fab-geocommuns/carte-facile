@@ -1,5 +1,29 @@
 [
   {
+    "id": "Cadastre - Parcelles - Contours",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "parcelle",
+    "minzoom": 16,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgba(40, 40, 40, 1)",
+      "line-width": {"stops": [[17, 3], [19, 4.6]]}
+    }
+  },
+  {
+    "id": "Cadastre - Parcelles",
+    "type": "line",
+    "source": "pci_express",
+    "source-layer": "parcelle",
+    "minzoom": 16,
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "rgb(255,202,0)",
+      "line-width": {"stops": [[17, 1.4], [19, 3]]}
+    }
+  },
+  {
     "id": "Cadastre - Feuilles - Bordures",
     "type": "line",
     "source": "pci_express",
@@ -26,35 +50,11 @@
     }
   },
   {
-    "id": "Cadastre - Parcelles - Contours",
-    "type": "line",
-    "source": "pci_express",
-    "source-layer": "parcelle",
-    "minzoom": 17,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgba(40, 40, 40, 1)",
-      "line-width": {"stops": [[17, 3], [19, 4.6]]}
-    }
-  },
-  {
-    "id": "Cadastre - Parcelles",
-    "type": "line",
-    "source": "pci_express",
-    "source-layer": "parcelle",
-    "minzoom": 17,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgb(255,202,0)",
-      "line-width": {"stops": [[17, 1.4], [19, 3]]}
-    }
-  },
-  {
     "id": "Cadastre - Parcelles - Label",
     "type": "symbol",
     "source": "pci_express",
     "source-layer": "parcelle",
-    "minzoom": 18,
+    "minzoom": 16,
     "layout": {
       "text-field": "{numero}",
       "text-font": ["Source Sans Pro Bold"],
