@@ -68,7 +68,7 @@ export type MapThumbnails = {
 
 // Types pour la gestion mutualisée des overlays (refonte sémantique)
 export type OverlayVariant = 'neutral' | 'color';
-export type OverlayType = 'cadastre' | 'administrative-boundaries';
+export type OverlayType = 'cadastre' | 'administrativeBoundaries';
 
 export interface OverlayConfig {
   sources: Record<string, any>;
