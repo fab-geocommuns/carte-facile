@@ -28,6 +28,8 @@ export const mapStyle = mapStyles;
 import simpleThumb from '../assets/thumbnails/simple.webp';
 import aerialThumb from '../assets/thumbnails/aerial.webp';
 import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
+import cadastreThumb from '../assets/thumbnails/cadastre.webp';
+import administrativeBoundariesThumb from '../assets/thumbnails/administrative-boundaries.webp';
 
 /**
  * Map thumbnails configuration
@@ -38,6 +40,8 @@ export const mapThumbnails: MapThumbnails = {
   simpleOsm: simpleThumb,
   aerial: aerialThumb,
   desaturated: desaturatedThumb,
+  cadastre: cadastreThumb,
+  administrativeBoundaries: administrativeBoundariesThumb,
 }
 
 // Import shared overlay configurations

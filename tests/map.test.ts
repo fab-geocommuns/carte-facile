@@ -42,6 +42,8 @@ describe('mapThumbnails', () => {
     expect(mapThumbnails.desaturated).toBeDefined();
     expect(mapThumbnails.aerial).toBeDefined();
     expect(mapThumbnails.simpleOsm).toBeDefined();
+    expect(mapThumbnails.cadastre).toBeDefined();
+    expect(mapThumbnails.administrativeBoundaries).toBeDefined();
   });
 });
 

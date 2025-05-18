@@ -62,6 +62,8 @@ export type MapThumbnails = {
   simpleOsm: string;
   aerial: string;
   desaturated: string;
+  cadastre: string;
+  administrativeBoundaries: string;
 }
 
 // Types pour la gestion mutualisée des overlays (refonte sémantique)
