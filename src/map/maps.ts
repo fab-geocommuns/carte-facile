@@ -64,7 +64,7 @@ export const mapOverlays: MapOverlays = {
     neutral: { ...cadastreCommon, layers: cadastreNeutralLayers },
     color: { ...cadastreCommon, layers: cadastreColorLayers }
   },
-  'administrative-boundaries': {
+  administrativeBoundaries: {
     neutral: { ...adminCommon, layers: adminNeutralLayers },
     color: { ...adminCommon, layers: adminColorLayers }
   }

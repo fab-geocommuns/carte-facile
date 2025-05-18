@@ -87,14 +87,14 @@ describe('mapOverlays', () => {
 
   it('should add all layers from the neutral variant for simple style', () => {
     // For simple style, all neutral layers should be added
-    addOverlay(map, 'administrative-boundaries');
+    addOverlay(map, 'administrativeBoundaries');
     expect(map.addLayer).toHaveBeenCalledTimes(8);
   });
 
   it('should add all layers from the color variant for aerial style', () => {
     // For aerial style, all color layers should be added
     map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
-    addOverlay(map, 'administrative-boundaries');
+    addOverlay(map, 'administrativeBoundaries');
     expect(map.addLayer).toHaveBeenCalledTimes(8);
   });
 });
