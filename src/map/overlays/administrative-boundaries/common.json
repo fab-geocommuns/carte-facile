@@ -12,15 +12,9 @@
     "maputnik:renderer": "mlgljs"
   },
   "sources": {
-    "admin_express": {
+    "decoupage-administratif": {
       "type": "vector",
-      "tiles": [
-        "https://data.geopf.fr/tms/1.0.0/ADMIN_EXPRESS/{z}/{x}/{y}.pbf"
-      ],
-      "minzoom": 0,
-      "maxzoom": 20,
-      "scheme": "xyz",
-      "attribution": "© IGN"
+      "url": "https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json"
     }
   }
 } 
