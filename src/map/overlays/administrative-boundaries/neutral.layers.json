@@ -2,8 +2,8 @@
   {
     "id": "Limites - Commune - Bordures",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "commune",
+    "source": "decoupage-administratif",
+    "source-layer": "communes",
     "minzoom": 12,
     "layout": {"line-cap": "round"},
     "paint": {
@@ -15,8 +15,8 @@
   {
     "id": "Limites - Commune",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "commune",
+    "source": "decoupage-administratif",
+    "source-layer": "communes",
     "minzoom": 12,
     "layout": {"line-cap": "round"},
     "paint": {
@@ -28,8 +28,8 @@
   {
     "id": "Limites - EPCI - Bordures",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "epci",
+    "source": "decoupage-administratif",
+    "source-layer": "epcis",
     "minzoom": 10,
     "maxzoom": 12.5,
     "layout": {"line-cap": "round"},
@@ -42,8 +42,8 @@
   {
     "id": "Limites - EPCI",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "epci",
+    "source": "decoupage-administratif",
+    "source-layer": "epcis",
     "minzoom": 10,
     "maxzoom": 12.5,
     "layout": {"line-cap": "round"},
@@ -56,8 +56,8 @@
   {
     "id": "Limites - Departement - Bordures",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "departement",
+    "source": "decoupage-administratif",
+    "source-layer": "departements",
     "minzoom": 7.5,
     "maxzoom": 10.5,
     "layout": {"line-cap": "round"},
@@ -70,8 +70,8 @@
   {
     "id": "Limites - Departement",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "departement",
+    "source": "decoupage-administratif",
+    "source-layer": "departements",
     "minzoom": 7.5,
     "maxzoom": 10.5,
     "layout": {"line-cap": "round"},
@@ -84,8 +84,8 @@
   {
     "id": "Limites - Region - Bordures",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "region",
+    "source": "decoupage-administratif",
+    "source-layer": "regions",
     "minzoom": 6,
     "maxzoom": 8,
     "layout": {"line-cap": "round"},
@@ -98,8 +98,8 @@
   {
     "id": "Limites - Region",
     "type": "line",
-    "source": "admin_express",
-    "source-layer": "region",
+    "source": "decoupage-administratif",
+    "source-layer": "regions",
     "minzoom": 6,
     "maxzoom": 8,
     "layout": {"line-cap": "round"},
