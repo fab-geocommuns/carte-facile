@@ -28,8 +28,7 @@ export default {
     }),
     image({
       include: ['**/*.webp'],
-      exclude: 'node_modules/**',
-      dom: true,
+      exclude: 'node_modules/**'
     }),
     typescript({ tsconfig: './tsconfig.json' }),
   ],
