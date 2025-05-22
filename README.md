@@ -36,21 +36,12 @@ npm install carte-facile
 
 ## Prérequis
 
-En plus de `carte-facile`, vous devez installer la bibliothèque de cartographie que vous souhaitez utiliser :
-* Si vous ne savez pas quelle librairie choisir, nous vous conseillons d'utiliser maplibre-gl par défaut. *
+En plus de `carte-facile`, vous devez installer la bibliothèque de cartographie maplibre-gl.
 
 ```bash
 # Pour MapLibre
 npm install maplibre-gl
-
-# Pour Leaflet
-npm install leaflet
-
-# Pour OpenLayers
-npm install ol
 ```
-
-> **WARNING**: Actuellement les styles sont compatible avec Maplibre, peuvent poser des problématique pour les autres librairies.
 
 ## Utilisation
 
