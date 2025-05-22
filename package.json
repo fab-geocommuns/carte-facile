@@ -6,9 +6,11 @@
   "main": "dist/carte-facile.cjs.js",
   "module": "dist/carte-facile.esm.js",
   "exports": {
-    "import": "./dist/carte-facile.esm.js",
-    "require": "./dist/carte-facile.cjs.js",
-    "default": "./dist/carte-facile.esm.js",
+    ".": {
+      "import": "./dist/carte-facile.esm.js",
+      "require": "./dist/carte-facile.cjs.js",
+      "default": "./dist/carte-facile.esm.js"
+    },
     "./carte-facile.css": {
       "default": "./dist/carte-facile.css"
     }
