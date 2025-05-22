@@ -1,0 +1,59 @@
+[
+  {
+    "id": "courbes de niveau - intervalle 10m",
+    "type": "line",
+    "source": "isohypse",
+    "source-layer": "courbe",
+    "minzoom": 14,
+    "maxzoom": 24,
+    "filter": ["all", ["==", ["%", ["get", "altitude"], 10], 0]],
+    "layout": {
+      "line-cap": "square",
+      "line-join": "bevel",
+      "visibility": "visible"
+    },
+    "paint": {
+      "line-color": " #FC9B4F",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 14, 0.5, 17, 1],
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
+    }
+  },
+  {
+    "id": "courbes maitresses - 100m",
+    "type": "line",
+    "source": "isohypse",
+    "source-layer": "courbe",
+    "minzoom": 14,
+    "maxzoom": 24,
+    "filter": ["all", ["==", ["%", ["get", "altitude"], 50], 0]],
+    "layout": {"visibility": "visible"},
+    "paint": {
+      "line-color": "#FC9B4F",
+      "line-width": ["interpolate", ["linear"], ["zoom"], 14, 1, 17, 2.5],
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
+    }
+  },
+  {
+    "id": "courbes maitresses - labels",
+    "type": "symbol",
+    "source": "isohypse",
+    "source-layer": "courbe",
+    "minzoom": 14.5,
+    "filter": ["all", ["==", ["%", ["get", "altitude"], 50], 0]],
+    "layout": {
+      "text-field": "{altitude}",
+      "visibility": "visible",
+      "symbol-placement": "line",
+      "text-size": {"stops": [[14, 10], [17, 13]]},
+      "text-font": ["Source Sans Pro Bold"],
+      "text-pitch-alignment": "auto",
+      "text-rotation-alignment": "auto",
+      "text-keep-upright": true
+    },
+    "paint": {
+      "text-color": "#FC9B4F",
+      "text-halo-width": 2,
+      "text-halo-color": "rgba(40, 40, 40, 1)"
+    }
+  }
+] 

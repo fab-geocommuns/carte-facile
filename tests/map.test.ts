@@ -44,6 +44,7 @@ describe('mapThumbnails', () => {
     expect(mapThumbnails.simpleOsm).toBeDefined();
     expect(mapThumbnails.cadastre).toBeDefined();
     expect(mapThumbnails.administrativeBoundaries).toBeDefined();
+    expect(mapThumbnails.levelCurves).toBeDefined();
   });
 });
 
@@ -97,4 +98,11 @@ describe('mapOverlays', () => {
     addOverlay(map, 'administrativeBoundaries');
     expect(map.addLayer).toHaveBeenCalledTimes(8);
   });
+
+  it('should add all layers from the neutral variant for level curves style', () => {
+    // For level curves style, all neutral layers should be added
+    addOverlay(map, 'levelCurves');
+    expect(map.addLayer).toHaveBeenCalledTimes(3);
+  });
+  
 });

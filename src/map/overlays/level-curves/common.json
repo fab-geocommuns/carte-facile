@@ -1,0 +1,20 @@
+{
+  "name": "level-curves",
+  "metadata": {
+    "fr": {
+      "name": "Courbes de niveau",
+      "description": "Surcouche des courbes de niveau."
+    },
+    "en": {
+      "name": "Level curves",
+      "description": "Overlay of level curves."
+    },
+    "maputnik:renderer": "mlgljs"
+  },
+  "sources": {
+    "isohypse": {
+      "type": "vector",
+      "url": "https://data.geopf.fr/tms/1.0.0/ISOHYPSE/metadata.json"
+    }
+  }
+} 

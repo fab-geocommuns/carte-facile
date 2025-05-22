@@ -31,6 +31,7 @@ import aerialThumb from '../assets/thumbnails/aerial.webp';
 import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
 import cadastreThumb from '../assets/thumbnails/cadastre.webp';
 import administrativeBoundariesThumb from '../assets/thumbnails/administrative-boundaries.webp';
+import levelCurvesThumb from '../assets/thumbnails/level-curves.webp';
 
 /**
  * Map thumbnails configuration
@@ -43,6 +44,7 @@ export const mapThumbnails: MapThumbnails = {
   desaturated: desaturatedThumb,
   cadastre: cadastreThumb,
   administrativeBoundaries: administrativeBoundariesThumb,
+  levelCurves: levelCurvesThumb,
 }
 
 // Import shared overlay configurations
@@ -53,6 +55,10 @@ import cadastreColorLayers from './overlays/cadastre/color.layers.json';
 import adminCommon from './overlays/administrative-boundaries/common.json';
 import adminNeutralLayers from './overlays/administrative-boundaries/neutral.layers.json';
 import adminColorLayers from './overlays/administrative-boundaries/color.layers.json';
+
+import levelsCommon from './overlays/level-curves/common.json';
+import levelsNeutralLayers from './overlays/level-curves/neutral.layers.json';
+import levelsColorLayers from './overlays/level-curves/color.layers.json';
 
 /**
  * Overlay configurations
@@ -68,6 +74,10 @@ export const mapOverlays: MapOverlays = {
   administrativeBoundaries: {
     neutral: { ...adminCommon, layers: adminNeutralLayers },
     color: { ...adminCommon, layers: adminColorLayers }
+  },
+  levelCurves: {
+    neutral: { ...levelsCommon, layers: levelsNeutralLayers },
+    color: { ...levelsCommon, layers: levelsColorLayers }
   }
 };
 
