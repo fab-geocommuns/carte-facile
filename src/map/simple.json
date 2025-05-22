@@ -1,5 +1,8 @@
 {
   "version": 8,
+  "projection": {
+    "type": "globe"
+  },
   "name": "simple",
   "metadata": {
     "fr": {
