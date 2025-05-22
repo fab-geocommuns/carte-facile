@@ -23,11 +23,12 @@ export type MapThumbnails = {
   desaturated: string;
   cadastre: string;
   administrativeBoundaries: string;
+  levelCurves: string;
 };
 
 // Types pour la gestion mutualisée des overlays
 export type OverlayVariant = 'neutral' | 'color';
-export type OverlayType = 'cadastre' | 'administrativeBoundaries';
+export type OverlayType = 'cadastre' | 'administrativeBoundaries' | 'levelCurves';
 
 export interface OverlayConfig {
   sources: Record<string, any>;
