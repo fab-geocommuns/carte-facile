@@ -9,7 +9,8 @@
     ".": {
       "import": "./dist/carte-facile.esm.js",
       "require": "./dist/carte-facile.cjs.js",
-      "default": "./dist/carte-facile.esm.js"
+      "default": "./dist/carte-facile.esm.js",
+      "types": "./dist/index.d.ts"
     },
     "./carte-facile.css": {
       "default": "./dist/carte-facile.css"
