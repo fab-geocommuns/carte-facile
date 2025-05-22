@@ -15,49 +15,7 @@ export interface LayerConfig {
   [key: string]: unknown;
 }
 
-/**
- * Map configuration following Mapbox/Maplibre specification
- */
-export interface StyleConfig {
-  version: 8;
-  name: string;
-  metadata: {
-    fr: {
-      name: string;
-      description: string;
-      use: string;
-      accessibility: string;
-    };
-    en: {
-      name: string;
-      description: string;
-      use: string;
-      accessibility: string;
-    };
-    [key: string]: unknown;
-  };
-  center?: number[];
-  zoom?: number;
-  sources?: Record<string, unknown>;
-  sprite?: string;
-  glyphs?: string;
-  layers: LayerConfig[];
-  [key: string]: unknown;
-}
-
-/**
- * Map style configuration
- */
-export type MapStyles = {
-  simple: StyleConfig;
-  simpleOsm: StyleConfig;
-  aerial: StyleConfig;
-  desaturated: StyleConfig;
-}
-
-/**
- * Map thumbnails configuration
- */
+// Type pour les miniatures de styles de carte
 export type MapThumbnails = {
   simple: string;
   simpleOsm: string;
@@ -65,9 +23,9 @@ export type MapThumbnails = {
   desaturated: string;
   cadastre: string;
   administrativeBoundaries: string;
-}
+};
 
-// Types pour la gestion mutualisée des overlays (refonte sémantique)
+// Types pour la gestion mutualisée des overlays
 export type OverlayVariant = 'neutral' | 'color';
 export type OverlayType = 'cadastre' | 'administrativeBoundaries';
 
