@@ -1,4 +1,5 @@
 import { MapStyles, MapThumbnails, OverlayType, OverlayVariant, MapOverlays } from './types';
+import type { StyleConfig } from './types';
 
 // Import IGN map styles
 import desaturatedIgn from './desaturated.json';
@@ -13,10 +14,10 @@ import simpleOsm from './simple-osm.json';
  * Each style is a complete MapLibre style configuration
  */
 export const mapStyles: MapStyles = {
-  simple: simpleIgn,
-  simpleOsm: simpleOsm,
-  aerial: aerialIgn,
-  desaturated: desaturatedIgn
+  simple: simpleIgn as StyleConfig,
+  simpleOsm: simpleOsm as StyleConfig,
+  aerial: aerialIgn as StyleConfig,
+  desaturated: desaturatedIgn as StyleConfig
 }
 
 /**
