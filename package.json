@@ -1,14 +1,19 @@
 {
   "name": "carte-facile",
-  "version": "0.5.11",
+  "version": "0.5.12",
   "description": "Une librairie de styles de cartes et surcouches prêtes à l'emploi, pour ajouter des cartes rapidement à votre application avec MapLibre ou d'autres librairies cartographiques.",
   "type": "module",
   "main": "dist/carte-facile.cjs.js",
   "module": "dist/carte-facile.esm.js",
   "exports": {
-    "import": "./dist/carte-facile.esm.js",
-    "require": "./dist/carte-facile.cjs.js",
-    "./carte-facile.css": "./dist/carte-facile.css"
+    ".": {
+      "import": "./dist/carte-facile.esm.js",
+      "require": "./dist/carte-facile.cjs.js",
+      "default": "./dist/carte-facile.esm.js"
+    },
+    "./carte-facile.css": {
+      "default": "./dist/carte-facile.css"
+    }
   },
   "types": "dist/index.d.ts",
   "files": [

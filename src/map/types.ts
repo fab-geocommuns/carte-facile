@@ -19,6 +19,7 @@ export interface LayerConfig {
  * Map configuration following Mapbox/Maplibre specification
  */
 export interface StyleConfig {
+  version: number;
   name: string;
   metadata: {
     fr: {
