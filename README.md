@@ -6,7 +6,7 @@
 [![Tests](https://github.com/fab-geocommuns/carte-facile/workflows/Tests/badge.svg)](https://github.com/fab-geocommuns/carte-facile/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 
-Une bibliothèque simple pour gérer les styles de cartes, compatible avec différentes bibliothèques de cartographie (MapLibre, Leaflet, OpenLayers).
+Une bibliothèque simple pour gérer les styles de cartes, surcouches et composants cartographiques.
 
 La documentation officielle est disponible sur le site dédié : [Documentation de Carte facile](https://fab-geocommuns.github.io/carte-facile-site/)
 
