@@ -8,7 +8,10 @@
   "exports": {
     "import": "./dist/carte-facile.esm.js",
     "require": "./dist/carte-facile.cjs.js",
-    "./carte-facile.css": "./dist/carte-facile.css"
+    "default": "./dist/carte-facile.esm.js",
+    "./carte-facile.css": {
+      "default": "./dist/carte-facile.css"
+    }
   },
   "types": "dist/index.d.ts",
   "files": [
