@@ -97,7 +97,7 @@ Vous pouvez ajouter une surcouche (par exemple le cadastre ou les limites admini
 ```typescript
 import { addOverlay } from 'carte-facile';
 
-addOverlay(map, 'administrative-boundaries');
+addOverlay(map, 'administrativeBoundaries');
 ```
 > Le style de la surcouche s'adapte automatiquement au fond de carte utilisé.
 
@@ -106,7 +106,7 @@ Pour retirer une surcouche :
 ```typescript
 import { removeOverlay } from 'carte-facile';
 
-removeOverlay(map, 'administrative-boundaries');
+removeOverlay(map, 'administrativeBoundaries');
 ```
 
 ## Contribution
