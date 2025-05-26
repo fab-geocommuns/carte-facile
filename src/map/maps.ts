@@ -107,7 +107,7 @@ export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
   if (map.loaded()) update();
   else map.once('load', update);
   
-  map.on('style.load', update);
+  map.on('styledata', update);
 }
 
 /**
@@ -129,5 +129,5 @@ export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
   if (map.loaded()) update();
   else map.once('load', update);
   
-  map.off('style.load', update);
+  map.off('styledata', update);
 }
