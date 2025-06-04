@@ -1,4 +1,4 @@
-import { MapThumbnails, OverlayType, OverlayVariant, MapOverlays } from './types';
+import { OverlayType, OverlayVariant, MapOverlays } from './types';
 import type { StyleSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
@@ -37,7 +37,7 @@ import levelCurvesThumb from '../assets/thumbnails/level-curves.webp';
  * Map thumbnails configuration
  * Used for style selection UI
  */
-export const mapThumbnails: MapThumbnails = {
+export const mapThumbnails = {
   simple: simpleThumb,
   simpleOsm: simpleThumb,
   aerial: aerialThumb,
@@ -45,7 +45,7 @@ export const mapThumbnails: MapThumbnails = {
   cadastre: cadastreThumb,
   administrativeBoundaries: administrativeBoundariesThumb,
   levelCurves: levelCurvesThumb,
-}
+} as const;
 
 // Import shared overlay configurations
 import cadastreCommon from './overlays/cadastre/common.json';

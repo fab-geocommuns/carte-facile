@@ -25,17 +25,6 @@ export interface OverlayConfig {
   layers: LayerConfig[];
 }
 
-// Type pour les miniatures de styles de carte
-export type MapThumbnails = {
-  simple: string;
-  simpleOsm: string;
-  aerial: string;
-  desaturated: string;
-  cadastre: string;
-  administrativeBoundaries: string;
-  levelCurves: string;
-};
-
 export type MapOverlays = {
   [key in OverlayType]: {
     [variant in OverlayVariant]: OverlayConfig
