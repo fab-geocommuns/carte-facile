@@ -4319,6 +4319,9 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
+      "metadata": {
+        "cartefacile:group": "street_labels"
+      },
       "minzoom": 15,
       "maxzoom": 17,
       "layout": {
@@ -4341,6 +4344,9 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
+      "metadata": {
+        "cartefacile:group": "street_labels"
+      },
       "minzoom": 15,
       "layout": {
         "symbol-placement": "line",
