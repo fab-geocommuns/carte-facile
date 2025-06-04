@@ -95,7 +95,7 @@
       "source-layer": "landcover",
       "minzoom": 10,
       "filter": ["any", ["==", "class", "farmland"]],
-      "layout": {"visibility": "visible"},
+      "layout": {"visibility": "none"},
       "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
     },
     {
