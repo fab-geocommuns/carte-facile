@@ -4,6 +4,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "communes",
+    "metadata": {
+      "cartefacile:group": "commune"
+    },
     "minzoom": 10,
     "layout": {"line-cap": "round"},
     "paint": {
@@ -17,6 +20,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "communes",
+    "metadata": {
+      "cartefacile:group": "commune"
+    },
     "minzoom": 10,
     "layout": {"line-cap": "round"},
     "paint": {
@@ -30,6 +36,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "epcis",
+    "metadata": {
+      "cartefacile:group": "epci"
+    },
     "minzoom": 10,
     "maxzoom": 24,
     "layout": {"line-cap": "round", "visibility": "visible"},
@@ -44,6 +53,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "epcis",
+    "metadata": {
+      "cartefacile:group": "epci"
+    },
     "minzoom": 10,
     "maxzoom": 24,
     "layout": {"line-cap": "round", "visibility": "visible"},
@@ -58,6 +70,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "departements",
+    "metadata": {
+      "cartefacile:group": "departement"
+    },
     "minzoom": 6.4,
     "maxzoom": 24,
     "layout": {"line-cap": "round"},
@@ -72,6 +87,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "departements",
+    "metadata": {
+      "cartefacile:group": "departement"
+    },
     "minzoom": 6.4,
     "maxzoom": 24,
     "layout": {"line-cap": "round"},
@@ -86,6 +104,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "regions",
+    "metadata": {
+      "cartefacile:group": "region"
+    },
     "minzoom": 5,
     "maxzoom": 24,
     "layout": {"line-cap": "round"},
@@ -100,6 +121,9 @@
     "type": "line",
     "source": "decoupage-administratif",
     "source-layer": "regions",
+    "metadata": {
+      "cartefacile:group": "region"
+    },
     "minzoom": 5,
     "maxzoom": 24,
     "layout": {"line-cap": "round"},
