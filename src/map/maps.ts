@@ -136,15 +136,12 @@ export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
  * Liste des groupes de couches disponibles
  * Utilisé pour la gestion de la visibilité des couches
  */
-export const LAYER_GROUP = {
-  cadastral_sections: 'Sections of French land registry',
-  cadastral_parcels: 'Parcels of French land registry',
-  communes: 'Communes of French administrative boundaries',
-  epcis: 'EPCI of French administrative boundaries',
-  departments: 'Departments of French administrative boundaries',
-  regions: 'Region of French administrative boundaries',
-  street_labels: 'Streets labels and numbers(odonymes)'
-} as const;
-
-// Type pour les groupes de couches
-export type LayerGroup = keyof typeof LAYER_GROUP;
+export enum LayerGroup {
+  cadastral_sections = 'cadastral_sections',
+  cadastral_parcels = 'cadastral_parcels',
+  communes = 'communes',
+  epcis = 'epcis',
+  departments = 'departments',
+  regions = 'regions',
+  street_labels = 'street_labels'
+}
