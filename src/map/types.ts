@@ -5,7 +5,7 @@ export interface LayerConfig {
   id: string;
   type: string;
   metadata?: {
-    group?: string;
+    'cartefacile:group'?: string;
     [key: string]: unknown;
   };
   layout?: {
@@ -13,6 +13,16 @@ export interface LayerConfig {
     [key: string]: unknown;
   };
   [key: string]: unknown;
+}
+
+// Types pour la gestion mutualisée des overlays
+export type OverlayVariant = 'neutral' | 'color';
+export type OverlayType = 'cadastre' | 'administrativeBoundaries' | 'levelCurves';
+
+export interface OverlayConfig {
+  sources: Record<string, any>;
+  metadata?: Record<string, any>;
+  layers: LayerConfig[];
 }
 
 // Type pour les miniatures de styles de carte
@@ -25,16 +35,6 @@ export type MapThumbnails = {
   administrativeBoundaries: string;
   levelCurves: string;
 };
-
-// Types pour la gestion mutualisée des overlays
-export type OverlayVariant = 'neutral' | 'color';
-export type OverlayType = 'cadastre' | 'administrativeBoundaries' | 'levelCurves';
-
-export interface OverlayConfig {
-  sources: Record<string, any>;
-  metadata?: Record<string, any>;
-  layers: LayerConfig[];
-}
 
 export type MapOverlays = {
   [key in OverlayType]: {
