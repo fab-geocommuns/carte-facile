@@ -5,7 +5,7 @@
     "source": "decoupage-administratif",
     "source-layer": "communes",
     "metadata": {
-      "cartefacile:group": "commune"
+      "cartefacile:group": "communes"
     },
     "minzoom": 10,
     "layout": {"line-cap": "round"},
@@ -21,7 +21,7 @@
     "source": "decoupage-administratif",
     "source-layer": "communes",
     "metadata": {
-      "cartefacile:group": "commune"
+      "cartefacile:group": "communes"
     },
     "minzoom": 10,
     "layout": {"line-cap": "round"},
@@ -37,7 +37,7 @@
     "source": "decoupage-administratif",
     "source-layer": "epcis",
     "metadata": {
-      "cartefacile:group": "epci"
+      "cartefacile:group": "epcis"
     },
     "minzoom": 10,
     "maxzoom": 24,
@@ -54,7 +54,7 @@
     "source": "decoupage-administratif",
     "source-layer": "epcis",
     "metadata": {
-      "cartefacile:group": "epci"
+      "cartefacile:group": "epcis"
     },
     "minzoom": 10,
     "maxzoom": 24,
@@ -71,7 +71,7 @@
     "source": "decoupage-administratif",
     "source-layer": "departements",
     "metadata": {
-      "cartefacile:group": "departement"
+      "cartefacile:group": "departements"
     },
     "minzoom": 6.4,
     "maxzoom": 24,
@@ -88,7 +88,7 @@
     "source": "decoupage-administratif",
     "source-layer": "departements",
     "metadata": {
-      "cartefacile:group": "departement"
+      "cartefacile:group": "departements"
     },
     "minzoom": 6.4,
     "maxzoom": 24,
@@ -105,7 +105,7 @@
     "source": "decoupage-administratif",
     "source-layer": "regions",
     "metadata": {
-      "cartefacile:group": "region"
+      "cartefacile:group": "regions"
     },
     "minzoom": 5,
     "maxzoom": 24,
@@ -122,7 +122,7 @@
     "source": "decoupage-administratif",
     "source-layer": "regions",
     "metadata": {
-      "cartefacile:group": "region"
+      "cartefacile:group": "regions"
     },
     "minzoom": 5,
     "maxzoom": 24,

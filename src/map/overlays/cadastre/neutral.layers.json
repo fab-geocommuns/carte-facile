@@ -5,7 +5,7 @@
     "source": "cadastre",
     "source-layer": "sections",
     "metadata": {
-      "cartefacile:group": "cadastral_section"
+      "cartefacile:group": "cadastral_sections"
     },
     "minzoom": 14,
     "layout": {"visibility": "visible"},
@@ -21,7 +21,7 @@
     "source": "cadastre",
     "source-layer": "sections",
     "metadata": {
-      "cartefacile:group": "cadastral_section"
+      "cartefacile:group": "cadastral_sections"
     },
     "minzoom": 14,
     "layout": {"visibility": "visible"},
@@ -37,7 +37,7 @@
     "source": "cadastre",
     "source-layer": "parcelles",
     "metadata": {
-      "cartefacile:group": "cadastral_parcel"
+      "cartefacile:group": "cadastral_parcels"
     },
     "minzoom": 16.5,
     "layout": {"visibility": "visible"},
@@ -52,7 +52,7 @@
     "source": "cadastre",
     "source-layer": "parcelles",
     "metadata": {
-      "cartefacile:group": "cadastral_parcel"
+      "cartefacile:group": "cadastral_parcels"
     },
     "minzoom": 16.5,
     "layout": {"visibility": "visible"},
@@ -67,7 +67,7 @@
     "source": "cadastre",
     "source-layer": "parcelles",
     "metadata": {
-      "cartefacile:group": "cadastral_parcel"
+      "cartefacile:group": "cadastral_parcels"
     },
     "minzoom": 16.5,
     "layout": {
@@ -89,7 +89,7 @@
     "source": "cadastre",
     "source-layer": "sections",
     "metadata": {
-      "cartefacile:group": "cadastral_section"
+      "cartefacile:group": "cadastral_sections"
     },
     "minzoom": 14,
     "layout": {
