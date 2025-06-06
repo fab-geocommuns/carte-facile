@@ -676,6 +676,9 @@
       "source": "openmaptiles",
       "source-layer": "building",
       "minzoom": 14,
+      "metadata": {
+        "cartefacile:group": "buildings"
+      },
       "paint": {
         "fill-color": "rgba(213, 213, 208, 1)",
         "fill-outline-color": "rgba(151, 150, 137, 1)",

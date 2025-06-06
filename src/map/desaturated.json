@@ -1486,6 +1486,9 @@
       "type": "fill",
       "source": "plan_ign",
       "source-layer": "bati_surf",
+      "metadata": {
+        "cartefacile:group": "buildings"
+      },
       "minzoom": 14,
       "filter": [
         "all",

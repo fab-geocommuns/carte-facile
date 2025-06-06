@@ -1638,6 +1638,9 @@
       "id": "bati surfacique",
       "type": "fill",
       "source": "plan_ign",
+      "metadata": {
+        "cartefacile:group": "buildings"
+      },
       "source-layer": "bati_surf",
       "minzoom": 14,
       "filter": [
