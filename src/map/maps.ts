@@ -139,10 +139,10 @@ export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
 export enum LayerGroup {
   cadastral_sections = 'cadastral_sections',
   cadastral_parcels = 'cadastral_parcels',
-  communes = 'communes',
-  epcis = 'epcis',
-  departments = 'departments',
-  regions = 'regions',
+  boundaries_communes = 'boundaries_communes',
+  boundaries_epcis = 'boundaries_epcis',
+  boundaries_departments = 'boundaries_departments',
+  boundaries_regions = 'boundaries_regions',
   buildings = 'buildings',
   street_labels = 'street_labels',
 }
