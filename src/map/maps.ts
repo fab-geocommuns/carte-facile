@@ -1,4 +1,4 @@
-import { OverlayType, OverlayVariant, MapOverlays } from './types';
+import { OverlayType, OverlayVariant, MapOverlays, LayerConfig } from './types';
 import type { StyleSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
@@ -133,8 +133,8 @@ export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
 }
 
 /**
- * Liste des groupes de couches disponibles
- * Utilisé pour la gestion de la visibilité des couches
+ * List of layer groups available
+ * Used for layer visibility management
  */
 export enum LayerGroup {
   cadastral_sections = 'cadastral_sections',
@@ -147,4 +147,38 @@ export enum LayerGroup {
   buildings = 'buildings',
   streets = 'streets',
   street_labels = 'street_labels',
+}
+
+/**
+ * Show the specified layer groups
+ * @param map - The MapLibre map instance
+ * @param groups - List of layer groups to show
+ */
+export function showLayers(
+  map: maplibregl.Map,
+  groups: LayerGroup[]
+): void {
+  map.getStyle().layers?.forEach(layer => {
+    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
+    if (group && groups.includes(group as LayerGroup)) {
+      map.setLayoutProperty(layer.id, 'visibility', 'visible');
+    }
+  });
+}
+
+/**
+ * Hide the specified layer groups
+ * @param map - The MapLibre map instance
+ * @param groups - List of layer groups to hide
+ */
+export function hideLayers(
+  map: maplibregl.Map,
+  groups: LayerGroup[]
+): void {
+  map.getStyle().layers?.forEach(layer => {
+    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
+    if (group && groups.includes(group as LayerGroup)) {
+      map.setLayoutProperty(layer.id, 'visibility', 'none');
+    }
+  });
 }
