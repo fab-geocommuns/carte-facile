@@ -5,7 +5,7 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay } from '../src/map/maps';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup } from '../src/map/maps';
 import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
@@ -105,4 +105,52 @@ describe('mapOverlays', () => {
     expect(map.addLayer).toHaveBeenCalledTimes(3);
   });
   
+});
+
+describe('Layer visibility', () => {
+  let map: maplibregl.Map;
+
+  beforeEach(() => {
+    // Create a mock MapLibre map with two layers:
+    // - A buildings layer
+    // - A streets layer
+    map = {
+      getStyle: jest.fn().mockReturnValue({
+        layers: [
+          { id: 'layer1', metadata: { 'cartefacile:group': 'buildings' } },
+          { id: 'layer2', metadata: { 'cartefacile:group': 'streets' } }
+        ]
+      }),
+      setLayoutProperty: jest.fn(),
+      loaded: jest.fn().mockReturnValue(true),
+      once: jest.fn()
+    } as unknown as maplibregl.Map;
+  });
+
+  it('should show and hide layers', () => {
+    // Test showing a layer
+    showLayers(map, [LayerGroup.buildings]);
+    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'visible');
+
+    // Test hiding a different layer
+    hideLayers(map, [LayerGroup.streets]);
+    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer2', 'visibility', 'none');
+  });
+
+  it('should wait for map to load', () => {
+    // Simulate map not being loaded
+    map.loaded = jest.fn().mockReturnValue(false);
+    showLayers(map, [LayerGroup.buildings]);
+    
+    // Verify that we wait for the load event
+    expect(map.once).toHaveBeenCalledWith('load', expect.any(Function));
+    expect(map.setLayoutProperty).not.toHaveBeenCalled();
+    
+    // Simulate map being loaded and trigger the load callback
+    map.loaded = jest.fn().mockReturnValue(true);
+    (map.once as jest.Mock).mock.calls[0][1]();
+    
+    // Verify that the layer visibility is set after loading
+    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'visible');
+  });
 });
