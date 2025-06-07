@@ -5,7 +5,7 @@ export interface LayerConfig {
   id: string;
   type: string;
   metadata?: {
-    group?: string;
+    'cartefacile:group'?: string;
     [key: string]: unknown;
   };
   layout?: {
@@ -14,17 +14,6 @@ export interface LayerConfig {
   };
   [key: string]: unknown;
 }
-
-// Type pour les miniatures de styles de carte
-export type MapThumbnails = {
-  simple: string;
-  simpleOsm: string;
-  aerial: string;
-  desaturated: string;
-  cadastre: string;
-  administrativeBoundaries: string;
-  levelCurves: string;
-};
 
 // Types pour la gestion mutualisée des overlays
 export type OverlayVariant = 'neutral' | 'color';

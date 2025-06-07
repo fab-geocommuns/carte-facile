@@ -54,6 +54,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -86,6 +89,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -118,6 +124,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -144,6 +153,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -170,6 +182,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": ["in", "symbo", "VF_SERVICE_SOU", "VF_NON_EXPLOITEE_SOU"],
@@ -190,6 +205,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "maxzoom": 18,
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SOU", "TRANSPORT_URBAIN_SOU"],
       "layout": {
@@ -209,6 +227,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "maxzoom": 18,
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SOU", "TRANSPORT_URBAIN_SOU"],
       "layout": {
@@ -228,6 +249,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE_SOU", "VOIE_VERTE_SOU"],
       "layout": {
@@ -259,6 +283,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SOU"],
       "layout": {
@@ -289,6 +316,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SOU"],
       "layout": {
@@ -320,6 +350,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE_SOU"],
       "layout": {
@@ -351,6 +384,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER_SOU"],
       "layout": {
@@ -382,6 +418,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN_SOU"],
       "layout": {
@@ -412,6 +451,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "maxzoom": 18,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SOU"],
@@ -443,6 +485,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SOU"],
       "layout": {
@@ -473,6 +518,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -514,6 +562,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SOU"],
       "layout": {
@@ -544,6 +595,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SOU", "NON_CLASSEE_SOU"],
       "layout": {
@@ -574,6 +628,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -614,6 +671,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SOU"],
       "layout": {
@@ -647,6 +707,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -694,6 +757,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SOU"],
       "layout": {
@@ -735,6 +801,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -783,6 +852,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SOU"],
       "layout": {
@@ -824,6 +896,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SOU", "AUTOROU_LIBRE_SOU"],
       "layout": {
@@ -864,6 +939,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SOU"],
       "layout": {
@@ -905,6 +983,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE", "VOIE_VERTE"],
       "layout": {
@@ -938,6 +1019,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER"],
       "layout": {
@@ -968,6 +1052,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER"],
       "layout": {
@@ -999,6 +1086,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE"],
       "layout": {
@@ -1032,6 +1122,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER"],
       "layout": {
@@ -1065,6 +1158,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN"],
       "layout": {
@@ -1097,6 +1193,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 0,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT"],
       "layout": {
@@ -1127,6 +1226,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO"],
       "layout": {
@@ -1157,6 +1259,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -1198,6 +1303,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT"],
       "layout": {
@@ -1228,6 +1336,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4", "NON_CLASSEE"],
       "layout": {
@@ -1258,6 +1369,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -1298,6 +1412,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR"],
       "layout": {
@@ -1331,6 +1448,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 6,
       "filter": [
         "in",
@@ -1378,6 +1498,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR"],
       "layout": {
@@ -1418,6 +1541,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -1465,6 +1591,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR"],
       "layout": {
@@ -1505,6 +1634,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE", "AUTOROU_LIBRE"],
       "layout": {
@@ -1544,6 +1676,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 8,
       "filter": ["==", "symbo", "AUTOROU_CONSTR"],
       "layout": {
@@ -1577,6 +1712,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -1618,6 +1756,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -1660,6 +1801,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["in", "symbo", "VF_ETROITE_1", "VF_ETROITE_2", "VF_ETROITE"],
       "layout": {
@@ -1690,6 +1834,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["in", "symbo", "VF_ETROITE_1", "VF_ETROITE_2", "VF_ETROITE"],
       "layout": {
@@ -1721,6 +1868,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["in", "symbo", "VF_SERVICE", "VF_NON_EXPLOITEE"],
       "layout": {
@@ -1752,6 +1902,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR"],
@@ -1784,6 +1937,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR"],
@@ -1816,6 +1972,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE", "TRANSPORT_URBAIN"],
       "layout": {
         "visibility": "visible",
@@ -1845,6 +2004,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE", "TRANSPORT_URBAIN"],
       "layout": {
         "visibility": "visible",
@@ -1875,6 +2037,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE_SUP", "VOIE_VERTE_SUP"],
       "layout": {
@@ -1908,6 +2073,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SUP"],
       "layout": {
@@ -1938,6 +2106,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SUP"],
       "layout": {
@@ -1969,6 +2140,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE_SUP"],
       "layout": {
@@ -2002,6 +2176,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER_SUP"],
       "layout": {
@@ -2035,6 +2212,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN_SUP"],
       "layout": {
@@ -2067,6 +2247,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SUP"],
       "layout": {
@@ -2097,6 +2280,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SUP"],
       "layout": {
@@ -2127,6 +2313,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -2168,6 +2357,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SUP"],
       "layout": {
@@ -2198,6 +2390,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SUP", "NON_CLASSEE_SUP"],
       "layout": {
@@ -2228,6 +2423,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -2268,6 +2466,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SUP"],
       "layout": {
@@ -2301,6 +2502,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -2348,6 +2552,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SUP"],
       "layout": {
@@ -2388,6 +2595,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -2436,6 +2646,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SUP"],
       "layout": {
@@ -2476,6 +2689,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SUP", "AUTOROU_LIBRE_SUP"],
       "layout": {
@@ -2516,6 +2732,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SUP"],
       "layout": {
@@ -2557,6 +2776,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2598,6 +2820,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2640,6 +2865,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2676,6 +2904,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2713,6 +2944,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 14,
       "filter": ["in", "symbo", "VF_SERVICE_SUP", "VF_NON_EXPLOITEE_SUP"],
       "layout": {
@@ -2744,6 +2978,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR_SUP"],
@@ -2776,6 +3013,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR_SUP"],
@@ -2808,6 +3048,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SUP", "TRANSPORT_URBAIN_SUP"],
       "layout": {
         "visibility": "visible",
@@ -2837,6 +3080,9 @@
       "type": "line",
       "source": "plan_ign",
       "source-layer": "ferre_sup",
+      "metadata": {
+        "cartefacile:group": "streets"
+      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SUP", "TRANSPORT_URBAIN_SUP"],
       "layout": {
         "visibility": "visible",
@@ -4319,6 +4565,9 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
+      "metadata": {
+        "cartefacile:group": "street_labels"
+      },
       "minzoom": 15,
       "maxzoom": 17,
       "layout": {
@@ -4341,6 +4590,9 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
+      "metadata": {
+        "cartefacile:group": "street_labels"
+      },
       "minzoom": 15,
       "layout": {
         "symbol-placement": "line",

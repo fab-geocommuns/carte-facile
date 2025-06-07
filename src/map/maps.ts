@@ -1,4 +1,4 @@
-import { MapThumbnails, OverlayType, OverlayVariant, MapOverlays } from './types';
+import { OverlayType, OverlayVariant, MapOverlays, LayerConfig } from './types';
 import type { StyleSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
@@ -37,7 +37,7 @@ import levelCurvesThumb from '../assets/thumbnails/level-curves.webp';
  * Map thumbnails configuration
  * Used for style selection UI
  */
-export const mapThumbnails: MapThumbnails = {
+export const mapThumbnails = {
   simple: simpleThumb,
   simpleOsm: simpleThumb,
   aerial: aerialThumb,
@@ -45,7 +45,7 @@ export const mapThumbnails: MapThumbnails = {
   cadastre: cadastreThumb,
   administrativeBoundaries: administrativeBoundariesThumb,
   levelCurves: levelCurvesThumb,
-}
+} as const;
 
 // Import shared overlay configurations
 import cadastreCommon from './overlays/cadastre/common.json';
@@ -107,7 +107,7 @@ export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
   if (map.loaded()) update();
   else map.once('load', update);
   
-  map.on('style.load', update);
+  map.on('styledata', update);
 }
 
 /**
@@ -129,5 +129,66 @@ export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
   if (map.loaded()) update();
   else map.once('load', update);
   
-  map.off('style.load', update);
+  map.off('styledata', update);
+}
+
+/**
+ * List of layer groups available
+ * Used for layer visibility management
+ */
+export enum LayerGroup {
+  cadastral_sections = 'cadastral_sections',
+  cadastral_parcels = 'cadastral_parcels',
+  boundaries_communes = 'boundaries_communes',
+  boundaries_epcis = 'boundaries_epcis',
+  boundaries_departments = 'boundaries_departments',
+  boundaries_regions = 'boundaries_regions',
+  boundaries = 'boundaries',
+  buildings = 'buildings',
+  streets = 'streets',
+  street_labels = 'street_labels',
+}
+
+/**
+ * Show the specified layer groups
+ * @param map - The MapLibre map instance
+ * @param groups - List of layer groups to show
+ */
+export function showLayers(
+  map: maplibregl.Map,
+  groups: LayerGroup[]
+): void {
+  if (!map.loaded()) {
+    map.once('load', () => showLayers(map, groups));
+    return;
+  }
+
+  map.getStyle().layers?.forEach(layer => {
+    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
+    if (group && groups.includes(group as LayerGroup)) {
+      map.setLayoutProperty(layer.id, 'visibility', 'visible');
+    }
+  });
+}
+
+/**
+ * Hide the specified layer groups
+ * @param map - The MapLibre map instance
+ * @param groups - List of layer groups to hide
+ */
+export function hideLayers(
+  map: maplibregl.Map,
+  groups: LayerGroup[]
+): void {
+  if (!map.loaded()) {
+    map.once('load', () => hideLayers(map, groups));
+    return;
+  }
+
+  map.getStyle().layers?.forEach(layer => {
+    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
+    if (group && groups.includes(group as LayerGroup)) {
+      map.setLayoutProperty(layer.id, 'visibility', 'none');
+    }
+  });
 }

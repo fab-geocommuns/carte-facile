@@ -21,6 +21,7 @@ La documentation officielle est disponible sur le site dédié : [Documentation 
     - [Exemples d'utilisation](#exemples-dutilisation)
       - [Ajouter une carte avec MapLibre](#ajouter-une-carte-avec-maplibre)
     - [Ajouter une surcouche (overlay)](#ajouter-une-surcouche-overlay)
+    - [Gérer la visibilité des couches](#gérer-la-visibilité-des-couches)
   - [Contribution](#contribution)
   - [Développement](#développement)
     - [Mise en place de l'environnement de développement](#mise-en-place-de-lenvironnement-de-développement)
@@ -99,6 +100,24 @@ import { removeOverlay } from 'carte-facile';
 
 removeOverlay(map, 'administrativeBoundaries');
 ```
+
+### Gérer la visibilité des couches
+
+Vous pouvez masquer ou afficher des groupes de couches spécifiques :
+
+```typescript
+import { showLayers, hideLayers, LayerGroup } from 'carte-facile';
+
+// Masquer les rues et leurs labels
+hideLayers(map, [LayerGroup.streets, LayerGroup.street_labels]);
+
+
+// Utiliser showLayers our afficher des couches qui auraient été masquées
+showLayers(map, [LayerGroup.cadastral_sections, LayerGroup.buildings]);
+```
+
+Pour obtenir la liste des groupes de couches disponibles, vous pouvez utiliser l'autocomplétion de votre IDE avec `LayerGroup.` ou consulter la documentation TypeScript :
+
 
 ## Contribution
 
