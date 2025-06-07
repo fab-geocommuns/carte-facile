@@ -690,6 +690,9 @@
       "type": "line",
       "source": "openmaptiles",
       "source-layer": "boundary",
+      "metadata": {
+        "cartefacile:group": "boundaries"
+      },
       "maxzoom": 24,
       "filter": ["all", ["<=", "admin_level", 3], ["==", "maritime", 0]],
       "layout": {"visibility": "visible"},

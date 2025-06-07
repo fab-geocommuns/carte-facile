@@ -143,6 +143,8 @@ export enum LayerGroup {
   boundaries_epcis = 'boundaries_epcis',
   boundaries_departments = 'boundaries_departments',
   boundaries_regions = 'boundaries_regions',
+  boundaries = 'boundaries',
   buildings = 'buildings',
+  streets = 'streets',
   street_labels = 'street_labels',
 }
