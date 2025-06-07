@@ -158,6 +158,11 @@ export function showLayers(
   map: maplibregl.Map,
   groups: LayerGroup[]
 ): void {
+  if (!map.loaded()) {
+    map.once('load', () => showLayers(map, groups));
+    return;
+  }
+
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
     if (group && groups.includes(group as LayerGroup)) {
@@ -175,6 +180,11 @@ export function hideLayers(
   map: maplibregl.Map,
   groups: LayerGroup[]
 ): void {
+  if (!map.loaded()) {
+    map.once('load', () => hideLayers(map, groups));
+    return;
+  }
+
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
     if (group && groups.includes(group as LayerGroup)) {
