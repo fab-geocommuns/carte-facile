@@ -5835,16 +5835,24 @@
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
       "maxzoom": 3,
-      "filter": ["==", "txt_typo", "continent"],
+      "filter": [
+        "==",
+        "txt_typo",
+        "continent"
+      ],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": 15,
+        "text-size": {
+          "stops": [[1, 10], [2, 15]]
+        },
         "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Bold"]
+        "text-font": [
+          "Source Sans Pro Bold"
+        ]
       },
       "paint": {
         "text-color": "#FFFFFF",
@@ -5852,7 +5860,8 @@
         "text-halo-width": 2,
         "text-halo-blur": 1,
         "icon-color": "#FFFFFF"
-      }
+      },
+      "minzoom": 1
     }
   ],
   "owner": "Carte Facile (IGN)"
