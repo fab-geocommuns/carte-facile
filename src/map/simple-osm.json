@@ -1051,9 +1051,12 @@
       "type": "symbol",
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 0,
+      "minzoom": 1,
       "maxzoom": 5,
-      "filter": ["any", ["==", "class", "country"]],
+      "filter": [
+        "any",
+        ["==", "class", "country"]
+      ],
       "layout": {
         "text-field": "{name:latin}{name:nonlatin}",
         "text-size": 12,
