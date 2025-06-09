@@ -6,6 +6,7 @@
  * - Style metadata and accessibility
  */
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup, mapOverlays } from '../src/map/maps';
+import { OverlayType } from '../src/map/types';
 import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
@@ -52,7 +53,6 @@ describe('mapOverlays', () => {
   let map: maplibregl.Map;
 
   beforeEach(() => {
-    // Create a mock MapLibre map instance with all required methods
     map = {
       getStyle: jest.fn().mockReturnValue({ name: 'simple' }),
       getSource: jest.fn().mockReturnValue(false),
@@ -68,66 +68,51 @@ describe('mapOverlays', () => {
     } as unknown as maplibregl.Map;
   });
 
-  it('should not add duplicate sources or layers', () => {
-    // Simulate that all sources and layers already exist
-    map.getSource = jest.fn().mockReturnValue(true);
-    map.getLayer = jest.fn().mockReturnValue(true);
+  const testOverlay = (type: OverlayType, expectedLayers: number) => {
+    describe(`${type} overlay`, () => {
+      it('should add overlay with correct number of layers', () => {
+        addOverlay(map, type);
+        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers);
+        expect(map.addSource).toHaveBeenCalled();
+      });
 
-    addOverlay(map, 'cadastre');
+      it('should update overlay when style changes', () => {
+        addOverlay(map, type);
+        map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
+        const styledataCallback = (map.on as jest.Mock).mock.calls.find(
+          call => call[0] === 'styledata'
+        )[1];
+        styledataCallback();
+        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2); // Called twice: initial + style change
+      });
 
-    // No new sources or layers should be added
-    expect(map.addSource).not.toHaveBeenCalled();
-    expect(map.addLayer).not.toHaveBeenCalled();
-  });
+      it('should remove overlay completely', () => {
+        addOverlay(map, type);
+        map.getLayer = jest.fn().mockReturnValue(true);
+        map.getSource = jest.fn().mockReturnValue(true);
+        
+        removeOverlay(map, type);
+        
+        expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers);
+        expect(map.removeSource).toHaveBeenCalled();
+        expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
+      });
 
-  it('should add all layers from the neutral variant for simple style', () => {
-    // For simple style, all neutral layers should be added
-    addOverlay(map, 'administrativeBoundaries');
-    expect(map.addLayer).toHaveBeenCalledTimes(8);
-  });
+      it('should not add duplicate layers or sources', () => {
+        map.getLayer = jest.fn().mockReturnValue(true);
+        map.getSource = jest.fn().mockReturnValue(true);
+        
+        addOverlay(map, type);
+        
+        expect(map.addLayer).not.toHaveBeenCalled();
+        expect(map.addSource).not.toHaveBeenCalled();
+      });
+    });
+  };
 
-  it('should add all layers from the color variant for aerial style', () => {
-    // For aerial style, all color layers should be added
-    map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
-    addOverlay(map, 'administrativeBoundaries');
-    expect(map.addLayer).toHaveBeenCalledTimes(8);
-  });
-
-  it('should add all layers from the neutral variant for level curves style', () => {
-    // For level curves style, all neutral layers should be added
-    addOverlay(map, 'levelCurves');
-    expect(map.addLayer).toHaveBeenCalledTimes(3);
-  });
-
-  it('should add and remove overlay layers', () => {
-    // Setup: simulate a map with no layers initially
-    map.getLayer = jest.fn().mockReturnValue(false);
-    map.getSource = jest.fn().mockReturnValue(false);
-    map.getStyle = jest.fn().mockReturnValue({ name: 'simple' });
-    
-    // Mock the overlay data
-    (mapOverlays as any).administrativeBoundaries = {
-      neutral: {
-        layers: [
-          { id: 'admin-layer-1' },
-          { id: 'admin-layer-2' }
-        ],
-        sources: {
-          'admin-source': {}
-        }
-      }
-    };
-    
-    // Add overlay
-    addOverlay(map, 'administrativeBoundaries');
-    expect(map.addLayer).toHaveBeenCalledTimes(2);
-    expect(map.addSource).toHaveBeenCalledTimes(1);
-    
-    // Remove overlay
-    removeOverlay(map, 'administrativeBoundaries');
-    expect(map.removeLayer).toHaveBeenCalledTimes(2);
-    expect(map.removeSource).toHaveBeenCalledTimes(1);
-  });
+  testOverlay('cadastre', 6);
+  testOverlay('administrativeBoundaries', 8);
+  testOverlay('levelCurves', 3);
 });
 
 describe('Layer visibility', () => {
