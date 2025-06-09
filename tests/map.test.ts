@@ -5,7 +5,8 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup } from '../src/map/maps';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup, mapOverlays } from '../src/map/maps';
+import { OverlayType } from '../src/map/types';
 import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
@@ -52,7 +53,6 @@ describe('mapOverlays', () => {
   let map: maplibregl.Map;
 
   beforeEach(() => {
-    // Create a mock MapLibre map instance with all required methods
     map = {
       getStyle: jest.fn().mockReturnValue({ name: 'simple' }),
       getSource: jest.fn().mockReturnValue(false),
@@ -68,43 +68,51 @@ describe('mapOverlays', () => {
     } as unknown as maplibregl.Map;
   });
 
-  it('should get style when removing overlay', () => {
-    // Ensure getStyle is called when removing an overlay
-    removeOverlay(map, 'cadastre');
-    expect(map.getStyle).toHaveBeenCalled();
-  });
+  const testOverlay = (type: OverlayType, expectedLayers: number) => {
+    describe(`${type} overlay`, () => {
+      it('should add overlay with correct number of layers', () => {
+        addOverlay(map, type);
+        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers);
+        expect(map.addSource).toHaveBeenCalled();
+      });
 
-  it('should not add duplicate sources or layers', () => {
-    // Simulate that all sources and layers already exist
-    map.getSource = jest.fn().mockReturnValue(true);
-    map.getLayer = jest.fn().mockReturnValue(true);
+      it('should update overlay when style changes', () => {
+        addOverlay(map, type);
+        map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
+        const styledataCallback = (map.on as jest.Mock).mock.calls.find(
+          call => call[0] === 'styledata'
+        )[1];
+        styledataCallback();
+        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2); // Called twice: initial + style change
+      });
 
-    addOverlay(map, 'cadastre');
+      it('should remove overlay completely', () => {
+        addOverlay(map, type);
+        map.getLayer = jest.fn().mockReturnValue(true);
+        map.getSource = jest.fn().mockReturnValue(true);
+        
+        removeOverlay(map, type);
+        
+        expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers);
+        expect(map.removeSource).toHaveBeenCalled();
+        expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
+      });
 
-    // No new sources or layers should be added
-    expect(map.addSource).not.toHaveBeenCalled();
-    expect(map.addLayer).not.toHaveBeenCalled();
-  });
+      it('should not add duplicate layers or sources', () => {
+        map.getLayer = jest.fn().mockReturnValue(true);
+        map.getSource = jest.fn().mockReturnValue(true);
+        
+        addOverlay(map, type);
+        
+        expect(map.addLayer).not.toHaveBeenCalled();
+        expect(map.addSource).not.toHaveBeenCalled();
+      });
+    });
+  };
 
-  it('should add all layers from the neutral variant for simple style', () => {
-    // For simple style, all neutral layers should be added
-    addOverlay(map, 'administrativeBoundaries');
-    expect(map.addLayer).toHaveBeenCalledTimes(8);
-  });
-
-  it('should add all layers from the color variant for aerial style', () => {
-    // For aerial style, all color layers should be added
-    map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
-    addOverlay(map, 'administrativeBoundaries');
-    expect(map.addLayer).toHaveBeenCalledTimes(8);
-  });
-
-  it('should add all layers from the neutral variant for level curves style', () => {
-    // For level curves style, all neutral layers should be added
-    addOverlay(map, 'levelCurves');
-    expect(map.addLayer).toHaveBeenCalledTimes(3);
-  });
-  
+  testOverlay('cadastre', 6);
+  testOverlay('administrativeBoundaries', 8);
+  testOverlay('levelCurves', 3);
 });
 
 describe('Layer visibility', () => {
