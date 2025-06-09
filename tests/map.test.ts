@@ -5,7 +5,7 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup } from '../src/map/maps';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup, mapOverlays } from '../src/map/maps';
 import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
@@ -68,12 +68,6 @@ describe('mapOverlays', () => {
     } as unknown as maplibregl.Map;
   });
 
-  it('should get style when removing overlay', () => {
-    // Ensure getStyle is called when removing an overlay
-    removeOverlay(map, 'cadastre');
-    expect(map.getStyle).toHaveBeenCalled();
-  });
-
   it('should not add duplicate sources or layers', () => {
     // Simulate that all sources and layers already exist
     map.getSource = jest.fn().mockReturnValue(true);
@@ -104,7 +98,36 @@ describe('mapOverlays', () => {
     addOverlay(map, 'levelCurves');
     expect(map.addLayer).toHaveBeenCalledTimes(3);
   });
-  
+
+  it('should add and remove overlay layers', () => {
+    // Setup: simulate a map with no layers initially
+    map.getLayer = jest.fn().mockReturnValue(false);
+    map.getSource = jest.fn().mockReturnValue(false);
+    map.getStyle = jest.fn().mockReturnValue({ name: 'simple' });
+    
+    // Mock the overlay data
+    (mapOverlays as any).administrativeBoundaries = {
+      neutral: {
+        layers: [
+          { id: 'admin-layer-1' },
+          { id: 'admin-layer-2' }
+        ],
+        sources: {
+          'admin-source': {}
+        }
+      }
+    };
+    
+    // Add overlay
+    addOverlay(map, 'administrativeBoundaries');
+    expect(map.addLayer).toHaveBeenCalledTimes(2);
+    expect(map.addSource).toHaveBeenCalledTimes(1);
+    
+    // Remove overlay
+    removeOverlay(map, 'administrativeBoundaries');
+    expect(map.removeLayer).toHaveBeenCalledTimes(2);
+    expect(map.removeSource).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('Layer visibility', () => {

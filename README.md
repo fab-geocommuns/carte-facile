@@ -112,7 +112,7 @@ import { showLayers, hideLayers, LayerGroup } from 'carte-facile';
 hideLayers(map, [LayerGroup.streets, LayerGroup.street_labels]);
 
 
-// Utiliser showLayers our afficher des couches qui auraient été masquées
+// Utiliser showLayers pour afficher des couches qui auraient été masquées
 showLayers(map, [LayerGroup.cadastral_sections, LayerGroup.buildings]);
 ```
 

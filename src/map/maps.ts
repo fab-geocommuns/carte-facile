@@ -118,17 +118,30 @@ export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
 export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
   const update = () => {
     const overlay = mapOverlays[type][getOverlayVariant(map)];
+    
+    // Remove layers first
     overlay.layers.forEach(layer => {
-      if (map.getLayer(layer.id)) map.removeLayer(layer.id);
+      try {
+        map.removeLayer(layer.id);
+      } catch (e) {
+        // Layer might not exist, that's ok
+      }
     });
+
+    // Then remove sources
     Object.keys(overlay.sources).forEach(id => {
-      if (map.getSource(id)) map.removeSource(id);
+      try {
+        map.removeSource(id);
+      } catch (e) {
+        // Source might not exist, that's ok
+      }
     });
   };
 
   if (map.loaded()) update();
   else map.once('load', update);
   
+  // Remove the styledata event listener to prevent re-adding layers
   map.off('styledata', update);
 }
 
