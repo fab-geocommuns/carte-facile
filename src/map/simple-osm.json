@@ -910,40 +910,14 @@
       "maxzoom": 18,
       "filter": ["any", ["==", "class", "suburb"], ["==", "class", "hamlet"]],
       "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
+        "text-field": "{name:fr}",
         "text-font": ["Noto Sans Italic"],
         "text-size": {"stops": [[12, 11], [18, 12]]},
-        "visibility": "none",
+        "visibility": "visible",
         "text-transform": "none"
       },
       "paint": {
         "text-color": "rgba(105, 105, 105, 1)",
-        "text-halo-color": "#F2F3F0",
-        "text-halo-width": 1,
-        "text-halo-blur": 1
-      }
-    },
-    {
-      "id": "place_town",
-      "type": "symbol",
-      "source": "openmaptiles",
-      "source-layer": "place",
-      "minzoom": 11,
-      "maxzoom": 15,
-      "filter": ["any", ["==", "class", "town"]],
-      "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
-        "text-font": ["Noto Sans Regular"],
-        "text-size": 12,
-        "icon-anchor": "center",
-        "text-justify": "center",
-        "text-anchor": "center",
-        "icon-size": 0.4,
-        "text-offset": [0, 0],
-        "visibility": "none"
-      },
-      "paint": {
-        "text-color": "#222222",
         "text-halo-color": "#F2F3F0",
         "text-halo-width": 1,
         "text-halo-blur": 1
@@ -958,7 +932,7 @@
       "maxzoom": 15,
       "filter": ["any", ["==", "class", "village"]],
       "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
+        "text-field": "{name:fr}",
         "text-font": ["Noto Sans Regular"],
         "text-size": 12,
         "icon-anchor": "center",
@@ -966,7 +940,7 @@
         "text-anchor": "center",
         "icon-size": 0.4,
         "text-offset": [0, 0],
-        "visibility": "none"
+        "visibility": "visible"
       },
       "paint": {
         "text-color": "#222222",
@@ -989,7 +963,7 @@
           "step",
           ["zoom"],
           ["literal", ["Noto Sans Regular"]],
-          11,
+          12,
           ["literal", ["Noto Sans Bold"]]
         ],
         "text-size": ["interpolate", ["linear"], ["zoom"], 7, 12, 13, 14],
@@ -997,7 +971,6 @@
         "text-justify": "center",
         "text-anchor": "center",
         "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
         "text-offset": [0.5, 0]
       },
@@ -1024,7 +997,6 @@
         "text-justify": "center",
         "text-anchor": "center",
         "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
         "text-offset": [0.5, 0]
       },
@@ -1051,7 +1023,6 @@
         "text-justify": "center",
         "text-anchor": "center",
         "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
         "text-offset": [0.5, 0]
       },
