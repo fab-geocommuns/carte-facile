@@ -61,12 +61,12 @@ import levelsNeutralLayers from './overlays/level-curves/neutral.layers.json';
 import levelsColorLayers from './overlays/level-curves/color.layers.json';
 
 /**
- * Overlay configurations
+ * Map overlays configuration
  * Each overlay has two variants:
  * - neutral: for standard map styles (simple, desaturated)
  * - color: for aerial map style
  */
-export const overlayConfigurations = {
+export const mapOverlays = {
   cadastre: {
     neutral: { ...cadastreCommon, layers: cadastreNeutralLayers },
     color: { ...cadastreCommon, layers: cadastreColorLayers }
@@ -101,7 +101,7 @@ export function addOverlay(
   
   const update = () => {
     types.forEach(singleType => {
-      const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+      const overlay = mapOverlays[singleType][getOverlayVariant(map)];
       Object.entries(overlay.sources).forEach(([id, source]) => {
         if (!map.getSource(id)) map.addSource(id, source as any);
       });
@@ -133,7 +133,7 @@ export function removeOverlay(
   const types = Array.isArray(type) ? type : [type];
   
   types.forEach(singleType => {
-    const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+    const overlay = mapOverlays[singleType][getOverlayVariant(map)];
     
     // Remove all layers from this overlay
     overlay.layers.forEach(layer => {
