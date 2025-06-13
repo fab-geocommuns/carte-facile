@@ -109,7 +109,7 @@ removeOverlay(map, Overlay.administrativeBoundaries);
 removeOverlay(map, [Overlay.administrativeBoundaries, Overlay.cadastre]);
 ```
 
-Pour avoir la liste des surcouches disponibles :
+Pour obtenir la liste des surcouches disponibles :
 
 ```typescript
 import { Overlay } from 'carte-facile';
@@ -118,7 +118,7 @@ import { Overlay } from 'carte-facile';
 console.log(Overlay);
 
 ```
-Ou en utilisant l'autocomplétion de votre IDE avec `Overlay.`.
+Ou utilisez l'autocomplétion de votre IDE avec `Overlay.`.
 
 
 ### Gérer la visibilité des couches
@@ -136,7 +136,16 @@ hideLayers(map, [LayerGroup.streets, LayerGroup.street_labels]);
 showLayers(map, [LayerGroup.cadastral_sections, LayerGroup.buildings]);
 ```
 
-Pour obtenir la liste des groupes de couches disponibles, vous pouvez utiliser l'autocomplétion de votre IDE avec `LayerGroup.`.
+Pour obetnir la liste des groupes de couches disponibles :
+
+```typescript
+import { LayerGroup } from 'carte-facile';
+
+// Liste des surcouches disponibles
+console.log(LayerGroup);
+
+```
+Ou utilisez l'autocomplétion de votre IDE avec `LayerGroup.`.
 
 
 ## Contribution
