@@ -1,8 +1,5 @@
 {
   "version": 8,
-  "projection": {
-    "type": "globe"
-  },
   "name": "simple-osm",
   "metadata": {
     "fr": {
@@ -21,6 +18,7 @@
   },
   "center": [2.5, 47],
   "zoom": 5,
+  "projection": {"type": "globe"},
   "sources": {
     "openmaptiles": {
       "type": "vector",
@@ -673,12 +671,10 @@
     {
       "id": "building",
       "type": "fill",
+      "metadata": {"cartefacile:group": "buildings"},
       "source": "openmaptiles",
       "source-layer": "building",
       "minzoom": 14,
-      "metadata": {
-        "cartefacile:group": "buildings"
-      },
       "paint": {
         "fill-color": "rgba(213, 213, 208, 1)",
         "fill-outline-color": "rgba(151, 150, 137, 1)",
@@ -688,11 +684,9 @@
     {
       "id": "boundary_country",
       "type": "line",
+      "metadata": {"cartefacile:group": "boundaries"},
       "source": "openmaptiles",
       "source-layer": "boundary",
-      "metadata": {
-        "cartefacile:group": "boundaries"
-      },
       "maxzoom": 24,
       "filter": ["all", ["<=", "admin_level", 3], ["==", "maritime", 0]],
       "layout": {"visibility": "visible"},
@@ -740,11 +734,9 @@
     {
       "id": "tname_ref-z13-major",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 13,
       "maxzoom": 16,
       "filter": [
@@ -774,11 +766,9 @@
     {
       "id": "tname_ref-z12-trunk",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 12,
       "maxzoom": 16,
       "filter": [
@@ -807,11 +797,9 @@
     {
       "id": "tname_ref-z9-motorway",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 9,
       "filter": ["any", ["==", "class", "motorway"]],
       "layout": {
@@ -838,11 +826,9 @@
     {
       "id": "tname_z16-track",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 16,
       "filter": ["any", ["==", "class", "track"]],
       "layout": {
@@ -864,11 +850,9 @@
     {
       "id": "tname_z15-minor",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 15,
       "filter": ["any", ["==", "class", "minor"], ["==", "class", "service"]],
       "layout": {
@@ -890,11 +874,9 @@
     {
       "id": "tname_z14-major",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "openmaptiles",
       "source-layer": "transportation_name",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 14,
       "filter": [
         "any",
@@ -931,7 +913,7 @@
         "text-field": "{name:latin}{name:nonlatin}",
         "text-font": ["Noto Sans Italic"],
         "text-size": {"stops": [[12, 11], [18, 12]]},
-        "visibility": "visible",
+        "visibility": "none",
         "text-transform": "none"
       },
       "paint": {
@@ -958,7 +940,7 @@
         "text-anchor": "center",
         "icon-size": 0.4,
         "text-offset": [0, 0],
-        "visibility": "visible"
+        "visibility": "none"
       },
       "paint": {
         "text-color": "#222222",
@@ -984,7 +966,7 @@
         "text-anchor": "center",
         "icon-size": 0.4,
         "text-offset": [0, 0],
-        "visibility": "visible"
+        "visibility": "none"
       },
       "paint": {
         "text-color": "#222222",
@@ -994,27 +976,61 @@
       }
     },
     {
-      "id": "place_city",
+      "id": "place_city_town",
       "type": "symbol",
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 8,
-      "maxzoom": 15,
-      "filter": ["any", ["==", "class", "city"]],
+      "minzoom": 7,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "class", "town"]],
       "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
-        "text-font": ["Noto Sans Regular"],
-        "text-size": 12,
+        "text-field": "{name:fr}",
+        "text-font": [
+          "step",
+          ["zoom"],
+          ["literal", ["Noto Sans Regular"]],
+          11,
+          ["literal", ["Noto Sans Bold"]]
+        ],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 7, 12, 13, 14],
         "icon-anchor": "center",
         "text-justify": "center",
         "text-anchor": "center",
-        "icon-size": 0.4,
-        "text-offset": [0, 0],
-        "visibility": "visible"
+        "icon-size": 0.5,
+        "icon-image": "circle_11",
+        "visibility": "visible",
+        "text-offset": [0.5, 0]
       },
       "paint": {
         "text-color": "#222222",
-        "text-halo-color": "#F2F3F0",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "place_city_secondary",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 7,
+      "maxzoom": 14,
+      "filter": ["all", ["==", "class", "city"]],
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": {"stops": [[7, 14], [10, 16]]},
+        "icon-anchor": "center",
+        "text-justify": "center",
+        "text-anchor": "center",
+        "icon-size": 0.5,
+        "icon-image": "circle_11",
+        "visibility": "visible",
+        "text-offset": [0.5, 0]
+      },
+      "paint": {
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 1,
         "text-halo-blur": 1
       }
@@ -1024,24 +1040,105 @@
       "type": "symbol",
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 6,
-      "maxzoom": 8,
-      "filter": ["any", ["==", "class", "city"]],
+      "minzoom": 7,
+      "maxzoom": 14,
+      "filter": ["all", ["in", "capital", 2, 3, 4, 5]],
       "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
-        "text-font": ["Noto Sans Regular"],
-        "text-size": 12,
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": 16,
         "icon-anchor": "center",
         "text-justify": "center",
-        "text-anchor": "bottom",
-        "icon-size": 0.4,
+        "text-anchor": "center",
+        "icon-size": 0.5,
         "icon-image": "circle_11",
         "visibility": "visible",
-        "text-offset": [0, -0.3]
+        "text-offset": [0.5, 0]
       },
       "paint": {
         "text-color": "#222222",
-        "text-halo-color": "#F2F3F0",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "place_city_secondary_point",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 6,
+      "maxzoom": 7,
+      "filter": ["any", ["in", "capital", 6], ["==", "class", "city"]],
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
+        "icon-anchor": "center",
+        "text-justify": "left",
+        "text-anchor": "left",
+        "icon-size": 0.5,
+        "icon-image": "circle_11",
+        "visibility": "visible",
+        "text-offset": [0.5, 0]
+      },
+      "paint": {
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "place_city_major_point",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 5,
+      "maxzoom": 7,
+      "filter": ["all", ["in", "capital", 4, 5]],
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
+        "icon-anchor": "center",
+        "text-justify": "left",
+        "text-anchor": "left",
+        "icon-size": 0.5,
+        "icon-image": "circle_11",
+        "visibility": "visible",
+        "text-offset": [0.5, 0]
+      },
+      "paint": {
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "place_city_capital_point",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 4,
+      "maxzoom": 7,
+      "filter": ["all", ["in", "capital", 2]],
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
+        "icon-anchor": "center",
+        "text-justify": "left",
+        "text-anchor": "left",
+        "icon-size": 0.5,
+        "icon-image": "circle_11",
+        "visibility": "visible",
+        "text-offset": [0.5, 0]
+      },
+      "paint": {
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 1,
         "text-halo-blur": 1
       }
@@ -1051,25 +1148,44 @@
       "type": "symbol",
       "source": "openmaptiles",
       "source-layer": "place",
-      "minzoom": 1,
-      "maxzoom": 5,
-      "filter": [
-        "any",
-        ["==", "class", "country"]
-      ],
+      "minzoom": 2,
+      "maxzoom": 9,
+      "filter": ["any", ["==", "class", "country"]],
       "layout": {
-        "text-field": "{name:latin}{name:nonlatin}",
-        "text-size": 12,
+        "text-field": "{name:fr}",
+        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 12, 6, 16, 9, 20],
         "text-font": ["Noto Sans Bold"],
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "rgba(141, 141, 141, 1)",
+        "text-color": "#787878",
         "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 1,
         "text-halo-blur": 0
       }
+    },
+    {
+      "id": "place_continent",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "place",
+      "minzoom": 0.2,
+      "maxzoom": 2,
+      "filter": ["all", ["==", "class", "continent"]],
+      "layout": {
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Bold"],
+        "text-size": {"stops": [[1, 10], [2, 15]]},
+        "text-transform": "uppercase"
+      },
+      "paint": {
+        "text-color": "#787878",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 2,
+        "text-halo-blur": 1
+      }
     }
   ],
-  "owner": "Carte Facile (IGN)"
+  "owner": "Carte Facile (IGN)",
+  "id": "hpi09n5"
 }
