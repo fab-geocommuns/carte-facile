@@ -1,4 +1,4 @@
-import { OverlayType, OverlayVariant, MapOverlays, LayerConfig } from './types';
+import { OverlayType, OverlayVariant, MapOverlays, LayerConfig, LayerGroup, LayerGroupType } from './types';
 import type { StyleSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
@@ -66,7 +66,7 @@ import levelsColorLayers from './overlays/level-curves/color.layers.json';
  * - neutral: for standard map styles (simple, desaturated)
  * - color: for aerial map style
  */
-export const mapOverlays: MapOverlays = {
+export const overlayConfigurations = {
   cadastre: {
     neutral: { ...cadastreCommon, layers: cadastreNeutralLayers },
     color: { ...cadastreCommon, layers: cadastreColorLayers }
@@ -79,7 +79,7 @@ export const mapOverlays: MapOverlays = {
     neutral: { ...levelsCommon, layers: levelsNeutralLayers },
     color: { ...levelsCommon, layers: levelsColorLayers }
   }
-};
+} as const;
 
 /**
  * Gets the appropriate overlay variant based on the current map style
@@ -89,74 +89,73 @@ function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
 }
 
 /**
- * Adds an overlay to the map
+ * Adds one or more overlays to the map
  * @param map - The MapLibre map instance
- * @param type - The type of overlay to add (cadastre or administrative-boundaries)
+ * @param type - The type of overlay(s) to add (cadastre, administrative-boundaries, or level-curves)
  */
-export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
+export function addOverlay(
+  map: maplibregl.Map, 
+  type: OverlayType | OverlayType[]
+): void {
+  const types = Array.isArray(type) ? type : [type];
+  
   const update = () => {
-    const overlay = mapOverlays[type][getOverlayVariant(map)];
-    Object.entries(overlay.sources).forEach(([id, source]) => {
-      if (!map.getSource(id)) map.addSource(id, source as any);
-    });
-    overlay.layers.forEach(layer => {
-      if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+    types.forEach(singleType => {
+      const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+      Object.entries(overlay.sources).forEach(([id, source]) => {
+        if (!map.getSource(id)) map.addSource(id, source as any);
+      });
+      overlay.layers.forEach(layer => {
+        if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+      });
     });
   };
 
   if (map.loaded()) update();
   else map.once('load', update);
   
-  // Store the update function on the map instance for this overlay type
-  (map as any)[`_overlay_update_${type}`] = update;
+  // Store the update function on the map instance for each overlay type
+  types.forEach(singleType => {
+    (map as any)[`_overlay_update_${singleType}`] = update;
+  });
   map.on('styledata', update);
 }
 
 /**
- * Removes an overlay from the map
+ * Removes one or more overlays from the map
  * @param map - The MapLibre map instance
- * @param type - The type of overlay to remove (cadastre, administrative-boundaries, or level-curves)
+ * @param type - The type of overlay(s) to remove (cadastre, administrative-boundaries, or level-curves)
  */
-export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
-  const overlay = mapOverlays[type][getOverlayVariant(map)];
+export function removeOverlay(
+  map: maplibregl.Map, 
+  type: OverlayType | OverlayType[]
+): void {
+  const types = Array.isArray(type) ? type : [type];
   
-  // Remove all layers from this overlay
-  overlay.layers.forEach(layer => {
-    if (map.getLayer(layer.id)) {
-      map.removeLayer(layer.id);
+  types.forEach(singleType => {
+    const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+    
+    // Remove all layers from this overlay
+    overlay.layers.forEach(layer => {
+      if (map.getLayer(layer.id)) {
+        map.removeLayer(layer.id);
+      }
+    });
+
+    // Remove all sources from this overlay
+    Object.keys(overlay.sources).forEach(sourceId => {
+      if (map.getSource(sourceId)) {
+        map.removeSource(sourceId);
+      }
+    });
+
+    // Remove the styledata event listener for this overlay
+    const update = (map as any)[`_overlay_update_${singleType}`];
+    if (update) {
+      map.off('styledata', update);
+      delete (map as any)[`_overlay_update_${singleType}`];
     }
   });
-
-  // Remove all sources from this overlay
-  Object.keys(overlay.sources).forEach(sourceId => {
-    if (map.getSource(sourceId)) {
-      map.removeSource(sourceId);
-    }
-  });
-
-  // Remove the styledata event listener for this overlay
-  const update = (map as any)[`_overlay_update_${type}`];
-  if (update) {
-    map.off('styledata', update);
-    delete (map as any)[`_overlay_update_${type}`];
-  }
-}
-
-/**
- * List of layer groups available
- * Used for layer visibility management
- */
-export enum LayerGroup {
-  cadastral_sections = 'cadastral_sections',
-  cadastral_parcels = 'cadastral_parcels',
-  boundaries_communes = 'boundaries_communes',
-  boundaries_epcis = 'boundaries_epcis',
-  boundaries_departments = 'boundaries_departments',
-  boundaries_regions = 'boundaries_regions',
-  boundaries = 'boundaries',
-  buildings = 'buildings',
-  streets = 'streets',
-  street_labels = 'street_labels',
 }
 
 /**
@@ -164,18 +163,20 @@ export enum LayerGroup {
  * @param map - The MapLibre map instance
  * @param groups - List of layer groups to show
  */
-export function showLayers(
+export function showLayer(
   map: maplibregl.Map,
-  groups: LayerGroup[]
+  groups: LayerGroupType | LayerGroupType[]
 ): void {
+  const groupList = Array.isArray(groups) ? groups : [groups];
+
   if (!map.loaded()) {
-    map.once('load', () => showLayers(map, groups));
+    map.once('load', () => showLayer(map, groupList));
     return;
   }
 
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groups.includes(group as LayerGroup)) {
+    if (group && groupList.includes(group as LayerGroupType)) {
       map.setLayoutProperty(layer.id, 'visibility', 'visible');
     }
   });
@@ -186,18 +187,20 @@ export function showLayers(
  * @param map - The MapLibre map instance
  * @param groups - List of layer groups to hide
  */
-export function hideLayers(
+export function hideLayer(
   map: maplibregl.Map,
-  groups: LayerGroup[]
+  groups: LayerGroupType | LayerGroupType[]
 ): void {
+  const groupList = Array.isArray(groups) ? groups : [groups];
+
   if (!map.loaded()) {
-    map.once('load', () => hideLayers(map, groups));
+    map.once('load', () => hideLayer(map, groupList));
     return;
   }
 
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groups.includes(group as LayerGroup)) {
+    if (group && groupList.includes(group as LayerGroupType)) {
       map.setLayoutProperty(layer.id, 'visibility', 'none');
     }
   });

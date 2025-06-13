@@ -84,39 +84,73 @@ const map = new maplibregl.Map({
 
 ### Ajouter une surcouche (overlay)
 
-Vous pouvez ajouter une surcouche (par exemple le cadastre ou les limites administratives) à votre carte :
+Vous pouvez ajouter une ou plusieurs surcouches (par exemple le cadastre ou les limites administratives) à votre carte :
 
 ```typescript
-import { addOverlay } from 'carte-facile';
+import { addOverlay, Overlay } from 'carte-facile';
 
-addOverlay(map, 'administrativeBoundaries');
+// Ajouter une seule surcouche
+addOverlay(map, Overlay.administrativeBoundaries);
+
+// Ou ajouter plusieurs surcouches en même temps
+addOverlay(map, [Overlay.administrativeBoundaries, Overlay.cadastre]);
 ```
 > Le style de la surcouche s'adapte automatiquement au fond de carte utilisé.
 
-Pour retirer une surcouche :
+Pour retirer une ou plusieurs surcouches :
 
 ```typescript
 import { removeOverlay } from 'carte-facile';
 
-removeOverlay(map, 'administrativeBoundaries');
+// Retirer une seule surcouche
+removeOverlay(map, Overlay.administrativeBoundaries);
+
+// Ou retirer plusieurs surcouches en même temps
+removeOverlay(map, [Overlay.administrativeBoundaries, Overlay.cadastre]);
 ```
+
+Pour obtenir la liste des surcouches disponibles :
+
+```typescript
+import { Overlay } from 'carte-facile';
+
+// Liste des surcouches disponibles
+console.log(Overlay);
+
+```
+Ou utilisez l'autocomplétion de votre IDE avec `Overlay.`.
+
 
 ### Gérer la visibilité des couches
 
-Vous pouvez masquer ou afficher des groupes de couches spécifiques :
+Vous pouvez afficher ou masquer des groupes de couches :
 
 ```typescript
-import { showLayers, hideLayers, LayerGroup } from 'carte-facile';
+import { showLayer, hideLayer, LayerGroup } from 'carte-facile';
 
-// Masquer les rues et leurs labels
-hideLayers(map, [LayerGroup.streets, LayerGroup.street_labels]);
+// Afficher un seul groupe de couches
+showLayer(map, LayerGroup.buildings);
 
+// Ou afficher plusieurs groupes de couches
+showLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
 
-// Utiliser showLayers pour afficher des couches qui auraient été masquées
-showLayers(map, [LayerGroup.cadastral_sections, LayerGroup.buildings]);
+// Masquer un seul groupe de couches
+hideLayer(map, LayerGroup.streets);
+
+// Ou masquer plusieurs groupes de couches
+hideLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
 ```
 
-Pour obtenir la liste des groupes de couches disponibles, vous pouvez utiliser l'autocomplétion de votre IDE avec `LayerGroup.`.
+Pour obtenir la liste des groupes de couches disponibles :
+
+```typescript
+import { LayerGroup } from 'carte-facile';
+
+// Liste des groupes de couches disponibles
+console.log(LayerGroup);
+
+```
+Ou utilisez l'autocomplétion de votre IDE avec `LayerGroup.`.
 
 
 ## Contribution
