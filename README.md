@@ -84,21 +84,29 @@ const map = new maplibregl.Map({
 
 ### Ajouter une surcouche (overlay)
 
-Vous pouvez ajouter une surcouche (par exemple le cadastre ou les limites administratives) à votre carte :
+Vous pouvez ajouter une ou plusieurs surcouches (par exemple le cadastre ou les limites administratives) à votre carte :
 
 ```typescript
 import { addOverlay } from 'carte-facile';
 
+// Ajouter une seule surcouche
 addOverlay(map, 'administrativeBoundaries');
+
+// Ou ajouter plusieurs surcouches en même temps
+addOverlay(map, ['administrativeBoundaries', 'cadastre']);
 ```
 > Le style de la surcouche s'adapte automatiquement au fond de carte utilisé.
 
-Pour retirer une surcouche :
+Pour retirer une ou plusieurs surcouches :
 
 ```typescript
 import { removeOverlay } from 'carte-facile';
 
+// Retirer une seule surcouche
 removeOverlay(map, 'administrativeBoundaries');
+
+// Ou retirer plusieurs surcouches en même temps
+removeOverlay(map, ['administrativeBoundaries', 'cadastre']);
 ```
 
 ### Gérer la visibilité des couches

@@ -70,14 +70,20 @@ describe('mapOverlays', () => {
 
   const testOverlay = (type: OverlayType, expectedLayers: number) => {
     describe(`${type} overlay`, () => {
-      it('should add overlay with correct number of layers', () => {
+      it('should add single overlay with correct number of layers', () => {
         addOverlay(map, type);
         expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers);
         expect(map.addSource).toHaveBeenCalled();
       });
 
+      it('should add multiple overlays with correct number of layers', () => {
+        addOverlay(map, [type, Overlay.administrativeBoundaries]);
+        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers + 8); // 8 is the number of layers in administrativeBoundaries
+        expect(map.addSource).toHaveBeenCalled();
+      });
+
       it('should update overlay when style changes', () => {
-        addOverlay(map, Overlay[type]);
+        addOverlay(map, type);
         map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
         const styledataCallback = (map.on as jest.Mock).mock.calls.find(
           call => call[0] === 'styledata'
@@ -86,7 +92,7 @@ describe('mapOverlays', () => {
         expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2); // Called twice: initial + style change
       });
 
-      it('should remove overlay completely', () => {
+      it('should remove single overlay completely', () => {
         addOverlay(map, type);
         map.getLayer = jest.fn().mockReturnValue(true);
         map.getSource = jest.fn().mockReturnValue(true);
@@ -94,6 +100,18 @@ describe('mapOverlays', () => {
         removeOverlay(map, type);
         
         expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers);
+        expect(map.removeSource).toHaveBeenCalled();
+        expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
+      });
+
+      it('should remove multiple overlays completely', () => {
+        addOverlay(map, [type, Overlay.administrativeBoundaries]);
+        map.getLayer = jest.fn().mockReturnValue(true);
+        map.getSource = jest.fn().mockReturnValue(true);
+        
+        removeOverlay(map, [type, Overlay.administrativeBoundaries]);
+        
+        expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers + 8); // 8 is the number of layers in administrativeBoundaries
         expect(map.removeSource).toHaveBeenCalled();
         expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
       });

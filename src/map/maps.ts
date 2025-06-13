@@ -89,57 +89,73 @@ function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
 }
 
 /**
- * Adds an overlay to the map
+ * Adds one or more overlays to the map
  * @param map - The MapLibre map instance
- * @param type - The type of overlay to add (cadastre or administrative-boundaries)
+ * @param type - The type of overlay(s) to add (cadastre, administrative-boundaries, or level-curves)
  */
-export function addOverlay(map: maplibregl.Map, type: OverlayType): void {
+export function addOverlay(
+  map: maplibregl.Map, 
+  type: OverlayType | OverlayType[]
+): void {
+  const types = Array.isArray(type) ? type : [type];
+  
   const update = () => {
-    const overlay = overlayConfigurations[type][getOverlayVariant(map)];
-    Object.entries(overlay.sources).forEach(([id, source]) => {
-      if (!map.getSource(id)) map.addSource(id, source as any);
-    });
-    overlay.layers.forEach(layer => {
-      if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+    types.forEach(singleType => {
+      const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+      Object.entries(overlay.sources).forEach(([id, source]) => {
+        if (!map.getSource(id)) map.addSource(id, source as any);
+      });
+      overlay.layers.forEach(layer => {
+        if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+      });
     });
   };
 
   if (map.loaded()) update();
   else map.once('load', update);
   
-  // Store the update function on the map instance for this overlay type
-  (map as any)[`_overlay_update_${type}`] = update;
+  // Store the update function on the map instance for each overlay type
+  types.forEach(singleType => {
+    (map as any)[`_overlay_update_${singleType}`] = update;
+  });
   map.on('styledata', update);
 }
 
 /**
- * Removes an overlay from the map
+ * Removes one or more overlays from the map
  * @param map - The MapLibre map instance
- * @param type - The type of overlay to remove (cadastre, administrative-boundaries, or level-curves)
+ * @param type - The type of overlay(s) to remove (cadastre, administrative-boundaries, or level-curves)
  */
-export function removeOverlay(map: maplibregl.Map, type: OverlayType): void {
-  const overlay = overlayConfigurations[type][getOverlayVariant(map)];
+export function removeOverlay(
+  map: maplibregl.Map, 
+  type: OverlayType | OverlayType[]
+): void {
+  const types = Array.isArray(type) ? type : [type];
   
-  // Remove all layers from this overlay
-  overlay.layers.forEach(layer => {
-    if (map.getLayer(layer.id)) {
-      map.removeLayer(layer.id);
+  types.forEach(singleType => {
+    const overlay = overlayConfigurations[singleType][getOverlayVariant(map)];
+    
+    // Remove all layers from this overlay
+    overlay.layers.forEach(layer => {
+      if (map.getLayer(layer.id)) {
+        map.removeLayer(layer.id);
+      }
+    });
+
+    // Remove all sources from this overlay
+    Object.keys(overlay.sources).forEach(sourceId => {
+      if (map.getSource(sourceId)) {
+        map.removeSource(sourceId);
+      }
+    });
+
+    // Remove the styledata event listener for this overlay
+    const update = (map as any)[`_overlay_update_${singleType}`];
+    if (update) {
+      map.off('styledata', update);
+      delete (map as any)[`_overlay_update_${singleType}`];
     }
   });
-
-  // Remove all sources from this overlay
-  Object.keys(overlay.sources).forEach(sourceId => {
-    if (map.getSource(sourceId)) {
-      map.removeSource(sourceId);
-    }
-  });
-
-  // Remove the styledata event listener for this overlay
-  const update = (map as any)[`_overlay_update_${type}`];
-  if (update) {
-    map.off('styledata', update);
-    delete (map as any)[`_overlay_update_${type}`];
-  }
 }
 
 /**
