@@ -163,14 +163,14 @@ export function removeOverlay(
  * @param map - The MapLibre map instance
  * @param groups - List of layer groups to show
  */
-export function showLayers(
+export function showLayer(
   map: maplibregl.Map,
   groups: LayerGroupType | LayerGroupType[]
 ): void {
   const groupList = Array.isArray(groups) ? groups : [groups];
 
   if (!map.loaded()) {
-    map.once('load', () => showLayers(map, groupList));
+    map.once('load', () => showLayer(map, groupList));
     return;
   }
 
@@ -187,14 +187,14 @@ export function showLayers(
  * @param map - The MapLibre map instance
  * @param groups - List of layer groups to hide
  */
-export function hideLayers(
+export function hideLayer(
   map: maplibregl.Map,
   groups: LayerGroupType | LayerGroupType[]
 ): void {
   const groupList = Array.isArray(groups) ? groups : [groups];
 
   if (!map.loaded()) {
-    map.once('load', () => hideLayers(map, groupList));
+    map.once('load', () => hideLayer(map, groupList));
     return;
   }
 

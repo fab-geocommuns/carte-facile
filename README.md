@@ -126,19 +126,19 @@ Ou utilisez l'autocomplétion de votre IDE avec `Overlay.`.
 Vous pouvez afficher ou masquer des groupes de couches :
 
 ```typescript
-import { showLayers, hideLayers, LayerGroup } from 'carte-facile';
+import { showLayer, hideLayer, LayerGroup } from 'carte-facile';
 
 // Afficher un seul groupe de couches
-showLayers(map, LayerGroup.buildings);
+showLayer(map, LayerGroup.buildings);
 
 // Ou afficher plusieurs groupes de couches
-showLayers(map, [LayerGroup.buildings, LayerGroup.streets]);
+showLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
 
 // Masquer un seul groupe de couches
-hideLayers(map, LayerGroup.streets);
+hideLayer(map, LayerGroup.streets);
 
 // Ou masquer plusieurs groupes de couches
-hideLayers(map, [LayerGroup.buildings, LayerGroup.streets]);
+hideLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
 ```
 
 Pour obtenir la liste des groupes de couches disponibles :
