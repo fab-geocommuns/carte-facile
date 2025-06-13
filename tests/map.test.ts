@@ -5,8 +5,8 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, LayerGroup, mapOverlays } from '../src/map/maps';
-import { OverlayType } from '../src/map/types';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayers, hideLayers, mapOverlays } from '../src/map/maps';
+import { OverlayType, LayerGroup, Overlay } from '../src/map/types';
 import maplibregl from 'maplibre-gl';
 
 describe('mapStyle', () => {
@@ -77,7 +77,7 @@ describe('mapOverlays', () => {
       });
 
       it('should update overlay when style changes', () => {
-        addOverlay(map, type);
+        addOverlay(map, Overlay[type]);
         map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
         const styledataCallback = (map.on as jest.Mock).mock.calls.find(
           call => call[0] === 'styledata'

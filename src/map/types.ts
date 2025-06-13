@@ -15,14 +15,24 @@ export interface LayerConfig {
   [key: string]: unknown;
 }
 
-// Types pour la gestion mutualisée des overlays
+/**
+ * Overlay configuration types
+ * Used for overlay management
+ */
+export const Overlay = {
+  cadastre: 'cadastre',
+  administrativeBoundaries: 'administrativeBoundaries',
+  levelCurves: 'levelCurves',
+} as const;
+
+export type OverlayType = typeof Overlay[keyof typeof Overlay];
+
 export type OverlayVariant = 'neutral' | 'color';
-export type OverlayType = 'cadastre' | 'administrativeBoundaries' | 'levelCurves';
 
 export interface OverlayConfig {
   sources: Record<string, any>;
   metadata?: Record<string, any>;
-  layers: LayerConfig[];
+  layers: any[];
 }
 
 export type MapOverlays = {
@@ -30,4 +40,23 @@ export type MapOverlays = {
     [variant in OverlayVariant]: OverlayConfig
   }
 };
+
+/**
+ * List of layer groups available
+ * Used for layer visibility management
+ */
+export const LayerGroup = {
+  cadastral_sections: 'cadastral_sections',
+  cadastral_parcels: 'cadastral_parcels',
+  boundaries_communes: 'boundaries_communes',
+  boundaries_epcis: 'boundaries_epcis',
+  boundaries_departments: 'boundaries_departments',
+  boundaries_regions: 'boundaries_regions',
+  boundaries: 'boundaries',
+  buildings: 'buildings',
+  streets: 'streets',
+  street_labels: 'street_labels',
+} as const;
+
+export type LayerGroupType = typeof LayerGroup[keyof typeof LayerGroup];
 
