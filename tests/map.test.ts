@@ -5,7 +5,7 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayer, hideLayer, overlayConfigurations } from '../src/map/maps';
+import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayer, hideLayer, mapOverlays } from '../src/map/maps';
 import { OverlayType, LayerGroup, Overlay } from '../src/map/types';
 import maplibregl from 'maplibre-gl';
 
