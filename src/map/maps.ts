@@ -165,16 +165,18 @@ export function removeOverlay(
  */
 export function showLayers(
   map: maplibregl.Map,
-  groups: LayerGroupType[]
+  groups: LayerGroupType | LayerGroupType[]
 ): void {
+  const groupList = Array.isArray(groups) ? groups : [groups];
+
   if (!map.loaded()) {
-    map.once('load', () => showLayers(map, groups));
+    map.once('load', () => showLayers(map, groupList));
     return;
   }
 
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groups.includes(group as LayerGroupType)) {
+    if (group && groupList.includes(group as LayerGroupType)) {
       map.setLayoutProperty(layer.id, 'visibility', 'visible');
     }
   });
@@ -187,16 +189,18 @@ export function showLayers(
  */
 export function hideLayers(
   map: maplibregl.Map,
-  groups: LayerGroupType[]
+  groups: LayerGroupType | LayerGroupType[]
 ): void {
+  const groupList = Array.isArray(groups) ? groups : [groups];
+
   if (!map.loaded()) {
-    map.once('load', () => hideLayers(map, groups));
+    map.once('load', () => hideLayers(map, groupList));
     return;
   }
 
   map.getStyle().layers?.forEach(layer => {
     const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groups.includes(group as LayerGroupType)) {
+    if (group && groupList.includes(group as LayerGroupType)) {
       map.setLayoutProperty(layer.id, 'visibility', 'none');
     }
   });

@@ -123,25 +123,30 @@ Ou utilisez l'autocomplétion de votre IDE avec `Overlay.`.
 
 ### Gérer la visibilité des couches
 
-Vous pouvez masquer ou afficher des groupes de couches spécifiques :
+Vous pouvez afficher ou masquer des groupes de couches :
 
 ```typescript
 import { showLayers, hideLayers, LayerGroup } from 'carte-facile';
 
-// Masquer les rues et leurs labels
-hideLayers(map, [LayerGroup.streets, LayerGroup.street_labels]);
+// Afficher un seul groupe de couches
+showLayers(map, LayerGroup.buildings);
 
+// Ou afficher plusieurs groupes de couches
+showLayers(map, [LayerGroup.buildings, LayerGroup.streets]);
 
-// Utiliser showLayers pour afficher des couches qui auraient été masquées
-showLayers(map, [LayerGroup.cadastral_sections, LayerGroup.buildings]);
+// Masquer un seul groupe de couches
+hideLayers(map, LayerGroup.streets);
+
+// Ou masquer plusieurs groupes de couches
+hideLayers(map, [LayerGroup.buildings, LayerGroup.streets]);
 ```
 
-Pour obetnir la liste des groupes de couches disponibles :
+Pour obtenir la liste des groupes de couches disponibles :
 
 ```typescript
 import { LayerGroup } from 'carte-facile';
 
-// Liste des surcouches disponibles
+// Liste des groupes de couches disponibles
 console.log(LayerGroup);
 
 ```
