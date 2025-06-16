@@ -571,6 +571,7 @@
     {
       "id": "Ferre souterrain - trait perpendic fin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
       "minzoom": 0,
@@ -3663,6 +3664,7 @@
     {
       "id": "Routier superieur - filet interieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
       "minzoom": 5,
