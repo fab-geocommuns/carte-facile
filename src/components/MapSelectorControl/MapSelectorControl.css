@@ -1,0 +1,133 @@
+.maplibregl-ctrl-map-selector {
+  position: relative;
+}
+
+.map-selector-toggle {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.map-selector-toggle:hover {
+  background: #f5f5f5;
+}
+
+.map-selector-toggle.active {
+  background: #0066cc;
+  color: white;
+}
+
+.map-selector-panel {
+  position: absolute;
+  padding: 12px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  width: 280px;
+  z-index: 1000;
+}
+
+/* Positionnement selon la position du contrôle */
+.maplibregl-ctrl-top-right .map-selector-panel {
+  top: 0;
+  right: 0;
+}
+
+.maplibregl-ctrl-top-left .map-selector-panel {
+  top: 0;
+  left: 0;
+}
+
+.maplibregl-ctrl-bottom-right .map-selector-panel {
+  bottom: 0;
+  right: 0;
+}
+
+.maplibregl-ctrl-bottom-left .map-selector-panel {
+  bottom: 0;
+  left: 0;
+}
+
+.map-selector-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  z-index: 1001;
+}
+
+.map-selector-close:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.map-selector-styles,
+.map-selector-overlays {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  margin-top: 8px;
+}
+
+.map-selector-overlays {
+  margin-bottom: 0;
+}
+
+.map-selector-card {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+  transition: border-color 0.2s, transform 0.1s;
+}
+
+.map-selector-card:hover {
+  border-color: #999;
+  transform: translateY(-1px);
+}
+
+.map-selector-card.active {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 1px #0066cc;
+}
+
+.map-selector-card img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  display: block;
+}
+
+.map-selector-card__title {
+  padding: 6px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+  color: #333;
+  line-height: 1.2;
+}

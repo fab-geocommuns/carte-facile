@@ -1,10 +1,5 @@
-.maplibregl-ctrl-zoom-level {
+.cartefacile-ctrl-zoom-level {
   padding: 4px 8px;
   font-weight: 700;
   color: #000;
-}
-
-/* Thème DSFR */
-[data-theme="dsfr"].maplibregl-ctrl-zoom-level {
-  font-family: 'Marianne', Arial, sans-serif;
 }
