@@ -4,6 +4,7 @@ import { Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
 import './MapSelectorControl.css';
 
+/** Template for the map selector panel structure */
 const MAP_SELECTOR_TEMPLATE = `
     <button class="cartefacile-ctrl-map-selector-close-btn" title="Fermer">x</button>
     <h3>Cartes</h3>
@@ -12,6 +13,18 @@ const MAP_SELECTOR_TEMPLATE = `
     <div class="cartefacile-ctrl-map-selector-section"></div>
 `;
 
+/** Template for individual style/overlay cards */
+const CARD_TEMPLATE = (id: string, title: string, thumbnail: string) => `
+    <div class="cartefacile-ctrl-map-selector-card" data-id="${id}">
+        <img src="${thumbnail}" alt="Aperçu de ${title}">
+        <div class="cartefacile-ctrl-map-selector-card__title">${title}</div>
+    </div>
+`;
+
+/**
+ * MapLibre control for selecting map styles and overlays
+ * Provides a toggle button that opens a panel with style and overlay options
+ */
 export class MapSelectorControl implements IControl {
     private _map?: Map;
     private _container!: HTMLDivElement;
@@ -22,38 +35,43 @@ export class MapSelectorControl implements IControl {
     private _activeOverlays: Set<string> = new Set();
 
     constructor() {
-        // Utilise directement CarteFacile.mapStyles
+        // Uses CarteFacile.mapStyles directly
     }
 
+    /** Creates all style and overlay cards from available data */
     private _createAllCards(): void {
-        // Styles
+        // Create style cards
         Object.entries(mapStyles).forEach(([key, obj]) => {
-            this._styleCards[key] = this._createCard(
+            const card = this._createCardFromTemplate(
                 key,
                 key.charAt(0).toUpperCase() + key.slice(1),
                 mapThumbnails[key as keyof typeof mapThumbnails] || '',
-                () => this._onStyleClick(key, obj, this._styleCards[key])
+                () => this._onStyleClick(key, obj, card)
             );
-            if (key === 'simple') this._styleCards[key].classList.add('active');
+            this._styleCards[key] = card;
+            if (key === 'simple') card.classList.add('active');
         });
 
-        // Overlays
+        // Create overlay cards
         Object.values(Overlay).forEach(id => {
-            this._overlayCards[id] = this._createCard(
+            const card = this._createCardFromTemplate(
                 id,
                 id.charAt(0).toUpperCase() + id.slice(1),
                 mapThumbnails[id as keyof typeof mapThumbnails] || '',
-                () => this._onOverlayClick(id, this._overlayCards[id])
+                () => this._onOverlayClick(id, card)
             );
+            this._overlayCards[id] = card;
         });
     }
 
+    /** Handles style card click events */
     private _onStyleClick(styleKey: string, styleObj: any, card: HTMLElement): void {
         this._map!.setStyle(styleObj);
         Object.values(this._styleCards).forEach(c => c.classList.remove('active'));
         card.classList.add('active');
     }
 
+    /** MapLibre IControl interface method - creates the control structure */
     onAdd(map: Map): HTMLElement {
         this._map = map;
         this._container = document.createElement('div');
@@ -67,15 +85,17 @@ export class MapSelectorControl implements IControl {
         return this._container;
     }
 
+    /** Creates the toggle button */
     private _createToggleButton(): HTMLButtonElement {
         const toggleButton = document.createElement('button');
         toggleButton.className = 'cartefacile-ctrl-map-selector';
         toggleButton.innerHTML = '🗺️';
         toggleButton.title = 'Sélecteur de carte';
-        toggleButton.addEventListener('click', () => this._open(toggleButton, this._panel));
+        toggleButton.addEventListener('click', () => this._open(this._toggleButton, this._panel));
         return toggleButton;
     }
 
+    /** Creates the main selector panel */
     private _createPanel(): HTMLDivElement {
         const panel = document.createElement('div');
         panel.className = 'cartefacile-ctrl-map-selector-panel';
@@ -83,7 +103,6 @@ export class MapSelectorControl implements IControl {
         
         panel.innerHTML = MAP_SELECTOR_TEMPLATE;
         
-        // Récupérer les éléments avec querySelector
         const closeButton = panel.querySelector('.cartefacile-ctrl-map-selector-close-btn') as HTMLButtonElement;
         const stylesContainer = panel.querySelectorAll('.cartefacile-ctrl-map-selector-section')[0] as HTMLDivElement;
         const overlaysContainer = panel.querySelectorAll('.cartefacile-ctrl-map-selector-section')[1] as HTMLDivElement;
@@ -97,25 +116,22 @@ export class MapSelectorControl implements IControl {
         return panel;
     }
 
+    /** Adds generated cards to their containers */
     private _addCardsToContainers(stylesContainer: HTMLDivElement, overlaysContainer: HTMLDivElement): void {
         Object.values(this._styleCards).forEach(card => stylesContainer.appendChild(card));
         Object.values(this._overlayCards).forEach(card => overlaysContainer.appendChild(card));
     }
 
-    private _createCard(id: string, title: string, thumbnail: string, onClick: () => void): HTMLElement {
-        const card = document.createElement('div');
-        card.className = 'cartefacile-ctrl-map-selector-card';
-        card.dataset.id = id;
-        
-        card.innerHTML = `
-            <img src="${thumbnail}" alt="Aperçu de ${title}">
-            <div class="cartefacile-ctrl-map-selector-card__title">${title}</div>
-        `;
-        
+    /** Creates a card element from template */
+    private _createCardFromTemplate(id: string, title: string, thumbnail: string, onClick: () => void): HTMLElement {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = CARD_TEMPLATE(id, title, thumbnail);
+        const card = tempDiv.firstElementChild as HTMLElement;
         card.addEventListener('click', onClick);
         return card;
     }
 
+    /** Handles overlay card click events - toggles overlay visibility */
     private _onOverlayClick(overlayId: string, card: HTMLElement): void {
         const isActive = this._activeOverlays.has(overlayId);
         
@@ -130,21 +146,25 @@ export class MapSelectorControl implements IControl {
         }
     }
 
+    /** Opens the selector panel */
     private _open(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
         toggleButton.style.display = 'none';
         panel.style.display = 'block';
     }
 
+    /** Closes the selector panel */
     private _close(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
         toggleButton.style.display = 'block';
         panel.style.display = 'none';
     }
 
+    /** MapLibre IControl interface method - cleanup */
     onRemove(): void {
         this._container.parentNode?.removeChild(this._container);
         this._map = undefined;
     }
 
+    /** MapLibre IControl interface method - default position */
     getDefaultPosition(): ControlPosition {
         return 'top-right';
     }
