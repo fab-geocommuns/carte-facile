@@ -1,5 +1,4 @@
 import { Map, IControl, ControlPosition } from 'maplibre-gl';
-import { Theme } from '../../themes/manager';
 import '../../themes/styles/dsfr.css';
 import './ZoomLevelControl.css';
 

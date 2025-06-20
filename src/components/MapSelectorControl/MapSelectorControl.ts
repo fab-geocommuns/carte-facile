@@ -1,5 +1,4 @@
 import { Map, IControl, ControlPosition } from 'maplibre-gl';
-import { Theme } from '../../themes/manager';
 import { mapStyles, mapThumbnails, mapOverlays, addOverlay, removeOverlay } from '../../maps/maps';
 import { Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
