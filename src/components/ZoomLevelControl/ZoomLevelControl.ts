@@ -4,27 +4,32 @@ import './ZoomLevelControl.css';
 
 export class ZoomLevelControl implements IControl {
     private _map?: Map;
-    private _container!: HTMLDivElement;
+    private _ctrl!: HTMLDivElement;
+    private _label!: HTMLDivElement;
+    private _value!: HTMLSpanElement;
 
     onAdd(map: Map): HTMLElement {
         this._map = map;
-        this._container = document.createElement('div');
-        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+        this._ctrl = document.createElement('div');
+        this._ctrl.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
-        this._container.innerHTML = '<div class="cartefacile-ctrl-zoom-level">Zoom : <span></span></div>';
-        
-        const span = this._container.querySelector('span')!;
-        span.textContent = map.getZoom().toFixed(1);
+        this._label = document.createElement('div');
+        this._label.className = 'cartefacile-ctrl-zoom-level';
+        this._label.textContent = 'Zoom : ';
+        this._value = document.createElement('span');
+        this._value.textContent = map.getZoom().toFixed(1);
+        this._ctrl.appendChild(this._label);
+        this._label.appendChild(this._value);
         
         map.on('zoom', () => {
-            span.textContent = map.getZoom().toFixed(1);
+            this._value.textContent = map.getZoom().toFixed(1);
         });
         
-        return this._container;
+        return this._ctrl;
     }
 
     onRemove() {
-        this._container.parentNode?.removeChild(this._container);
+        this._ctrl.parentNode?.removeChild(this._ctrl);
         this._map = undefined;
     }
 
