@@ -1,4 +1,6 @@
-import { Map, IControl } from 'maplibre-gl';
+import { Map, IControl, ControlPosition } from 'maplibre-gl';
+import { Theme } from '../../themes/manager';
+import '../../themes/styles/dsfr.css';
 import './ZoomLevelControl.css';
 
 export class ZoomLevelControl implements IControl {
@@ -9,6 +11,8 @@ export class ZoomLevelControl implements IControl {
         this._map = map;
         this._container = document.createElement('div');
         this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-zoom-level';
+        this._container.setAttribute('data-theme', Theme.getTheme());
+        
         this._container.innerHTML = 'Zoom : <span></span>';
         
         const span = this._container.querySelector('span')!;
@@ -24,5 +28,9 @@ export class ZoomLevelControl implements IControl {
     onRemove() {
         this._container.parentNode?.removeChild(this._container);
         this._map = undefined;
+    }
+
+    getDefaultPosition(): ControlPosition {
+        return 'bottom-left';
     }
 } 
