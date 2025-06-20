@@ -32,23 +32,22 @@
   "transition": {"duration": 300, "delay": 0},
   "layers": [
     {
-      "id": "bckgrd",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "fond_opaque",
-      "minzoom": 0,
-      "maxzoom": 24,
-      "layout": {"visibility": "visible"},
+      "id": "background",
+      "type": "background",
       "paint": {
-        "fill-color": {
-          "stops": [
-            [4, "rgba(229, 229, 217, 1)"],
-            [5, "rgba(214, 234, 209, 1)"],
-            [12, "rgba(214, 234, 209, 1)"],
-            [13, "rgba(240, 240, 237, 1)"]
-          ]
-        },
-        "fill-opacity": 1
+        "background-color": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          "rgba(229, 229, 217, 1)",
+          5,
+          "rgba(214, 234, 209, 1)",
+          12,
+          "rgba(214, 234, 209, 1)",
+          13,
+          "rgba(240, 240, 237, 1)"
+        ]
       }
     },
     {
