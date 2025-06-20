@@ -1,13 +1,21 @@
-import { Map, IControl, ControlPosition } from 'maplibre-gl';
+import { Map, IControl, ControlPosition, StyleSpecification } from 'maplibre-gl';
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay } from '../../maps/maps';
 import { Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
 import './MapSelectorControl.css';
 
+const MAP_SELECTOR_TEMPLATE = `
+    <button class="cartefacile-ctrl-map-selector-close-btn" title="Fermer">x</button>
+    <h3>Cartes</h3>
+    <div class="cartefacile-ctrl-map-selector-section"></div>
+    <h3>Surcouches</h3>
+    <div class="cartefacile-ctrl-map-selector-section"></div>
+`;
+
 export interface MapOption {
     id: string;
     name: string;
-    style: any; // StyleSpecification
+    style: StyleSpecification;
     thumbnail?: string;
 }
 
@@ -16,23 +24,22 @@ export class MapSelectorControl implements IControl {
     private _container!: HTMLDivElement;
     private _toggleButton!: HTMLButtonElement;
     private _panel!: HTMLDivElement;
-    private _closeButton!: HTMLButtonElement;
     private _styleCards: Record<string, HTMLElement> = {};
     private _overlayCards: Record<string, HTMLElement> = {};
     private _options: MapOption[];
     private _activeOverlays: Set<string> = new Set();
-    private _isOpen: boolean = false;
 
     constructor(options: MapOption[] = []) {
-        // Par défaut, utiliser tous les styles de carte-facile
-        const defaultOptions: MapOption[] = Object.keys(mapStyles).map(key => ({
+        this._options = options.length > 0 ? options : this._createDefaultOptions();
+    }
+
+    private _createDefaultOptions(): MapOption[] {
+        return Object.keys(mapStyles).map(key => ({
             id: key,
             name: key.charAt(0).toUpperCase() + key.slice(1),
             style: mapStyles[key as keyof typeof mapStyles],
             thumbnail: mapThumbnails[key as keyof typeof mapThumbnails]
         }));
-        
-        this._options = options.length > 0 ? options : defaultOptions;
     }
 
     onAdd(map: Map): HTMLElement {
@@ -40,127 +47,106 @@ export class MapSelectorControl implements IControl {
         this._container = document.createElement('div');
         this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
-        this._createToggleButton();
-        this._createPanel();
+        this._toggleButton = this._createToggleButton();
+        const panel = this._createPanel();
         
         this._container.appendChild(this._toggleButton);
-        this._container.appendChild(this._panel);
+        this._container.appendChild(panel);
         return this._container;
     }
 
-    private _createToggleButton() {
-        this._toggleButton = document.createElement('button');
-        this._toggleButton.className = 'cartefacile-ctrl-map-selector-button';
-        this._toggleButton.innerHTML = '🗺️';
-        this._toggleButton.title = 'Sélecteur de carte';
-        this._toggleButton.addEventListener('click', () => this.open());
+    private _createToggleButton(): HTMLButtonElement {
+        const toggleButton = document.createElement('button');
+        toggleButton.className = 'cartefacile-ctrl-map-selector';
+        toggleButton.innerHTML = '🗺️';
+        toggleButton.title = 'Sélecteur de carte';
+        toggleButton.addEventListener('click', () => this._open(toggleButton, this._panel));
+        return toggleButton;
     }
 
-    private _createPanel() {
-        this._panel = document.createElement('div');
-        this._panel.className = 'cartefacile-ctrl-map-selector-panel';
-        this._panel.style.display = 'none';
+    private _createPanel(): HTMLDivElement {
+        const panel = document.createElement('div');
+        panel.className = 'cartefacile-ctrl-map-selector-panel';
+        panel.style.display = 'none';
         
-        this._createCloseButton();
-        this._createStyleCards();
-        this._createOverlayCards();
+        panel.innerHTML = MAP_SELECTOR_TEMPLATE;
         
-        this._panel.appendChild(this._closeButton);
-        this._panel.appendChild(this._createStylesContainer());
-        this._panel.appendChild(this._createOverlaysContainer());
+        const closeButton = panel.querySelector('.cartefacile-ctrl-map-selector-close-btn') as HTMLButtonElement;
+        const stylesContainer = panel.querySelectorAll('.cartefacile-ctrl-map-selector-section')[0] as HTMLDivElement;
+        const overlaysContainer = panel.querySelectorAll('.cartefacile-ctrl-map-selector-section')[1] as HTMLDivElement;
+        
+        closeButton.addEventListener('click', () => this._close(this._toggleButton, panel));
+        
+        this._createAllCards();
+        this._addCardsToContainers(stylesContainer, overlaysContainer);
+        
+        this._panel = panel; // Garder une référence pour _open et _close
+        return panel;
     }
 
-    private _createCloseButton() {
-        this._closeButton = document.createElement('button');
-        this._closeButton.className = 'map-selector-close';
-        this._closeButton.innerHTML = '×';
-        this._closeButton.title = 'Fermer';
-        this._closeButton.addEventListener('click', () => this.close());
+    private _addCardsToContainers(stylesContainer: HTMLDivElement, overlaysContainer: HTMLDivElement): void {
+        Object.values(this._styleCards).forEach(card => stylesContainer.appendChild(card));
+        Object.values(this._overlayCards).forEach(card => overlaysContainer.appendChild(card));
     }
 
-    private _createStyleCards() {
+    private _createAllCards(): void {
+        // Styles
         this._options.forEach(option => {
-            const card = this._createStyleCard(option);
-            this._styleCards[option.id] = card;
-            
-            // Marquer le style simple comme actif par défaut
-            if (option.id === 'simple') {
-                card.classList.add('active');
-            }
+            this._styleCards[option.id] = this._createCard({
+                id: option.id,
+                title: option.name,
+                thumbnail: option.thumbnail || '',
+                onClick: () => this._onStyleClick(option, this._styleCards[option.id])
+            });
+            if (option.id === 'simple') this._styleCards[option.id].classList.add('active');
         });
-    }
 
-    private _createStyleCard(option: MapOption): HTMLElement {
-        const card = document.createElement('div');
-        card.className = 'map-selector-card';
-        card.dataset.styleId = option.id;
-        
-        const img = document.createElement('img');
-        img.src = option.thumbnail || '';
-        img.alt = `Aperçu de ${option.name}`;
-        
-        const title = document.createElement('div');
-        title.className = 'map-selector-card__title';
-        title.textContent = option.name;
-        
-        card.appendChild(img);
-        card.appendChild(title);
-        
-        card.addEventListener('click', () => this._onStyleClick(option, card));
-        
-        return card;
-    }
-
-    private _createOverlayCards() {
+        // Overlays
         Object.values(Overlay).forEach(overlayId => {
-            const card = this._createOverlayCard(overlayId);
-            this._overlayCards[overlayId] = card;
+            this._overlayCards[overlayId] = this._createCard({
+                id: overlayId,
+                title: overlayId.charAt(0).toUpperCase() + overlayId.slice(1),
+                thumbnail: mapThumbnails[overlayId as keyof typeof mapThumbnails] || '',
+                onClick: () => this._onOverlayClick(overlayId, this._overlayCards[overlayId])
+            });
         });
     }
 
-    private _createOverlayCard(overlayId: string): HTMLElement {
+    private _createCard(options: {
+        id: string;
+        title: string;
+        thumbnail: string;
+        onClick: () => void;
+    }): HTMLElement {
         const card = document.createElement('div');
-        card.className = 'map-selector-card';
-        card.dataset.overlayId = overlayId;
+        card.className = 'cartefacile-ctrl-map-selector-card';
+        card.dataset.id = options.id;
         
-        const thumbnailId = overlayId;
         const img = document.createElement('img');
-        img.src = mapThumbnails[thumbnailId as keyof typeof mapThumbnails] || '';
-        img.alt = `Aperçu de ${overlayId}`;
+        img.src = options.thumbnail;
+        img.alt = `Aperçu de ${options.title}`;
         
         const title = document.createElement('div');
-        title.className = 'map-selector-card__title';
-        title.textContent = overlayId.charAt(0).toUpperCase() + overlayId.slice(1);
+        title.className = 'cartefacile-ctrl-map-selector-card__title';
+        title.textContent = options.title;
         
         card.appendChild(img);
         card.appendChild(title);
-        
-        card.addEventListener('click', () => this._onOverlayClick(overlayId, card));
+        card.addEventListener('click', options.onClick);
         
         return card;
     }
 
-    private _createStylesContainer(): HTMLElement {
-        const container = document.createElement('div');
-        container.className = 'map-selector-styles';
-        Object.values(this._styleCards).forEach(card => container.appendChild(card));
-        return container;
-    }
-
-    private _createOverlaysContainer(): HTMLElement {
-        const container = document.createElement('div');
-        container.className = 'map-selector-overlays';
-        Object.values(this._overlayCards).forEach(card => container.appendChild(card));
-        return container;
-    }
-
-    private _onStyleClick(option: MapOption, card: HTMLElement) {
+    private _onStyleClick(option: MapOption, card: HTMLElement): void {
         this._map!.setStyle(option.style);
-        this._updateStyleSelection(card);
+        Object.values(this._styleCards).forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
     }
 
-    private _onOverlayClick(overlayId: string, card: HTMLElement) {
-        if (this._activeOverlays.has(overlayId)) {
+    private _onOverlayClick(overlayId: string, card: HTMLElement): void {
+        const isActive = this._activeOverlays.has(overlayId);
+        
+        if (isActive) {
             removeOverlay(this._map!, overlayId as any);
             this._activeOverlays.delete(overlayId);
             card.classList.remove('active');
@@ -171,25 +157,17 @@ export class MapSelectorControl implements IControl {
         }
     }
 
-    private _updateStyleSelection(activeCard: HTMLElement) {
-        // Mettre à jour seulement les cartes de style
-        Object.values(this._styleCards).forEach(card => card.classList.remove('active'));
-        activeCard.classList.add('active');
+    private _open(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
+        toggleButton.style.display = 'none';
+        panel.style.display = 'block';
     }
 
-    private open() {
-        this._isOpen = true;
-        this._toggleButton.style.display = 'none';
-        this._panel.style.display = 'block';
+    private _close(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
+        toggleButton.style.display = 'block';
+        panel.style.display = 'none';
     }
 
-    private close() {
-        this._isOpen = false;
-        this._toggleButton.style.display = 'block';
-        this._panel.style.display = 'none';
-    }
-
-    onRemove() {
+    onRemove(): void {
         this._container.parentNode?.removeChild(this._container);
         this._map = undefined;
     }
@@ -198,17 +176,15 @@ export class MapSelectorControl implements IControl {
         return 'top-right';
     }
 
-    // Méthode pour ajouter une option dynamiquement
-    addOption(option: MapOption) {
+    addOption(option: MapOption): void {
         this._options.push(option);
-        // Note: nécessiterait de recréer l'interface
     }
 
-    // Méthode pour définir l'option sélectionnée
-    setSelectedMap(mapId: string) {
+    setSelectedMap(mapId: string): void {
         const card = this._styleCards[mapId];
-        if (card) {
-            this._onStyleClick(this._options.find(opt => opt.id === mapId)!, card);
+        const option = this._options.find(opt => opt.id === mapId);
+        if (card && option) {
+            this._onStyleClick(option, card);
         }
     }
 } 

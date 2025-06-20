@@ -1,77 +1,30 @@
-.cartefacile-ctrl-map-selector {
-  position: relative;
-  z-index: 3;
-}
-
-.map-selector-toggle.active {
-  background: #0066cc;
-  color: white;
-}
-
-.map-selector-panel {
-  position: absolute;
+.cartefacile-ctrl-map-selector-panel {
   padding: 12px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   width: 280px;
 }
 
-@media (max-width: 768px) {
-  .map-selector-panel {
-    width: 100vw; /* Pleine largeur sur mobile */
-  }
-}
-
 /* Positionnement selon la position du contrôle */
-.maplibregl-ctrl-top-right .map-selector-panel {
+.maplibregl-ctrl-top-right .cartefacile-ctrl-map-selector-panel {
   top: 0;
   right: 0;
 }
 
-.maplibregl-ctrl-top-left .map-selector-panel {
+.maplibregl-ctrl-top-left .cartefacile-ctrl-map-selector-panel {
   top: 0;
   left: 0;
 }
 
-.maplibregl-ctrl-bottom-right .map-selector-panel {
+.maplibregl-ctrl-bottom-right .cartefacile-ctrl-map-selector-panel {
   bottom: 0;
   right: 0;
 }
 
-.maplibregl-ctrl-bottom-left .map-selector-panel {
+.maplibregl-ctrl-bottom-left .cartefacile-ctrl-map-selector-panel {
   bottom: 0;
   left: 0;
 }
 
-.map-selector-close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
-  border: none;
-  background: #f0f0f0;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-  color: #666;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-  z-index: 1001;
-}
-
-.map-selector-close:hover {
-  background: #e0e0e0;
-  color: #333;
-}
-
-.map-selector-styles,
-.map-selector-overlays {
+.cartefacile-ctrl-map-selector-section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
@@ -79,11 +32,7 @@
   margin-top: 8px;
 }
 
-.map-selector-overlays {
-  margin-bottom: 0;
-}
-
-.map-selector-card {
+.cartefacile-ctrl-map-selector-card {
   position: relative;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -93,24 +42,23 @@
   transition: border-color 0.2s, transform 0.1s;
 }
 
-.map-selector-card:hover {
-  border-color: #999;
-  transform: translateY(-1px);
+.cartefacile-ctrl-map-selector-card:hover {
+  border-color: #0066cc;
 }
 
-.map-selector-card.active {
+.cartefacile-ctrl-map-selector-card.active {
   border-color: #0066cc;
   box-shadow: 0 0 0 1px #0066cc;
 }
 
-.map-selector-card img {
+.cartefacile-ctrl-map-selector-card img {
   width: 100%;
   height: 60px;
   object-fit: cover;
   display: block;
 }
 
-.map-selector-card__title {
+.cartefacile-ctrl-map-selector-card__title {
   padding: 6px 8px;
   font-size: 11px;
   font-weight: 500;
