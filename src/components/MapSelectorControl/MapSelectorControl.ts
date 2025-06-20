@@ -39,8 +39,7 @@ export class MapSelectorControl implements IControl {
     onAdd(map: Map): HTMLElement {
         this._map = map;
         this._container = document.createElement('div');
-        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector';
-        this._container.setAttribute('data-theme', Theme.getTheme());
+        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
         this._createToggleButton();
         this._createPanel();
@@ -52,7 +51,7 @@ export class MapSelectorControl implements IControl {
 
     private _createToggleButton() {
         this._toggleButton = document.createElement('button');
-        this._toggleButton.className = 'map-selector-toggle';
+        this._toggleButton.className = 'cartefacile-ctrl-map-selector-button';
         this._toggleButton.innerHTML = '🗺️';
         this._toggleButton.title = 'Sélecteur de carte';
         this._toggleButton.addEventListener('click', () => this.open());
@@ -60,7 +59,7 @@ export class MapSelectorControl implements IControl {
 
     private _createPanel() {
         this._panel = document.createElement('div');
-        this._panel.className = 'map-selector-panel';
+        this._panel.className = 'cartefacile-ctrl-map-selector-panel';
         this._panel.style.display = 'none';
         
         this._createCloseButton();
@@ -197,7 +196,7 @@ export class MapSelectorControl implements IControl {
     }
 
     getDefaultPosition(): ControlPosition {
-        return 'bottom-left';
+        return 'top-right';
     }
 
     // Méthode pour ajouter une option dynamiquement

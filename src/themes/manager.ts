@@ -1,22 +1,23 @@
 /**
- * Gestionnaire de thème global pour Carte Facile
+ * Gestionnaire de thème pour Carte Facile
  */
-class Theme {
-  private static _theme: 'default' | 'dsfr' = 'default';
+type ThemeType = 'default' | 'dsfr';
+
+export class Theme {
+  private static _theme: ThemeType = 'default';
   
   /**
-   * Définit le thème global pour tous les composants
+   * Applique le thème sur une carte MapLibre
    */
-  static setTheme(theme: 'default' | 'dsfr') {
+  static applyToMap(map: maplibregl.Map, theme: ThemeType = 'default') {
     this._theme = theme;
+    map.getContainer().setAttribute('data-theme', theme);
   }
   
   /**
-   * Récupère le thème global actuel
+   * Récupère le thème actuel
    */
-  static getTheme(): 'default' | 'dsfr' {
+  static getTheme(): ThemeType {
     return this._theme;
   }
-}
-
-export { Theme }; 
+} 

@@ -1,24 +1,6 @@
 .cartefacile-ctrl-map-selector {
   position: relative;
-}
-
-.map-selector-toggle {
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 3px;
-  background: white;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s;
-}
-
-.map-selector-toggle:hover {
-  background: #f5f5f5;
+  z-index: 3;
 }
 
 .map-selector-toggle.active {
@@ -34,7 +16,12 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   width: 280px;
-  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .map-selector-panel {
+    width: 100vw; /* Pleine largeur sur mobile */
+  }
 }
 
 /* Positionnement selon la position du contrôle */

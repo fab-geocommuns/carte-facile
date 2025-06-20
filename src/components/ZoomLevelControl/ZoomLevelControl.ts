@@ -10,10 +10,9 @@ export class ZoomLevelControl implements IControl {
     onAdd(map: Map): HTMLElement {
         this._map = map;
         this._container = document.createElement('div');
-        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-zoom-level';
-        this._container.setAttribute('data-theme', Theme.getTheme());
+        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
-        this._container.innerHTML = 'Zoom : <span></span>';
+        this._container.innerHTML = '<div class="cartefacile-ctrl-zoom-level">Zoom : <span></span></div>';
         
         const span = this._container.querySelector('span')!;
         span.textContent = map.getZoom().toFixed(1);
@@ -31,6 +30,6 @@ export class ZoomLevelControl implements IControl {
     }
 
     getDefaultPosition(): ControlPosition {
-        return 'bottom-left';
+        return 'top-right';
     }
 } 
