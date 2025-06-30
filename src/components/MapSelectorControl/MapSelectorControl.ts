@@ -119,7 +119,11 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Handles style card click - changes map style */
     private _onStyleClick(styleKey: string, styleObj: maplibregl.StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
         try {
-            this._map?.setStyle(styleObj);
+            if (!this._map || !this._map.getContainer()) {
+                console.warn('Map is not available');
+                return;
+            }
+            this._map.setStyle(styleObj);
             container.querySelectorAll('.cartefacile-ctrl-map-selector-card').forEach(c => c.classList.remove('active'));
             card.classList.add('active');
         } catch (error) {
