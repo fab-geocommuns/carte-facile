@@ -1,6 +1,6 @@
-import { Map, IControl, ControlPosition } from 'maplibre-gl';
+import { Map, IControl, ControlPosition, StyleSpecification } from 'maplibre-gl';
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, mapOverlays } from '../../maps/maps';
-import { Overlay } from '../../maps/types';
+import { OverlayType, Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
 import '../Button/Button.css';
 import './MapSelectorControl.css';
@@ -61,7 +61,7 @@ export class MapSelectorControl implements IControl {
     /** Creates style selection cards */
     private _createStyleCards(container: HTMLDivElement): void {
         Object.entries(mapStyles).forEach(([key, styleObj]) => {
-            const title = (styleObj as any).metadata.fr.name;
+            const title = (styleObj as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
             const card = this._createCard(key, title, mapThumbnails[key as keyof typeof mapThumbnails] || '');
             card.addEventListener('click', () => this._onStyleClick(key, styleObj, container, card));
             container.appendChild(card);
@@ -73,7 +73,7 @@ export class MapSelectorControl implements IControl {
     private _createOverlayCards(container: HTMLDivElement): void {
         Object.values(Overlay).forEach(id => {
             const overlay = mapOverlays[id as keyof typeof mapOverlays];
-            const title = (overlay?.neutral as any).metadata.fr.name;
+            const title = (overlay?.neutral as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
             const card = this._createCard(id, title, mapThumbnails[id as keyof typeof mapThumbnails] || '');
             card.addEventListener('click', () => this._onOverlayClick(id, card));
             container.appendChild(card);
@@ -93,7 +93,7 @@ export class MapSelectorControl implements IControl {
     }
 
     /** Handles style card click - changes map style */
-    private _onStyleClick(styleKey: string, styleObj: any, container: HTMLDivElement, card: HTMLElement): void {
+    private _onStyleClick(styleKey: string, styleObj: StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
         try {
             this._map?.setStyle(styleObj);
             container.querySelectorAll('.cartefacile-ctrl-map-selector-card').forEach(c => c.classList.remove('active'));
@@ -108,11 +108,11 @@ export class MapSelectorControl implements IControl {
         try {
             const isActive = this._activeOverlays.has(overlayId);
             if (isActive) {
-                this._map && removeOverlay(this._map, overlayId as any);
+                this._map && removeOverlay(this._map, overlayId as OverlayType);
                 this._activeOverlays.delete(overlayId);
                 card.classList.remove('active');
             } else {
-                this._map && addOverlay(this._map, overlayId as any);
+                this._map && addOverlay(this._map, overlayId as OverlayType);
                 this._activeOverlays.add(overlayId);
                 card.classList.add('active');
             }
