@@ -15,16 +15,19 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Creates the control structure */
     onAdd(map: maplibregl.Map): HTMLElement {
         this._map = map;
+        
         const container = document.createElement('div');
         container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
         const toggleButton = this._createToggleButton();
         const panel = this._createPanel(map);
         
+        // Ajouter le panel au conteneur de la carte
+        map.getContainer().appendChild(panel);
+        
         this._setupToggleLogic(toggleButton, panel);
         
         container.appendChild(toggleButton);
-        container.appendChild(panel);
         return container;
     }
 
@@ -40,13 +43,8 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Creates the main selector panel with cards */
     private _createPanel(map: maplibregl.Map): HTMLDivElement {
         const panel = document.createElement('div');
-        panel.className = 'cartefacile-ctrl-map-selector-panel';
+        panel.className = 'maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel';
         panel.style.display = 'none';
-        
-        // Calculer la hauteur maximale basée sur la carte
-        const mapHeight = map.getContainer().offsetHeight;
-        const maxHeight = Math.min(mapHeight * 0.5, 600); // 80% de la carte, max 600px
-        panel.style.maxHeight = `${maxHeight}px`;
         
         panel.innerHTML = `
             <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close" title="Fermer"></button>
@@ -130,14 +128,35 @@ export class MapSelectorControl implements maplibregl.IControl {
     private _setupToggleLogic(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
         const toggle = () => {
             const isVisible = panel.style.display !== 'none';
-            toggleButton.style.display = isVisible ? 'block' : 'none';
+            if (!isVisible) {
+                const container = toggleButton.closest('.maplibregl-ctrl-group');
+                let position = 'top-right';
+                
+                if (container) {
+                    const parent = container.parentElement;
+                    const positionMap: Record<string, string> = {
+                        'maplibregl-ctrl-top-left': 'top-left',
+                        'maplibregl-ctrl-bottom-right': 'bottom-right',
+                        'maplibregl-ctrl-bottom-left': 'bottom-left'
+                    };
+                    
+                    for (const [mapClass, panelPosition] of Object.entries(positionMap)) {
+                        if (parent?.classList.contains(mapClass)) {
+                            position = panelPosition;
+                            break;
+                        }
+                    }
+                }
+                
+                // Ajouter la nouvelle classe de position
+                panel.classList.add(`cartefacile-ctrl-${position}`);
+            }
             panel.style.display = isVisible ? 'none' : 'block';
         };
         
         toggleButton.addEventListener('click', toggle);
         panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', toggle);
         
-        // Fermer en cliquant à l'extérieur
         document.addEventListener('click', (e) => {
             if (panel.style.display !== 'none' && 
                 !panel.contains(e.target as Node) && 

@@ -3,8 +3,11 @@
   padding-bottom: 16px;
   width: 240px;
   box-sizing: border-box;
-  max-width: calc(100vw - 20px);
+  max-width: calc(100% - 20px);
   overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+  max-height: calc(100% - 20px);
 }
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
@@ -56,4 +59,28 @@
   border-radius: 4px;
   object-fit: cover;
   border: 2px solid #ffffff;
+}
+
+/* Position top-right (par défaut) */
+.cartefacile-ctrl-top-right {
+    top: 10px;
+    right: 10px;
+}
+
+/* Position top-left */
+.cartefacile-ctrl-top-left {
+    top: 10px;
+    left: 10px;
+}
+
+/* Position bottom-right */
+.cartefacile-ctrl-bottom-right {
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Position bottom-left */
+.cartefacile-ctrl-bottom-left {
+    bottom: 10px;
+    left: 10px;
 }
