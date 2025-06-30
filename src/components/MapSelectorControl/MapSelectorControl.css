@@ -1,68 +1,51 @@
 .cartefacile-ctrl-map-selector-panel {
   padding: 12px;
-  width: 280px;
+  padding-bottom: 16px;
+  width: 240px;
+  box-sizing: border-box;
+  max-width: calc(100vw - 20px);
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-/* Positionnement selon la position du contrôle */
-.maplibregl-ctrl-top-right .cartefacile-ctrl-map-selector-panel {
-  top: 0;
-  right: 0;
+.maplibregl-ctrl button.cartefacile-ctrl-map-selector .maplibregl-ctrl-icon {
+  background-image: url('../../assets/icons/stack-fill.svg');
+  background-size: 20px;
 }
 
-.maplibregl-ctrl-top-left .cartefacile-ctrl-map-selector-panel {
-  top: 0;
-  left: 0;
+.cartefacile-ctrl-map-selector-close-btn {
+  margin-left: auto;
+  border-radius: 4px;
 }
 
-.maplibregl-ctrl-bottom-right .cartefacile-ctrl-map-selector-panel {
-  bottom: 0;
-  right: 0;
-}
-
-.maplibregl-ctrl-bottom-left .cartefacile-ctrl-map-selector-panel {
-  bottom: 0;
-  left: 0;
-}
-
-.cartefacile-ctrl-map-selector-section {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 12px;
-  margin-top: 8px;
+.cartefacile-ctrl-map-selector-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .cartefacile-ctrl-map-selector-card {
-  position: relative;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  overflow: hidden;
   cursor: pointer;
-  background: white;
   transition: border-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  padding: 4px;
 }
 
 .cartefacile-ctrl-map-selector-card:hover {
-  border-color: #0066cc;
+  background-color: rgb(0 0 0/5%);
 }
 
 .cartefacile-ctrl-map-selector-card.active {
-  border-color: #0066cc;
-  box-shadow: 0 0 0 1px #0066cc;
+  background-color: #3ea0eb60;
 }
 
 .cartefacile-ctrl-map-selector-card img {
-  width: 100%;
-  height: 60px;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
   object-fit: cover;
-  display: block;
-}
-
-.cartefacile-ctrl-map-selector-card__title {
-  padding: 6px 8px;
-  font-size: 11px;
-  font-weight: 500;
-  text-align: center;
-  color: #333;
-  line-height: 1.2;
+  border: 2px solid #ffffff;
 }
