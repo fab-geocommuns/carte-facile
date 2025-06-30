@@ -1,4 +1,3 @@
-import { Map, IControl, ControlPosition, StyleSpecification } from 'maplibre-gl';
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, mapOverlays } from '../../maps/maps';
 import { OverlayType, Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
@@ -9,18 +8,18 @@ import './MapSelectorControl.css';
  * MapLibre control for selecting map styles and overlays
  * Provides a toggle button that opens a panel with style and overlay options
  */
-export class MapSelectorControl implements IControl {
-    private _map?: Map;
+export class MapSelectorControl implements maplibregl.IControl {
+    private _map?: maplibregl.Map;
     private _activeOverlays: Set<string> = new Set();
 
     /** Creates the control structure */
-    onAdd(map: Map): HTMLElement {
+    onAdd(map: maplibregl.Map): HTMLElement {
         this._map = map;
         const container = document.createElement('div');
         container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
         const toggleButton = this._createToggleButton();
-        const panel = this._createPanel();
+        const panel = this._createPanel(map);
         
         this._setupToggleLogic(toggleButton, panel);
         
@@ -39,10 +38,16 @@ export class MapSelectorControl implements IControl {
     }
 
     /** Creates the main selector panel with cards */
-    private _createPanel(): HTMLDivElement {
+    private _createPanel(map: maplibregl.Map): HTMLDivElement {
         const panel = document.createElement('div');
         panel.className = 'cartefacile-ctrl-map-selector-panel';
         panel.style.display = 'none';
+        
+        // Calculer la hauteur maximale basée sur la carte
+        const mapHeight = map.getContainer().offsetHeight;
+        const maxHeight = Math.min(mapHeight * 0.5, 600); // 80% de la carte, max 600px
+        panel.style.maxHeight = `${maxHeight}px`;
+        
         panel.innerHTML = `
             <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close" title="Fermer"></button>
             <h3>Cartes</h3>
@@ -93,7 +98,7 @@ export class MapSelectorControl implements IControl {
     }
 
     /** Handles style card click - changes map style */
-    private _onStyleClick(styleKey: string, styleObj: StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
+    private _onStyleClick(styleKey: string, styleObj: maplibregl.StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
         try {
             this._map?.setStyle(styleObj);
             container.querySelectorAll('.cartefacile-ctrl-map-selector-card').forEach(c => c.classList.remove('active'));
@@ -131,16 +136,25 @@ export class MapSelectorControl implements IControl {
         
         toggleButton.addEventListener('click', toggle);
         panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', toggle);
+        
+        // Fermer en cliquant à l'extérieur
+        document.addEventListener('click', (e) => {
+            if (panel.style.display !== 'none' && 
+                !panel.contains(e.target as Node) && 
+                !toggleButton.contains(e.target as Node)) {
+                toggle();
+            }
+        });
     }
 
     /** Cleanup when control is removed */
-    onRemove(): void {
+    onRemove(map: maplibregl.Map): void {
         this._map = undefined;
         this._activeOverlays.clear();
     }
 
     /** Default position for the control */
-    getDefaultPosition(): ControlPosition {
+    getDefaultPosition(): maplibregl.ControlPosition {
         return 'top-right';
     }
 }   
