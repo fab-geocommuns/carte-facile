@@ -47,7 +47,9 @@ export class MapSelectorControl implements IControl {
         panel.className = 'cartefacile-ctrl-map-selector-panel';
         panel.style.display = 'none';
         panel.innerHTML = `
-            <button class="cartefacile-ctrl-map-selector-close-btn" title="Fermer">x</button>
+            <button class="cartefacile-ctrl-map-selector-close-btn" title="Fermer">
+                <span class="maplibregl-ctrl-icon"></span>
+            </button>
             <h3>Cartes</h3>
             <div class="cartefacile-ctrl-map-selector-card-list"></div>
             <h3>Surcouches</h3>
