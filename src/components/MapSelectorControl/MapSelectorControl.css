@@ -8,9 +8,15 @@
   overflow-y: auto;
 }
 
+.cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
+  margin-left: auto;
+}
+
 .cartefacile-ctrl-map-selector-panel h3 {
   margin-top: 0;
   margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list {
@@ -19,20 +25,6 @@
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list:last-child {
   margin-bottom: 0;
-}
-
-.maplibregl-ctrl button.cartefacile-ctrl-map-selector .maplibregl-ctrl-icon {
-  background-image: url('../../assets/icons/stack-fill.svg');
-  background-size: 20px;
-}
-
-.maplibregl-ctrl button.cartefacile-ctrl-map-selector-close-btn {
-  margin-left: auto;
-}
-
-.maplibregl-ctrl button.cartefacile-ctrl-map-selector-close-btn .maplibregl-ctrl-icon {
-  background-image: url('../../assets/icons/close-circle-fill.svg');
-  background-size: 20px;
 }
 
 .cartefacile-ctrl-map-selector-card-list {

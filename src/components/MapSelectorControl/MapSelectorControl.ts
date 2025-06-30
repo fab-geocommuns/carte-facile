@@ -2,6 +2,7 @@ import { Map, IControl, ControlPosition } from 'maplibre-gl';
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, mapOverlays } from '../../maps/maps';
 import { Overlay } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
+import '../Button/Button.css';
 import './MapSelectorControl.css';
 
 /**
@@ -31,12 +32,8 @@ export class MapSelectorControl implements IControl {
     /** Creates the toggle button */
     private _createToggleButton(): HTMLButtonElement {
         const button = document.createElement('button');
-        button.className = 'cartefacile-ctrl-map-selector';
+        button.className = 'cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack';
         button.title = 'Sélecteur de carte';
-
-        const icon = document.createElement('span');
-        icon.className = 'maplibregl-ctrl-icon';
-        button.appendChild(icon);
         
         return button;
     }
@@ -47,9 +44,7 @@ export class MapSelectorControl implements IControl {
         panel.className = 'cartefacile-ctrl-map-selector-panel';
         panel.style.display = 'none';
         panel.innerHTML = `
-            <button class="cartefacile-ctrl-map-selector-close-btn" title="Fermer">
-                <span class="maplibregl-ctrl-icon"></span>
-            </button>
+            <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close" title="Fermer"></button>
             <h3>Cartes</h3>
             <div class="cartefacile-ctrl-map-selector-card-list"></div>
             <h3>Surcouches</h3>
@@ -135,7 +130,7 @@ export class MapSelectorControl implements IControl {
         };
         
         toggleButton.addEventListener('click', toggle);
-        panel.querySelector('.cartefacile-ctrl-map-selector-close-btn')?.addEventListener('click', toggle);
+        panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', toggle);
     }
 
     /** Cleanup when control is removed */
