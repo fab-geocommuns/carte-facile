@@ -1,8 +1,18 @@
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, mapOverlays } from '../../maps/maps';
-import { OverlayType, Overlay } from '../../maps/types';
+import { OverlayType, Overlay, MapOverlays } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
 import '../Button/Button.css';
 import './MapSelectorControl.css';
+
+/**
+ * Configuration options for the MapSelectorControl
+ */
+export interface MapSelectorOptions {
+    /** Available map styles (default: all) */
+    styles?: (keyof typeof mapStyles)[];
+    /** Available overlays (default: all) */
+    overlays?: OverlayType[];
+}
 
 /**
  * MapLibre control for selecting map styles and overlays
@@ -10,7 +20,14 @@ import './MapSelectorControl.css';
  */
 export class MapSelectorControl implements maplibregl.IControl {
     private _map?: maplibregl.Map;
-    private _activeOverlays: Set<string> = new Set();
+    private _options: Required<MapSelectorOptions>;
+
+    constructor(options: MapSelectorOptions = {}) {
+        this._options = {
+            styles: options.styles || Object.keys(mapStyles) as (keyof typeof mapStyles)[],
+            overlays: options.overlays || Object.values(Overlay)
+        };
+    }
 
     /** Creates the control structure */
     onAdd(map: maplibregl.Map): HTMLElement {
@@ -63,24 +80,28 @@ export class MapSelectorControl implements maplibregl.IControl {
 
     /** Creates style selection cards */
     private _createStyleCards(container: HTMLDivElement): void {
-        Object.entries(mapStyles).forEach(([key, styleObj]) => {
-            const title = (styleObj as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
-            const card = this._createCard(key, title, mapThumbnails[key as keyof typeof mapThumbnails] || '');
-            card.addEventListener('click', () => this._onStyleClick(key, styleObj, container, card));
-            container.appendChild(card);
-            if (key === 'simple') card.classList.add('active');
-        });
+        Object.entries(mapStyles)
+            .filter(([key]) => this._options.styles.includes(key as keyof typeof mapStyles))
+            .forEach(([key, styleObj]) => {
+                const title = (styleObj as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
+                const card = this._createCard(key, title, mapThumbnails[key as keyof typeof mapThumbnails] || '');
+                card.addEventListener('click', () => this._onStyleClick(key, styleObj, container, card));
+                container.appendChild(card);
+                if (key === 'simple') card.classList.add('active');
+            });
     }
 
     /** Creates overlay selection cards */
     private _createOverlayCards(container: HTMLDivElement): void {
-        Object.values(Overlay).forEach(id => {
-            const overlay = mapOverlays[id as keyof typeof mapOverlays];
-            const title = (overlay?.neutral as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
-            const card = this._createCard(id, title, mapThumbnails[id as keyof typeof mapThumbnails] || '');
-            card.addEventListener('click', () => this._onOverlayClick(id, card));
-            container.appendChild(card);
-        });
+        Object.values(Overlay)
+            .filter(id => this._options.overlays.includes(id as OverlayType))
+            .forEach(id => {
+                const overlay = mapOverlays[id as keyof typeof mapOverlays];
+                const title = (overlay?.neutral as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
+                const card = this._createCard(id, title, mapThumbnails[id as keyof typeof mapThumbnails] || '');
+                card.addEventListener('click', () => this._onOverlayClick(id, card));
+                container.appendChild(card);
+            });
     }
 
     /** Creates a card element */
@@ -109,14 +130,13 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Handles overlay card click - toggles overlay visibility */
     private _onOverlayClick(overlayId: string, card: HTMLElement): void {
         try {
-            const isActive = this._activeOverlays.has(overlayId);
+            const isActive = card.classList.contains('active');
+            
             if (isActive) {
                 this._map && removeOverlay(this._map, overlayId as OverlayType);
-                this._activeOverlays.delete(overlayId);
                 card.classList.remove('active');
             } else {
                 this._map && addOverlay(this._map, overlayId as OverlayType);
-                this._activeOverlays.add(overlayId);
                 card.classList.add('active');
             }
         } catch (error) {
@@ -169,7 +189,6 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Cleanup when control is removed */
     onRemove(map: maplibregl.Map): void {
         this._map = undefined;
-        this._activeOverlays.clear();
     }
 
     /** Default position for the control */

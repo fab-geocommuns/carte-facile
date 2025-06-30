@@ -21,6 +21,7 @@ La documentation officielle est disponible sur le site dédié : [Documentation 
     - [Exemples d'utilisation](#exemples-dutilisation)
       - [Ajouter une carte avec MapLibre](#ajouter-une-carte-avec-maplibre)
     - [Ajouter une surcouche (overlay)](#ajouter-une-surcouche-overlay)
+    - [Ajouter le sélecteur de carte et surcouches](#ajouter-le-sélecteur-de-carte-et-surcouches)
     - [Gérer la visibilité des couches](#gérer-la-visibilité-des-couches)
   - [Contribution](#contribution)
   - [Développement](#développement)
@@ -119,6 +120,29 @@ console.log(Overlay);
 
 ```
 Ou utilisez l'autocomplétion de votre IDE avec `Overlay.`.
+
+### Ajouter le sélecteur de carte et surcouches
+
+Ce composant vous permet d'avoir immédiatement accès aux cartes et surcouches disponibles à travers une interface pour votre carte.
+
+Pour ajouter le sélecteur de carte par défaut :
+
+```typescript
+import { MapSelectorControl } from 'carte-facile';
+
+map.addControl(new MapSelectorControl);
+```
+
+Pour préciser les cartes et surcouches que vous voulez afficher dans le composant, et préciser sa position : 
+
+```typescript
+import { MapSelectorControl } from 'carte-facile';
+
+map.addControl(new MapSelectorControl({
+  styles: ['simple', 'aerial'],
+  overlays: ['administrativeBoundaries', 'cadastre']
+}), 'bottom-left');
+```
 
 
 ### Gérer la visibilité des couches
