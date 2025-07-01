@@ -116,14 +116,21 @@ export class MapSelectorControl implements maplibregl.IControl {
         return card;
     }
 
+    /** Ensures the map is available and valid */
+    private _ensureMapAvailable(): boolean {
+        if (!this._map || !this._map.getContainer()) {
+            console.warn('Map is not available');
+            return false;
+        }
+        return true;
+    }
+
     /** Handles style card click - changes map style */
     private _onStyleClick(styleKey: string, styleObj: maplibregl.StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
         try {
-            if (!this._map || !this._map.getContainer()) {
-                console.warn('Map is not available');
-                return;
-            }
-            this._map.setStyle(styleObj);
+            if (!this._ensureMapAvailable()) return;
+            
+            this._map!.setStyle(styleObj);
             container.querySelectorAll('.cartefacile-ctrl-map-selector-card').forEach(c => c.classList.remove('active'));
             card.classList.add('active');
         } catch (error) {
@@ -134,13 +141,15 @@ export class MapSelectorControl implements maplibregl.IControl {
     /** Handles overlay card click - toggles overlay visibility */
     private _onOverlayClick(overlayId: string, card: HTMLElement): void {
         try {
+            if (!this._ensureMapAvailable()) return;
+            
             const isActive = card.classList.contains('active');
             
             if (isActive) {
-                this._map && removeOverlay(this._map, overlayId as OverlayType);
+                removeOverlay(this._map!, overlayId as OverlayType);
                 card.classList.remove('active');
             } else {
-                this._map && addOverlay(this._map, overlayId as OverlayType);
+                addOverlay(this._map!, overlayId as OverlayType);
                 card.classList.add('active');
             }
         } catch (error) {
@@ -148,43 +157,49 @@ export class MapSelectorControl implements maplibregl.IControl {
         }
     }
 
-    /** Sets up panel toggle functionality */
+    /**
+     * Sets up the open/close logic for the map selector panel.
+     * - Dynamically positions the panel based on the control's location.
+     * - Handles open/close via the main button, close icon, or outside click.
+     */
     private _setupToggleLogic(toggleButton: HTMLButtonElement, panel: HTMLDivElement): void {
+        // Dynamically determine the panel position based on the MapLibre control location
+        const getPanelPosition = (): string => {
+            const container = toggleButton.closest('.maplibregl-ctrl-group');
+            if (!container) return 'top-right';
+            const parent = container.parentElement;
+            const positionMap: Record<string, string> = {
+                'maplibregl-ctrl-top-left': 'top-left',
+                'maplibregl-ctrl-bottom-right': 'bottom-right',
+                'maplibregl-ctrl-bottom-left': 'bottom-left'
+            };
+            for (const [mapClass, panelPosition] of Object.entries(positionMap)) {
+                if (parent?.classList.contains(mapClass)) return panelPosition;
+            }
+            return 'top-right';
+        };
+
+        // Open or close the panel
         const toggle = () => {
             const isVisible = panel.style.display !== 'none';
             if (!isVisible) {
-                const container = toggleButton.closest('.maplibregl-ctrl-group');
-                let position = 'top-right';
-                
-                if (container) {
-                    const parent = container.parentElement;
-                    const positionMap: Record<string, string> = {
-                        'maplibregl-ctrl-top-left': 'top-left',
-                        'maplibregl-ctrl-bottom-right': 'bottom-right',
-                        'maplibregl-ctrl-bottom-left': 'bottom-left'
-                    };
-                    
-                    for (const [mapClass, panelPosition] of Object.entries(positionMap)) {
-                        if (parent?.classList.contains(mapClass)) {
-                            position = panelPosition;
-                            break;
-                        }
-                    }
-                }
-                
-                // Ajouter la nouvelle classe de position
-                panel.classList.add(`cartefacile-ctrl-${position}`);
+                // Add the dynamic position class to the panel
+                panel.classList.add(`cartefacile-ctrl-${getPanelPosition()}`);
             }
             panel.style.display = isVisible ? 'none' : 'block';
         };
-        
+
+        // Open/close via the main button
         toggleButton.addEventListener('click', toggle);
+        // Close via the close icon
         panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', toggle);
-        
+        // Close if clicking outside the panel or button
         document.addEventListener('click', (e) => {
-            if (panel.style.display !== 'none' && 
-                !panel.contains(e.target as Node) && 
-                !toggleButton.contains(e.target as Node)) {
+            if (
+                panel.style.display !== 'none' &&
+                !panel.contains(e.target as Node) &&
+                !toggleButton.contains(e.target as Node)
+            ) {
                 toggle();
             }
         });
