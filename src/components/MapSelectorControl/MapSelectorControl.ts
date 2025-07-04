@@ -8,9 +8,9 @@ import './MapSelectorControl.css';
  * Configuration options for the MapSelectorControl
  */
 export interface MapSelectorOptions {
-    /** Available map styles (default: all) */
+    /** Available map styles to show in the selector (default: all styles) */
     styles?: (keyof typeof mapStyles)[];
-    /** Available overlays (default: all) */
+    /** Available overlays to show in the selector (default: all overlays) */
     overlays?: OverlayType[];
 }
 
@@ -30,7 +30,7 @@ export class MapSelectorControl implements maplibregl.IControl {
         };
     }
 
-    /** Creates the control structure */
+    /** Creates and initializes the control structure */
     onAdd(map: maplibregl.Map): HTMLElement {
         this._map = map;
         
@@ -40,12 +40,12 @@ export class MapSelectorControl implements maplibregl.IControl {
         const toggleButton = this._createToggleButton();
         this._panel = this._createPanel(map);
         
-        // Ajouter le panel au conteneur de la carte
+        // Add panel to map container
         map.getContainer().appendChild(this._panel);
         
         this._setupToggleLogic(toggleButton, this._panel);
         
-        // Synchroniser l'état initial après que la carte soit chargée
+        // Sync panel state after map is loaded
         if (map.loaded()) {
             this._syncPanelState();
         } else {
@@ -56,7 +56,7 @@ export class MapSelectorControl implements maplibregl.IControl {
         return container;
     }
 
-    /** Creates the toggle button */
+    /** Creates the main toggle button */
     private _createToggleButton(): HTMLButtonElement {
         const button = document.createElement('button');
         button.className = 'cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack';
@@ -65,7 +65,7 @@ export class MapSelectorControl implements maplibregl.IControl {
         return button;
     }
 
-    /** Creates the main selector panel with cards */
+    /** Creates the main selector panel with style and overlay sections */
     private _createPanel(map: maplibregl.Map): HTMLDivElement {
         const panel = document.createElement('div');
         panel.className = 'maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel';
@@ -86,7 +86,7 @@ export class MapSelectorControl implements maplibregl.IControl {
         return panel;
     }
 
-    /** Creates style selection cards */
+    /** Creates style selection cards for available map styles */
     private _createStyleCards(container: HTMLDivElement): void {
         Object.entries(mapStyles)
             .filter(([key]) => this._options.styles.includes(key as keyof typeof mapStyles))
@@ -99,7 +99,7 @@ export class MapSelectorControl implements maplibregl.IControl {
             });
     }
 
-    /** Creates overlay selection cards */
+    /** Creates overlay selection cards for available overlays */
     private _createOverlayCards(container: HTMLDivElement): void {
         Object.values(Overlay)
             .filter(id => this._options.overlays.includes(id as OverlayType))
@@ -113,7 +113,7 @@ export class MapSelectorControl implements maplibregl.IControl {
             });
     }
 
-    /** Creates a card element */
+    /** Creates a card element with thumbnail and title */
     private _createCard(id: string, title: string, thumbnail: string): HTMLElement {
         const card = document.createElement('div');
         card.className = 'cartefacile-ctrl-map-selector-card';
@@ -125,18 +125,19 @@ export class MapSelectorControl implements maplibregl.IControl {
         return card;
     }
 
-    /** Synchronise l'état du panneau avec la carte actuelle */
+    /** Syncs panel state with current map configuration */
     private _syncPanelState(): void {
         if (!this._map || !this._panel) return;
 
         try {
-            // Synchroniser les styles
+            // Sync style cards with current map style
             const currentStyle = this._map.getStyle();
             const styleCards = this._panel.querySelectorAll('[data-type="style"]');
             
             styleCards.forEach(card => {
                 const cardElement = card as HTMLElement;
                 const styleId = cardElement.dataset.id;
+                // Handle 'simple' style as default when no name is set
                 const isActive = currentStyle.name === styleId || 
                                (styleId === 'simple' && !currentStyle.name) ||
                                (styleId === 'simple' && currentStyle.name === 'simple');
@@ -144,7 +145,7 @@ export class MapSelectorControl implements maplibregl.IControl {
                 cardElement.classList.toggle('active', isActive);
             });
 
-            // Synchroniser les overlays
+            // Sync overlay cards with current overlay state
             const overlayCards = this._panel.querySelectorAll('[data-type="overlay"]');
             
             overlayCards.forEach(card => {
@@ -153,7 +154,7 @@ export class MapSelectorControl implements maplibregl.IControl {
                 const overlay = mapOverlays[overlayId];
                 if (!overlay) return;
 
-                // Vérifier si au moins une source de l'overlay est présente
+                // Check if overlay sources are present on the map
                 const hasOverlay = Object.keys(overlay.neutral.sources).some(sourceId => 
                     this._map!.getSource(sourceId)
                 );
