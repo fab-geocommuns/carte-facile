@@ -21,6 +21,7 @@ export interface MapSelectorOptions {
 export class MapSelectorControl implements maplibregl.IControl {
     private _map?: maplibregl.Map;
     private _options: Required<MapSelectorOptions>;
+    private _panel?: HTMLDivElement;
 
     constructor(options: MapSelectorOptions = {}) {
         this._options = {
@@ -37,12 +38,19 @@ export class MapSelectorControl implements maplibregl.IControl {
         container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
         const toggleButton = this._createToggleButton();
-        const panel = this._createPanel(map);
+        this._panel = this._createPanel(map);
         
         // Ajouter le panel au conteneur de la carte
-        map.getContainer().appendChild(panel);
+        map.getContainer().appendChild(this._panel);
         
-        this._setupToggleLogic(toggleButton, panel);
+        this._setupToggleLogic(toggleButton, this._panel);
+        
+        // Synchroniser l'état initial après que la carte soit chargée
+        if (map.loaded()) {
+            this._syncPanelState();
+        } else {
+            map.once('load', () => this._syncPanelState());
+        }
         
         container.appendChild(toggleButton);
         return container;
@@ -85,9 +93,9 @@ export class MapSelectorControl implements maplibregl.IControl {
             .forEach(([key, styleObj]) => {
                 const title = (styleObj as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
                 const card = this._createCard(key, title, mapThumbnails[key as keyof typeof mapThumbnails] || '');
+                card.dataset.type = 'style';
                 card.addEventListener('click', () => this._onStyleClick(key, styleObj, container, card));
                 container.appendChild(card);
-                if (key === 'simple') card.classList.add('active');
             });
     }
 
@@ -99,6 +107,7 @@ export class MapSelectorControl implements maplibregl.IControl {
                 const overlay = mapOverlays[id as keyof typeof mapOverlays];
                 const title = (overlay?.neutral as unknown as { metadata: { fr: { name: string } } }).metadata.fr.name;
                 const card = this._createCard(id, title, mapThumbnails[id as keyof typeof mapThumbnails] || '');
+                card.dataset.type = 'overlay';
                 card.addEventListener('click', () => this._onOverlayClick(id, card));
                 container.appendChild(card);
             });
@@ -114,6 +123,46 @@ export class MapSelectorControl implements maplibregl.IControl {
             <div class="cartefacile-ctrl-map-selector-card__title">${title}</div>
         `;
         return card;
+    }
+
+    /** Synchronise l'état du panneau avec la carte actuelle */
+    private _syncPanelState(): void {
+        if (!this._map || !this._panel) return;
+
+        try {
+            // Synchroniser les styles
+            const currentStyle = this._map.getStyle();
+            const styleCards = this._panel.querySelectorAll('[data-type="style"]');
+            
+            styleCards.forEach(card => {
+                const cardElement = card as HTMLElement;
+                const styleId = cardElement.dataset.id;
+                const isActive = currentStyle.name === styleId || 
+                               (styleId === 'simple' && !currentStyle.name) ||
+                               (styleId === 'simple' && currentStyle.name === 'simple');
+                
+                cardElement.classList.toggle('active', isActive);
+            });
+
+            // Synchroniser les overlays
+            const overlayCards = this._panel.querySelectorAll('[data-type="overlay"]');
+            
+            overlayCards.forEach(card => {
+                const cardElement = card as HTMLElement;
+                const overlayId = cardElement.dataset.id as OverlayType;
+                const overlay = mapOverlays[overlayId];
+                if (!overlay) return;
+
+                // Vérifier si au moins une source de l'overlay est présente
+                const hasOverlay = Object.keys(overlay.neutral.sources).some(sourceId => 
+                    this._map!.getSource(sourceId)
+                );
+                
+                cardElement.classList.toggle('active', hasOverlay);
+            });
+        } catch (error) {
+            console.warn('Failed to sync panel state:', error);
+        }
     }
 
     /** Ensures the map is available and valid */
