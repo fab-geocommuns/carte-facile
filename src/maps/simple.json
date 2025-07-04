@@ -1,26 +1,24 @@
 {
   "version": 8,
-  "projection": {
-    "type": "globe"
-  },
-  "name": "desaturated",
+  "name": "simple",
   "metadata": {
     "fr": {
-      "name": "Désaturée",
-      "description": "Une carte en niveaux de gris avec des contrastes doux, pour un fond cartographique discret.",
-      "use": "Recommandé pour des applications de datavisualisation et la superposition de données thématiques, notamment des aplats de couleurs. La discrétion de la carte permet de mettre en valeur vos données sans interférences visuelles.",
-      "accessibility": "Les contrastes adoucis permettent une bonne visibilité de vos données superposées. La lisibilité des toponymes est préservée."
+      "name": "Simple",
+      "description": "Une carte couleur de contextualisation géographique, adaptée à la plupart des usages.",
+      "use": "Recommandé pour les applications cartographiques générales. Ses couleurs légères permettent une superposition d'éléments, comme des marqueurs et différents types de données.",
+      "accessibility": "Les contrastes entre les toponymes et les différents aplats des zones géographiques sont travaillés ain d'être bien perceptibles selon une diversité de perceptions visuelles."
     },
     "en": {
-      "name": "Desaturated",
-      "description": "A grayscale map with soft contrasts, for a discreet map background.",
-      "use": "Recommended for datavisualization applications and overlaying thematic data, especially flat colors. The map's unobtrusive appearance allows you to highlight your data without visual interference.",
-      "accessibility": "Soft contrasts make your superimposed data clearly visible. Toponym legibility is preserved."
+      "name": "Simple",
+      "description": "A colorful map for geographic contextualization, suitable for most uses.",
+      "use": "Recommended for general cartographic applications. Its light colors allow elements such as markers and different types of data to be superimposed.",
+      "accessibility": "Contrasts between toponyms and the different flat areas of the geographical zones are worked on so as to be clearly perceptible according to a diversity of visual perceptions."
     },
     "maputnik:renderer": "mlgljs"
   },
   "center": [2.5, 47],
   "zoom": 5,
+  "projection": {"type": "globe"},
   "sources": {
     "plan_ign": {
       "type": "vector",
@@ -34,14 +32,23 @@
   "transition": {"duration": 300, "delay": 0},
   "layers": [
     {
-      "id": "bckgrd",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "fond_opaque",
-      "minzoom": 0,
-      "maxzoom": 24,
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#f6f6f6", "fill-opacity": 1}
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          "rgba(229, 229, 217, 1)",
+          5,
+          "rgba(214, 234, 209, 1)",
+          12,
+          "rgba(214, 234, 209, 1)",
+          13,
+          "rgba(240, 240, 237, 1)"
+        ]
+      }
     },
     {
       "id": "hydro surfacique - Estran",
@@ -50,153 +57,111 @@
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "ZONE_D_ESTRAN"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {"fill-color": "rgba(162, 216, 224, 1)"}
     },
     {
-      "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
+      "id": "orographie : relief - 0m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": [
-        "in",
-        "symbo",
-        "ZONE_BOISEE",
-        "ZONE_FORET_FERMEE_FEUIL",
-        "ZONE_FORET_FERMEE_CONI",
-        "ZONE_FORET_FERMEE_MIXTE",
-        "ZONE_PEUPLERAIE"
-      ],
-      "layout": {"visibility": "visible"},
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_0"],
+      "layout": {"visibility": "none"},
       "paint": {
-        "fill-color": "#dddddd",
-        "fill-opacity": {"stops": [[7, 0], [8, 1]]}
+        "fill-color": "#D6E5BA",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
       }
     },
     {
-      "id": "ocs - vegetation - forêt ouverte",
+      "id": "orographie : relief - 100m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["in", "symbo", "ZONE_FORET_OUVERTE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_100"],
+      "layout": {"visibility": "none"},
+      "paint": {
+        "fill-color": "#F7F2DA",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - lande ligneuse",
+      "id": "orographie : relief - 200m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_200"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {
+        "fill-color": "rgba(218, 218, 206, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - vigne",
+      "id": "orographie : relief - 1000m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_VIGNE"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_1000"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {
+        "fill-color": "rgba(207, 207, 194, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - verger",
+      "id": "orographie : relief - 3000m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_VERGER"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_3000"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {
+        "fill-color": "rgba(197, 197, 183, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - canne à sucre, bananeraie",
+      "id": "orographie : relief - 4000m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_CANNE_BANANE"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_4000"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {
+        "fill-color": "rgba(187, 187, 173, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - mangrovre",
+      "id": "orographie : relief - 5000m",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MANGROVE"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "HYPSO_5000"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {
+        "fill-color": "rgba(174, 174, 160, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+      }
     },
     {
-      "id": "ocs - vegetation - marais",
+      "id": "orographie : relief - glacier",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS"],
+      "source-layer": "oro_relief",
+      "minzoom": 0,
+      "filter": ["==", "symbo", "GLACIER"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd", "fill-opacity": 1}
-    },
-    {
-      "id": "hydro surfacique - marais",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "hydro_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
-    },
-    {
-      "id": "ocs - vegetation - marais salant",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS_SALANT"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
-    },
-    {
-      "id": "ocs - Zone sable sec",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["all", ["in", "symbo", "ZONE_SABLE_SEC"]],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
-    },
-    {
-      "id": "ocs - Zone sable humide",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["in", "symbo", "ZONE_SABLE_HUMIDE", "FOND_CUVETTE_HUMIDE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#cecece"}
-    },
-    {
-      "id": "ocs - Zone graviers galets humides",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "GRAVIERS_GALETS_HUM"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
-    },
-    {
-      "id": "ocs - Zone rocher hydro",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "ZONE_ROCHER_HYDRO"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
-    },
-    {
-      "id": "ocs - Zone glacier",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "ZONE_GLACIER"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-opacity": 1, "fill-color": "rgba(255, 255, 255, 1)"}
+      "paint": {
+        "fill-color": "#FFFFFF",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
+      }
     },
     {
       "id": "bati ZAI - Vert",
@@ -231,7 +196,168 @@
         ]
       ],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#e5e5e5", "fill-opacity": 1}
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
+    },
+    {
+      "id": "bati surfacique cimetière",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "bati_surf",
+      "filter": [
+        "in",
+        "symbo",
+        "CIMETIERE_SURF",
+        "CIMETIERE_MILI_SURF",
+        "NECROPOLE_NATIONALE"
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
+    },
+    {
+      "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": [
+        "in",
+        "symbo",
+        "ZONE_BOISEE",
+        "ZONE_FORET_FERMEE_FEUIL",
+        "ZONE_FORET_FERMEE_CONI",
+        "ZONE_FORET_FERMEE_MIXTE",
+        "ZONE_PEUPLERAIE"
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {
+        "fill-color": "rgba(188, 223, 184, 1)",
+        "fill-opacity": {"stops": [[7, 0], [8, 1]]}
+      }
+    },
+    {
+      "id": "ocs - vegetation - forêt ouverte",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["in", "symbo", "ZONE_FORET_OUVERTE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - lande ligneuse",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(214, 234, 209, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - vigne",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_VIGNE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - verger",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_VERGER"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - canne à sucre, bananeraie",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_CANNE_BANANE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - mangrovre",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MANGROVE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - marais",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)", "fill-opacity": 1}
+    },
+    {
+      "id": "hydro surfacique - marais",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "hydro_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - vegetation - marais salant",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS_SALANT"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - Zone sable sec",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["all", ["in", "symbo", "ZONE_SABLE_SEC"]],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(233, 232, 213, 1)"}
+    },
+    {
+      "id": "ocs - Zone sable humide",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["in", "symbo", "ZONE_SABLE_HUMIDE", "FOND_CUVETTE_HUMIDE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - Zone graviers galets humides",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "GRAVIERS_GALETS_HUM"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - Zone rocher hydro",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "ZONE_ROCHER_HYDRO"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+    },
+    {
+      "id": "ocs - Zone glacier",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "ZONE_GLACIER"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-opacity": 1, "fill-color": "rgba(255, 255, 255, 1)"}
     },
     {
       "id": "bati ZAI - Gris Bleu Elec",
@@ -243,9 +369,9 @@
       "filter": ["==", "nature", "Centrale électrique"],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "#ffffff",
+        "fill-color": "#7993B6",
         "fill-opacity": 0.3,
-        "fill-outline-color": "#c5c5c5"
+        "fill-outline-color": "#7993B6"
       }
     },
     {
@@ -258,20 +384,8 @@
       "filter": ["==", "symbo", "ZONE_BATI"],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "#ffffff",
-        "fill-opacity": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          7,
-          0,
-          8,
-          1,
-          14,
-          1,
-          15,
-          0
-        ]
+        "fill-color": "rgba(240, 240, 237, 1)",
+        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1, 14, 1]
       }
     },
     {
@@ -281,7 +395,7 @@
       "source-layer": "bati_zone_surf",
       "filter": ["==", "symbo", "ZONE_INDUS_ACTI"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#ffffff"}
+      "paint": {"fill-color": "rgba(240, 240, 237, 1)"}
     },
     {
       "id": "hydro surfacique",
@@ -290,7 +404,7 @@
       "source-layer": "hydro_surf",
       "filter": ["in", "symbo", "SURFACE_D_EAU", "BASSIN", "ZONE_MARINE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#cecece"}
+      "paint": {"fill-color": "rgba(151, 205, 213, 1)"}
     },
     {
       "id": "hydro surfacique temporaire",
@@ -299,7 +413,7 @@
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "SURFACE_D_EAU_TEMP"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd"}
+      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
     },
     {
       "id": "réseau hydro  - cours d'eau souterrain",
@@ -315,7 +429,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.5], [17, 6.5]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -335,7 +449,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -354,7 +468,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5],
         "line-opacity": 0.5
@@ -363,11 +477,9 @@
     {
       "id": "Ferre souterrain - voie normale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -398,11 +510,9 @@
     {
       "id": "Ferre souterrain - trait perpendic épais",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -433,11 +543,9 @@
     {
       "id": "Ferre souterrain - voie etroite",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -462,11 +570,9 @@
     {
       "id": "Ferre souterrain - trait perpendic fin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": [
@@ -491,11 +597,9 @@
     {
       "id": "Ferre souterrain - voie service",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 0,
       "maxzoom": 18,
       "filter": ["in", "symbo", "VF_SERVICE_SOU", "VF_NON_EXPLOITEE_SOU"],
@@ -514,11 +618,9 @@
     {
       "id": "Ferre souterrain - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "maxzoom": 18,
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SOU", "TRANSPORT_URBAIN_SOU"],
       "layout": {
@@ -536,11 +638,9 @@
     {
       "id": "Ferre souterrain - 2 trait perpendic - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "maxzoom": 18,
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SOU", "TRANSPORT_URBAIN_SOU"],
       "layout": {
@@ -558,11 +658,9 @@
     {
       "id": "Chemin souterrain - piste cyclable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE_SOU", "VOIE_VERTE_SOU"],
       "layout": {
@@ -580,11 +678,9 @@
     {
       "id": "Chemin souterrain - filet exterieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SOU"],
       "layout": {
@@ -601,11 +697,9 @@
     {
       "id": "Chemin souterrain - filet interieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SOU"],
       "layout": {
@@ -623,11 +717,9 @@
     {
       "id": "Chemin souterrain - Rue pietonne",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE_SOU"],
       "layout": {
@@ -645,11 +737,9 @@
     {
       "id": "Chemin souterrain - sentier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER_SOU"],
       "layout": {
@@ -667,11 +757,9 @@
     {
       "id": "Chemin souterrain - chemin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN_SOU"],
       "layout": {
@@ -688,11 +776,9 @@
     {
       "id": "Routier souterrain - filet extérieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "maxzoom": 18,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SOU"],
@@ -702,8 +788,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
       }
@@ -711,11 +797,9 @@
     {
       "id": "Routier souterrain - filet extérieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SOU"],
       "layout": {
@@ -724,8 +808,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
       }
@@ -733,11 +817,9 @@
     {
       "id": "Routier souterrain - filet extérieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -755,19 +837,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SOU"],
       "layout": {
@@ -776,19 +858,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SOU", "NON_CLASSEE_SOU"],
       "layout": {
@@ -797,19 +877,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -826,19 +904,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SOU"],
       "layout": {
@@ -847,19 +925,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -876,19 +954,26 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SOU"],
       "layout": {
@@ -897,19 +982,26 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 7,
       "filter": [
         "in",
@@ -926,19 +1018,26 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SOU"],
       "layout": {
@@ -947,19 +1046,26 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 7,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SOU", "AUTOROU_LIBRE_SOU"],
       "layout": {
@@ -968,19 +1074,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet extérieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SOU"],
       "layout": {
@@ -989,19 +1095,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        },
         "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - filet interieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "maxzoom": 18,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SOU"],
@@ -1011,7 +1117,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1019,11 +1125,9 @@
     {
       "id": "Routier souterrain - filet interieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SOU"],
       "layout": {
@@ -1032,7 +1136,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1040,11 +1144,9 @@
     {
       "id": "Routier souterrain - filet interieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -1062,7 +1164,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         },
@@ -1072,11 +1174,9 @@
     {
       "id": "Routier souterrain - filet interieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SOU"],
       "layout": {
@@ -1085,7 +1185,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1093,11 +1193,9 @@
     {
       "id": "Routier souterrain - filet interieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SOU", "NON_CLASSEE_SOU"],
       "layout": {
@@ -1106,7 +1204,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1114,11 +1212,9 @@
     {
       "id": "Routier souterrain - filet interieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -1135,7 +1231,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         },
@@ -1145,11 +1241,9 @@
     {
       "id": "Routier souterrain - filet interieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SOU"],
       "layout": {
@@ -1158,7 +1252,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -1169,11 +1263,9 @@
     {
       "id": "Routier souterrain - filet interieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -1190,7 +1282,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [6, 1.4],
@@ -1207,11 +1299,9 @@
     {
       "id": "Routier souterrain - filet interieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SOU"],
       "layout": {
@@ -1220,7 +1310,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.4],
@@ -1239,11 +1329,9 @@
     {
       "id": "Routier souterrain - filet interieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -1260,7 +1348,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -1278,11 +1366,9 @@
     {
       "id": "Routier souterrain - filet interieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SOU"],
       "layout": {
@@ -1291,7 +1377,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -1310,11 +1396,9 @@
     {
       "id": "Routier souterrain - filet interieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SOU", "AUTOROU_LIBRE_SOU"],
       "layout": {
@@ -1323,7 +1407,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -1341,11 +1425,9 @@
     {
       "id": "Routier souterrain - axe central - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SOU", "AUTOROU_LIBRE_SOU"],
       "layout": {
@@ -1354,8 +1436,10 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4],
         "line-opacity": 0.5
       }
@@ -1363,11 +1447,9 @@
     {
       "id": "Routier souterrain - filet interieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SOU"],
       "layout": {
@@ -1376,7 +1458,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -1388,17 +1470,16 @@
             [17, 26]
           ]
         },
-        "line-dasharray": [2, 2]
+        "line-dasharray": [2, 2],
+        "line-opacity": 0.5
       }
     },
     {
       "id": "Routier souterrain - axe central - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sou",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SOU"],
       "layout": {
@@ -1407,8 +1488,10 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4],
         "line-opacity": 0.5
       }
@@ -1425,7 +1508,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.4], [17, 5.9]]}
       }
     },
@@ -1442,7 +1525,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]}
       }
     },
@@ -1459,7 +1542,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5]
       }
@@ -1476,7 +1559,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.5], [17, 4]]},
         "line-dasharray": [6, 2]
       }
@@ -1493,7 +1576,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[7, 2], [12, 2.5]]}
       }
     },
@@ -1509,7 +1592,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[7, 3], [11, 5]]}
       }
     },
@@ -1526,7 +1609,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": [
           "interpolate",
           ["exponential", 1.8],
@@ -1539,21 +1622,6 @@
           10
         ]
       }
-    },
-    {
-      "id": "bati surfacique cimetière",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "bati_surf",
-      "filter": [
-        "in",
-        "symbo",
-        "CIMETIERE_SURF",
-        "CIMETIERE_MILI_SURF",
-        "NECROPOLE_NATIONALE"
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#dddddd", "fill-opacity": 1}
     },
     {
       "id": "bati sportif surfacique fond",
@@ -1573,7 +1641,7 @@
       ],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "#e5e5e5",
+        "fill-color": "rgba(234, 237, 222, 1)",
         "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
       }
     },
@@ -1599,7 +1667,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
+        "line-color": "rgba(183, 206, 182, 1)",
         "line-width": 1,
         "line-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
       }
@@ -1607,11 +1675,9 @@
     {
       "id": "bati surfacique",
       "type": "fill",
+      "metadata": {"cartefacile:group": "buildings"},
       "source": "plan_ign",
       "source-layer": "bati_surf",
-      "metadata": {
-        "cartefacile:group": "buildings"
-      },
       "minzoom": 14,
       "filter": [
         "all",
@@ -1640,8 +1706,8 @@
       ],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "#eeeeee",
-        "fill-outline-color": "#c1c1c1",
+        "fill-color": "rgba(213, 213, 208, 1)",
+        "fill-outline-color": "rgba(151, 150, 137, 1)",
         "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1],
         "fill-antialias": true
       }
@@ -1653,7 +1719,7 @@
       "source-layer": "bati_surf",
       "filter": ["in", "symbo", "PISTE_DUR", "PISTE_HERBE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "#eeeeee"}
+      "paint": {"fill-color": "rgba(216, 216, 216, 1)"}
     },
     {
       "id": "construction linéaire - mur",
@@ -1718,11 +1784,9 @@
     {
       "id": "Chemin a niveau - piste cyclable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE", "VOIE_VERTE"],
       "layout": {
@@ -1741,11 +1805,9 @@
     {
       "id": "Chemin a niveau - filet exterieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER"],
       "layout": {
@@ -1761,11 +1823,9 @@
     {
       "id": "Chemin a niveau - filet interieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER"],
       "layout": {
@@ -1782,11 +1842,9 @@
     {
       "id": "Chemin a niveau - Rue pietonne",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE"],
       "layout": {
@@ -1805,11 +1863,9 @@
     {
       "id": "Chemin a niveau - sentier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER"],
       "layout": {
@@ -1828,11 +1884,9 @@
     {
       "id": "Chemin a niveau - chemin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN"],
       "layout": {
@@ -1850,11 +1904,9 @@
     {
       "id": "Routier a niveau - filet extérieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "maxzoom": 18,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT"],
@@ -1864,19 +1916,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO"],
       "layout": {
@@ -1885,19 +1935,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -1915,18 +1963,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT"],
       "layout": {
@@ -1935,18 +1983,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4", "NON_CLASSEE"],
       "layout": {
@@ -1955,18 +2001,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 7,
       "filter": [
         "in",
@@ -1983,18 +2027,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR"],
       "layout": {
@@ -2003,18 +2047,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": [
         "in",
@@ -2031,18 +2075,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR"],
       "layout": {
@@ -2051,18 +2102,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": [
         "in",
@@ -2079,18 +2137,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR"],
       "layout": {
@@ -2099,18 +2164,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": ["in", "symbo", "AUTOROU_PEAGE", "AUTOROU_LIBRE"],
       "layout": {
@@ -2119,18 +2191,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet extérieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": ["==", "symbo", "AUTOROU_CONSTR"],
       "layout": {
@@ -2139,19 +2211,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
+        "line-color": "rgba(187, 187, 187, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        }
       }
     },
     {
       "id": "Routier a niveau - filet interieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
-      "minzoom": 0,
+      "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT"],
       "layout": {
         "visibility": "visible",
@@ -2159,18 +2231,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier a niveau - filet interieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO"],
       "layout": {
@@ -2179,18 +2249,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier a niveau - filet interieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -2208,7 +2276,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         }
@@ -2217,11 +2285,9 @@
     {
       "id": "Routier a niveau - filet interieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT"],
       "layout": {
@@ -2230,18 +2296,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier a niveau - filet interieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4", "NON_CLASSEE"],
       "layout": {
@@ -2250,18 +2314,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier a niveau - filet interieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -2278,7 +2340,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         }
@@ -2287,11 +2349,9 @@
     {
       "id": "Routier a niveau - filet interieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR"],
       "layout": {
@@ -2300,7 +2360,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -2310,11 +2370,9 @@
     {
       "id": "Routier a niveau - filet interieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 6,
       "filter": [
         "in",
@@ -2331,7 +2389,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 1.1],
@@ -2347,11 +2405,9 @@
     {
       "id": "Routier a niveau - filet interieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR"],
       "layout": {
@@ -2360,7 +2416,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.4],
@@ -2377,11 +2433,9 @@
     {
       "id": "Routier a niveau - filet interieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -2398,7 +2452,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.6],
@@ -2414,11 +2468,9 @@
     {
       "id": "Routier a niveau - filet interieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR"],
       "layout": {
@@ -2427,7 +2479,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -2444,11 +2496,9 @@
     {
       "id": "Routier a niveau - filet interieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE", "AUTOROU_LIBRE"],
       "layout": {
@@ -2457,7 +2507,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -2473,11 +2523,9 @@
     {
       "id": "Routier a niveau - axe central - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "AUTOROU_PEAGE", "AUTOROU_LIBRE"],
       "layout": {
@@ -2486,19 +2534,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4]
       }
     },
     {
       "id": "Routier a niveau - filet interieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": ["==", "symbo", "AUTOROU_CONSTR"],
       "layout": {
@@ -2507,7 +2555,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[4, 0.7], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
         },
@@ -2517,11 +2565,9 @@
     {
       "id": "Routier a niveau - axe centrale - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "AUTOROU_CONSTR"],
       "layout": {
@@ -2530,19 +2576,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4]
       }
     },
     {
       "id": "Ferre a niveau - voie normale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2569,11 +2615,9 @@
     {
       "id": "Ferre a niveau - voie normale trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -2601,11 +2645,9 @@
     {
       "id": "Ferre a niveau - voie etroite",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["in", "symbo", "VF_ETROITE_1", "VF_ETROITE_2", "VF_ETROITE"],
       "layout": {
@@ -2621,11 +2663,9 @@
     {
       "id": "Ferre a niveau - voie etroite trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["in", "symbo", "VF_ETROITE_1", "VF_ETROITE_2", "VF_ETROITE"],
       "layout": {
@@ -2642,11 +2682,9 @@
     {
       "id": "Ferre a niveau - voie service",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["in", "symbo", "VF_SERVICE", "VF_NON_EXPLOITEE"],
       "layout": {
@@ -2663,11 +2701,9 @@
     {
       "id": "Ferre a niveau - voie en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR"],
@@ -2685,11 +2721,9 @@
     {
       "id": "Ferre a niveau - voie en construction trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR"],
@@ -2707,11 +2741,9 @@
     {
       "id": "Ferre a niveau - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE", "TRANSPORT_URBAIN"],
       "layout": {
         "visibility": "visible",
@@ -2726,11 +2758,9 @@
     {
       "id": "Ferre a niveau - 2 trait perpendic - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE", "TRANSPORT_URBAIN"],
       "layout": {
         "visibility": "visible",
@@ -2746,11 +2776,9 @@
     {
       "id": "liaison routiere - Bac Liaison Maritime",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_liaison",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "maxzoom": 18,
       "filter": ["in", "symbo", "BAC_AUTO", "BAC", "LIAISON_MARITIME"],
@@ -2760,7 +2788,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#7b7b7b",
+        "line-color": "rgba(144, 182, 211, 1)",
         "line-width": {"stops": [[8, 1], [13, 2.5]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -2769,11 +2797,9 @@
     {
       "id": "liaison routiere - Gue route",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_liaison",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": ["==", "symbo", "GUE_ROUTE"],
       "layout": {
         "visibility": "visible",
@@ -2790,11 +2816,9 @@
     {
       "id": "liaison routiere - Gue chemin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_liaison",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "maxzoom": 18,
       "filter": ["==", "symbo", "GUE_CHEMIN"],
       "layout": {
@@ -2810,11 +2834,9 @@
     {
       "id": "liaison routiere - filet extérieur - Pont passerelle",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_liaison",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": [
         "in",
         "symbo",
@@ -2835,11 +2857,9 @@
     {
       "id": "liaison routiere - filet intérieur - Pont passerelle",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_liaison",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "maxzoom": 24,
       "filter": [
         "in",
@@ -2938,7 +2958,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.5], [17, 6.5]]}
       }
     },
@@ -2954,7 +2974,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.4], [17, 5.9]]}
       }
     },
@@ -2970,7 +2990,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]}
       }
     },
@@ -2986,7 +3006,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#cecece",
+        "line-color": "rgba(151, 205, 213, 1)",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5]
       }
@@ -2994,11 +3014,9 @@
     {
       "id": "Chemin superieur - piste cyclable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "PISTE_CYCLABLE_SUP", "VOIE_VERTE_SUP"],
       "layout": {
@@ -3017,11 +3035,9 @@
     {
       "id": "Chemin superieur - filet exterieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SUP"],
       "layout": {
@@ -3037,11 +3053,9 @@
     {
       "id": "Chemin superieur - filet interieur - escalier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "ESCALIER_SUP"],
       "layout": {
@@ -3058,11 +3072,9 @@
     {
       "id": "Chemin superieur - Rue pietonne",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["==", "symbo", "RUE_PIETONNE_SUP"],
       "layout": {
@@ -3081,11 +3093,9 @@
     {
       "id": "Chemin superieur - sentier",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "SENTIER_SUP"],
       "layout": {
@@ -3104,11 +3114,9 @@
     {
       "id": "Chemin superieur - chemin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_chemin_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": ["==", "symbo", "CHEMIN_SUP"],
       "layout": {
@@ -3126,11 +3134,9 @@
     {
       "id": "Routier superieur - filet extérieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "maxzoom": 18,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SUP"],
@@ -3140,19 +3146,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SUP"],
       "layout": {
@@ -3161,19 +3165,17 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
     {
       "id": "Routier superieur - filet extérieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -3191,18 +3193,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SUP"],
       "layout": {
@@ -3211,18 +3213,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SUP", "NON_CLASSEE_SUP"],
       "layout": {
@@ -3231,18 +3231,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -3259,18 +3257,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SUP"],
       "layout": {
@@ -3279,18 +3277,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": [
         "in",
@@ -3307,18 +3305,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SUP"],
       "layout": {
@@ -3327,18 +3332,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.5],
+            [9, 2.3],
+            [14, 5],
+            [15, 8.1],
+            [16, 11.2],
+            [17, 22]
+          ]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": [
         "in",
@@ -3355,18 +3367,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SUP"],
       "layout": {
@@ -3375,18 +3394,25 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [
+            [6, 1.8],
+            [9, 2.7],
+            [14, 5.9],
+            [15, 9],
+            [16, 12.2],
+            [17, 22.5]
+          ]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 8,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SUP", "AUTOROU_LIBRE_SUP"],
       "layout": {
@@ -3395,18 +3421,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        }
       }
     },
     {
       "id": "Routier superieur - filet extérieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SUP"],
       "layout": {
@@ -3415,18 +3441,18 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {
+          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
+        }
       }
     },
     {
       "id": "Routier superieur - filet interieur - route non revetu carrosable restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT_SUP"],
       "layout": {
@@ -3435,18 +3461,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier superieur - filet interieur - route non revetu carrosable",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_SUP"],
       "layout": {
@@ -3455,18 +3479,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier superieur - filet interieur - bretelle autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 12,
       "filter": [
         "in",
@@ -3484,7 +3506,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         }
@@ -3493,11 +3515,9 @@
     {
       "id": "Routier superieur - filet interieur - route non classee restreint",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT_SUP"],
       "layout": {
@@ -3506,18 +3526,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier superieur - filet interieur - route non classee",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "NON_CLASSEE_4_SUP", "NON_CLASSEE_SUP"],
       "layout": {
@@ -3526,18 +3544,16 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
     {
       "id": "Routier superieur - filet interieur - route locale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -3554,7 +3570,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         }
@@ -3563,11 +3579,9 @@
     {
       "id": "Routier superieur - filet interieur - route locale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 11,
       "filter": ["==", "symbo", "LOCALE_CONSTR_SUP"],
       "layout": {
@@ -3576,7 +3590,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -3586,11 +3600,9 @@
     {
       "id": "Routier superieur - filet interieur - route regionale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -3607,7 +3619,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [6, 1.4],
@@ -3623,11 +3635,9 @@
     {
       "id": "Routier superieur - filet interieur - route regionale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "REGIONALE_CONSTR_SUP"],
       "layout": {
@@ -3636,7 +3646,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [6, 1.5],
@@ -3653,11 +3663,9 @@
     {
       "id": "Routier superieur - filet interieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": [
         "in",
@@ -3674,7 +3682,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -3691,11 +3699,9 @@
     {
       "id": "Routier superieur - filet interieur - route principale en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "PRINCIPALE_CONSTR_SUP"],
       "layout": {
@@ -3704,7 +3710,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [6, 1.8],
@@ -3721,11 +3727,9 @@
     {
       "id": "Routier superieur - filet interieur - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 5,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SUP", "AUTOROU_LIBRE_SUP"],
       "layout": {
@@ -3734,7 +3738,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -3751,11 +3755,9 @@
     {
       "id": "Routier superieur - axe central - autoroute",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["in", "symbo", "AUTOROU_PEAGE_SUP", "AUTOROU_LIBRE_SUP"],
       "layout": {
@@ -3764,19 +3766,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4]
       }
     },
     {
       "id": "Routier superieur - filet interieur - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SUP"],
       "layout": {
@@ -3785,7 +3787,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#e5e5e5",
+        "line-color": "rgba(255, 255, 255, 1)",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -3803,11 +3805,9 @@
     {
       "id": "Routier superieur - axe centrale - autoroute en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 13,
       "filter": ["==", "symbo", "AUTOROU_CONSTR_SUP"],
       "layout": {
@@ -3816,19 +3816,19 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "#c5c5c5",
-        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
+        "line-color": "rgba(197, 197, 197, 1)",
+        "line-width": {
+          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
+        },
         "line-dasharray": [2, 4]
       }
     },
     {
       "id": "Ferre superieur - voie normale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -3855,11 +3855,9 @@
     {
       "id": "Ferre superieur - voie normale trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -3887,11 +3885,9 @@
     {
       "id": "Ferre superieur - voie etroite",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "filter": [
         "in",
@@ -3913,6 +3909,7 @@
     {
       "id": "Ferre superieur - voie etroite trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
       "minzoom": 10,
@@ -3937,11 +3934,9 @@
     {
       "id": "Ferre superieur - voie service",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 14,
       "filter": ["in", "symbo", "VF_SERVICE_SUP", "VF_NON_EXPLOITEE_SUP"],
       "layout": {
@@ -3958,11 +3953,9 @@
     {
       "id": "Ferre superieur - voie en construction",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR_SUP"],
@@ -3980,11 +3973,9 @@
     {
       "id": "Ferre superieur - voie en construction trait perpendic",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "minzoom": 10,
       "maxzoom": 18,
       "filter": ["==", "symbo", "VF_EN_CONSTR_SUP"],
@@ -4002,11 +3993,9 @@
     {
       "id": "Ferre superieur - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SUP", "TRANSPORT_URBAIN_SUP"],
       "layout": {
         "visibility": "visible",
@@ -4021,11 +4010,9 @@
     {
       "id": "Ferre superieur - 2 trait perpendic - funic/urbain",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
-      "metadata": {
-        "cartefacile:group": "streets"
-      },
       "filter": ["in", "symbo", "FUNI_CREMAILLERE_SUP", "TRANSPORT_URBAIN_SUP"],
       "layout": {
         "visibility": "visible",
@@ -4059,7 +4046,7 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "circle-radius": {"stops": [[14, 3], [17, 7], [20, 30]]},
-        "circle-color": "#cecece",
+        "circle-color": "rgba(162, 216, 224, 1)",
         "circle-opacity": 1,
         "circle-stroke-width": 0
       }
@@ -4159,19 +4146,12 @@
     {
       "id": "Limites - Etat",
       "type": "line",
+      "metadata": {"cartefacile:group": "boundaries"},
       "source": "plan_ign",
       "source-layer": "limite_lin",
-      "metadata": {
-        "cartefacile:group": "boundaries"
-      },
       "minzoom": 0,
       "maxzoom": 24,
-      "filter": [
-        "in",
-        "symbo",
-        "LIM_ETAT",
-        "LIM_ETAT_ETRANGER"
-      ],
+      "filter": ["in", "symbo", "LIM_ETAT", "LIM_ETAT_ETRANGER"],
       "layout": {
         "visibility": "visible",
         "line-cap": "butt",
@@ -4198,10 +4178,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4220,10 +4200,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4242,10 +4222,10 @@
         "text-keep-upright": true,
         "text-padding": 1,
         "text-max-angle": 45,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4264,10 +4244,10 @@
         "text-allow-overlap": false,
         "text-padding": 1,
         "text-anchor": "center",
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4286,10 +4266,10 @@
         "text-allow-overlap": false,
         "text-padding": 1,
         "text-anchor": "center",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4305,12 +4285,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
-        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4328,10 +4307,10 @@
         "text-anchor": "center",
         "text-keep-upright": true,
         "text-max-angle": 45,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4358,10 +4337,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4397,10 +4376,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4428,10 +4407,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4463,10 +4442,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4485,10 +4464,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4504,13 +4483,12 @@
         "text-field": "{texte}",
         "text-size": 12,
         "text-anchor": "center",
-        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"],
+        "text-font": ["Noto Sans Italic"],
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4527,12 +4505,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-padding": 5,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4558,12 +4535,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-padding": 5,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4587,9 +4563,8 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"],
+        "text-font": ["Noto Sans Regular"],
         "symbol-z-order": "auto",
         "symbol-avoid-edges": false,
         "icon-allow-overlap": false,
@@ -4599,7 +4574,7 @@
         "icon-pitch-alignment": "auto"
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1,
         "text-translate-anchor": "map"
@@ -4619,10 +4594,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4641,10 +4616,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4661,12 +4636,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
-        "text-allow-overlap": true,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4683,13 +4657,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[1, 10], [6, 20]]},
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#447FB3",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4708,10 +4681,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4744,10 +4717,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4774,10 +4747,10 @@
         "text-keep-upright": true,
         "text-padding": 10,
         "text-max-angle": 45,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4802,10 +4775,10 @@
         "text-keep-upright": true,
         "text-padding": 5,
         "text-max-angle": 45,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4831,12 +4804,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[13, 11], [16, 16]]},
-        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4869,12 +4841,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
-        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4893,10 +4864,10 @@
         "text-size": {"stops": [[13, 15], [16, 19]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4925,10 +4896,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4947,10 +4918,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4974,12 +4945,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
-        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5017,10 +4987,10 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#863831",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5041,11 +5011,11 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Source Sans Pro Italic"],
+        "text-font": ["Noto Sans Italic"],
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#5792C2",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -5070,7 +5040,7 @@
         "text-offset": [0.3, -0.25],
         "text-padding": 3,
         "text-anchor": "bottom-left",
-        "text-font": ["Source Sans Pro"],
+        "text-font": ["Noto Sans Regular"],
         "icon-image": "Metro",
         "icon-size": {"stops": [[15, 0.33], [17, 0.6]]}
       },
@@ -5089,7 +5059,7 @@
         "text-size": 10,
         "text-anchor": "center",
         "text-offset": [0, -1],
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5111,7 +5081,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5129,7 +5099,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5151,7 +5121,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5173,7 +5143,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5195,7 +5165,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5218,7 +5188,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5240,7 +5210,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5262,7 +5232,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5284,7 +5254,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5304,7 +5274,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#447FB3"}
     },
@@ -5322,7 +5292,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5342,7 +5312,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#447FB3"}
     },
@@ -5361,7 +5331,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5385,7 +5355,7 @@
         "text-allow-overlap": false,
         "text-offset": [-2, 0],
         "text-padding": 3,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5410,7 +5380,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5431,7 +5401,7 @@
         "text-size": 10.5,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5456,7 +5426,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5484,7 +5454,7 @@
         "text-size": {"stops": [[12, 11], [16, 13]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5509,7 +5479,7 @@
         "text-size": 9.5,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5534,7 +5504,7 @@
         "text-size": 10,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5562,7 +5532,7 @@
         "text-size": {"stops": [[12, 10], [16, 12]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5589,22 +5559,107 @@
         "text-size": 13,
         "text-allow-overlap": false,
         "text-padding": 2,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
     },
     {
+      "id": "toponyme numéro de route - départementale",
+      "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
+      "source": "plan_ign",
+      "source-layer": "toponyme_routier_numero_lin",
+      "minzoom": 11,
+      "maxzoom": 16,
+      "filter": ["==", "txt_typo", "Départementale"],
+      "layout": {
+        "visibility": "visible",
+        "symbol-placement": "line",
+        "text-field": "{texte}",
+        "text-size": 10.5,
+        "text-allow-overlap": false,
+        "text-padding": 2,
+        "text-anchor": "center",
+        "text-font": ["Noto Sans Regular"],
+        "text-rotation-alignment": "viewport"
+      },
+      "paint": {
+        "text-color": "#4D4D4D",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 4
+      }
+    },
+    {
+      "id": "toponyme numéro de route - nationale",
+      "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
+      "source": "plan_ign",
+      "source-layer": "toponyme_routier_numero_lin",
+      "minzoom": 8,
+      "maxzoom": 16,
+      "filter": ["==", "txt_typo", "Nationale"],
+      "layout": {
+        "visibility": "visible",
+        "symbol-placement": "line",
+        "text-field": "{texte}",
+        "text-size": 12,
+        "text-allow-overlap": false,
+        "text-padding": 0,
+        "text-anchor": "center",
+        "text-font": ["Noto Sans Regular"],
+        "icon-image": "Ecluse",
+        "icon-rotation-alignment": "viewport",
+        "text-rotation-alignment": "viewport",
+        "icon-text-fit": "both",
+        "icon-size": 0
+      },
+      "paint": {
+        "text-color": "rgba(255, 255, 255, 1)",
+        "text-halo-color": "rgba(150, 150, 150, 1)",
+        "text-halo-width": 4
+      }
+    },
+    {
+      "id": "toponyme numéro de route - autoroute",
+      "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
+      "source": "plan_ign",
+      "source-layer": "toponyme_routier_numero_lin",
+      "minzoom": 7,
+      "maxzoom": 16,
+      "filter": ["==", "txt_typo", "Autoroute"],
+      "layout": {
+        "visibility": "visible",
+        "symbol-placement": "line",
+        "text-field": "{texte}",
+        "text-size": 12,
+        "text-allow-overlap": false,
+        "text-padding": 0,
+        "text-anchor": "center",
+        "text-font": ["Noto Sans Regular"],
+        "icon-image": "Ecluse",
+        "icon-rotation-alignment": "viewport",
+        "text-rotation-alignment": "viewport",
+        "icon-text-fit": "both",
+        "icon-size": 0
+      },
+      "paint": {
+        "text-color": "#F0F0F0",
+        "icon-color": "#646464",
+        "text-halo-color": "rgba(133, 133, 133, 1)",
+        "text-halo-width": 4
+      }
+    },
+    {
       "id": "toponyme - odonyme abrégé",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 15,
       "maxzoom": 17,
       "layout": {
@@ -5613,7 +5668,7 @@
         "text-size": 10,
         "text-anchor": "center",
         "text-max-angle": 30,
-        "text-font": ["Source Sans Pro Regular"],
+        "text-font": ["Noto Sans Regular"],
         "visibility": "none"
       },
       "paint": {
@@ -5625,11 +5680,9 @@
     {
       "id": "toponyme - odonyme desabrégé",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "street_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_routier_odonyme_lin",
-      "metadata": {
-        "cartefacile:group": "street_labels"
-      },
       "minzoom": 15,
       "layout": {
         "symbol-placement": "line",
@@ -5637,7 +5690,7 @@
         "text-size": 11,
         "text-anchor": "center",
         "text-max-angle": 30,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5663,7 +5716,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5689,10 +5742,10 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5710,7 +5763,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5735,10 +5788,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5763,10 +5815,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5787,10 +5838,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"],
+        "text-font": ["Noto Sans Regular"],
         "icon-allow-overlap": false
       },
       "paint": {
@@ -5817,7 +5867,7 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5843,10 +5893,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5870,7 +5920,7 @@
         "text-anchor": "bottom-left",
         "text-offset": [0.3, 0.1],
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5896,7 +5946,7 @@
         "text-size": 15,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5921,10 +5971,10 @@
         "text-size": 16,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5946,10 +5996,10 @@
         "text-size": 18,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5968,7 +6018,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5986,7 +6036,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -6004,10 +6054,10 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6026,10 +6076,10 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#686042",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6052,7 +6102,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6078,7 +6128,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Italic"]
+        "text-font": ["Noto Sans Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6101,10 +6151,10 @@
         "text-allow-overlap": false,
         "text-padding": 10,
         "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#2A81A2",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6131,10 +6181,10 @@
         "text-allow-overlap": false,
         "text-padding": 10,
         "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
-        "text-color": "#666666",
+        "text-color": "#287B00",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6152,10 +6202,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6181,10 +6230,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6210,10 +6258,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"],
+        "text-font": ["Noto Sans Regular"],
         "icon-allow-overlap": false
       },
       "paint": {
@@ -6240,10 +6287,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6269,10 +6315,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 13,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6298,10 +6343,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6327,10 +6371,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 15,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6356,10 +6399,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6384,11 +6426,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6413,11 +6454,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6442,11 +6482,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6471,11 +6510,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 13,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6500,11 +6538,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6529,11 +6566,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 15,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6558,11 +6594,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
-        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Bold"]
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6586,7 +6621,7 @@
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6624,7 +6659,7 @@
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6649,12 +6684,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
+        "icon-size": 0.4,
         "text-field": "{texte}",
         "text-size": 13,
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6680,13 +6716,12 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "Localite",
         "text-field": "{texte}",
         "text-size": {"stops": [[7.5, 12], [12, 13]]},
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Source Sans Pro Regular"],
+        "text-font": ["Noto Sans Regular"],
         "text-transform": "none"
       },
       "paint": {
@@ -6715,17 +6750,17 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": {"stops": [[5, 12], [7, 14]]},
-        "text-allow-overlap": false,
+        "text-size": 14,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Source Sans Pro Bold"]
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
         "text-color": "#000000",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
-        "text-halo-width": 1
+        "text-halo-width": 1,
+        "icon-halo-width": 4
       }
     },
     {
@@ -6747,16 +6782,51 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": {"stops": [[3, 12], [6, 15]]},
-        "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-transform": "none",
-        "text-font": ["Source Sans Pro Bold"]
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
-        "text-color": "#000000",
-        "text-halo-color": "rgba(255, 255, 255, 0.5)",
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "toponyme localite importance 3 avec point",
+      "type": "symbol",
+      "source": "plan_ign",
+      "source-layer": "toponyme_localite_ponc",
+      "minzoom": 6,
+      "maxzoom": 7,
+      "filter": [
+        "all",
+        [
+          "in",
+          "txt_typo",
+          "commune 3",
+          "TYPO_A_3",
+          "BAT_COMMUNE_3",
+          "BAT_COMMUNE-3",
+          "BAT_COMMUNE_3_T"
+        ]
+      ],
+      "layout": {
+        "visibility": "visible",
+        "symbol-placement": "point",
+        "icon-image": "circle_11",
+        "icon-size": 0.5,
+        "text-field": "{texte}",
+        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
+        "text-anchor": "left",
+        "text-padding": 1,
+        "text-font": ["Noto Sans Bold"],
+        "text-justify": "left",
+        "text-offset": [0.5, 0]
+      },
+      "paint": {
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 1
       }
     },
@@ -6782,20 +6852,17 @@
         "icon-image": "circle_11",
         "icon-size": 0.5,
         "text-field": "{texte}",
-        "text-size": {"stops": [[5, 12], [7, 14]]},
-        "text-allow-overlap": false,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
         "text-anchor": "left",
         "text-padding": 1,
-        "text-transform": "none",
-        "text-font": ["Source Sans Pro Bold"],
+        "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, -0.05]
+        "text-offset": [0.5, 0]
       },
       "paint": {
-        "text-color": "#000000",
-        "text-halo-color": "rgba(255, 255, 255, 0.5)",
-        "text-halo-width": 1,
-        "icon-halo-width": 4
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1
       }
     },
     {
@@ -6803,7 +6870,7 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "minzoom": 3,
+      "minzoom": 4,
       "maxzoom": 7,
       "filter": [
         "in",
@@ -6819,18 +6886,16 @@
         "icon-image": "circle_11",
         "icon-size": 0.5,
         "text-field": "{texte}",
-        "text-size": {"stops": [[3, 12], [6, 15]]},
-        "text-allow-overlap": false,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
         "text-anchor": "left",
         "text-padding": 1,
-        "text-transform": "none",
-        "text-font": ["Source Sans Pro Bold"],
+        "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, -0.05]
+        "text-offset": [0.5, 0]
       },
       "paint": {
-        "text-color": "#000000",
-        "text-halo-color": "rgba(255, 255, 255, 0.5)",
+        "text-color": "#222222",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 1,
         "icon-opacity": 1
       }
@@ -6840,74 +6905,63 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "minzoom": 4,
-      "maxzoom": 5,
-      "filter": ["==", "txt_typo", "pays 3"],
+      "minzoom": 3.5,
+      "maxzoom": 10,
+      "filter": ["all", ["==", "txt_typo", "pays 3"]],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": 9,
-        "text-allow-overlap": true,
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          12,
+          6,
+          16,
+          10,
+          20
+        ],
         "text-anchor": "center",
-        "text-padding": 1,
-        "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-padding": 2,
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
         "text-color": "#787878",
         "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1,
-        "text-halo-blur": 1
+        "text-halo-width": 1
       }
     },
     {
-      "id": "toponyme pays 2",
+      "id": "toponyme pays 1 et 2",
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
       "minzoom": 2,
-      "maxzoom": 5,
-      "filter": ["==", "txt_typo", "pays 2"],
+      "maxzoom": 10,
+      "filter": ["all", ["in", "txt_typo", "pays 1", "pays 2"]],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": 13,
-        "text-allow-overlap": true,
+        "text-size": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          4,
+          12,
+          6,
+          16,
+          10,
+          20
+        ],
         "text-anchor": "center",
         "text-padding": 2,
-        "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Regular"]
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
         "text-color": "#787878",
         "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1,
-        "text-halo-blur": 1
-      }
-    },
-    {
-      "id": "toponyme pays 1",
-      "type": "symbol",
-      "source": "plan_ign",
-      "source-layer": "toponyme_localite_ponc",
-      "minzoom": 2,
-      "maxzoom": 5,
-      "filter": ["==", "txt_typo", "pays 1"],
-      "layout": {
-        "visibility": "visible",
-        "text-field": "{texte}",
-        "text-size": 13,
-        "text-allow-overlap": true,
-        "text-anchor": "center",
-        "text-padding": 2,
-        "text-transform": "uppercase",
-        "text-font": ["Source Sans Pro Regular"]
-      },
-      "paint": {
-        "text-color": "#787878",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1,
-        "text-halo-blur": 1
+        "text-halo-width": 1
       }
     },
     {
@@ -6915,35 +6969,27 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "maxzoom": 3,
-      "filter": [
-        "==",
-        "txt_typo",
-        "continent"
-      ],
+      "minzoom": 0.2,
+      "maxzoom": 2,
+      "filter": ["==", "txt_typo", "continent"],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": {
-          "stops": [[1, 10], [2, 15]]
-        },
-        "text-allow-overlap": true,
+        "text-size": {"stops": [[1, 10], [2, 15]]},
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "uppercase",
-        "text-font": [
-          "Source Sans Pro Bold"
-        ]
+        "text-font": ["Noto Sans Bold"]
       },
       "paint": {
-        "text-color": "#FFFFFF",
-        "text-halo-color": "#161616",
+        "text-color": "#787878",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
         "text-halo-width": 2,
         "text-halo-blur": 1,
         "icon-color": "#FFFFFF"
-      },
-      "minzoom": 1
+      }
     }
   ],
-  "owner": "Carte Facile (IGN)"
+  "owner": "Carte Facile (IGN)",
+  "id": "9jctx8c"
 }

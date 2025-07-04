@@ -1,18 +1,18 @@
 {
   "version": 8,
-  "name": "simple",
+  "name": "desaturated",
   "metadata": {
     "fr": {
-      "name": "Simple",
-      "description": "Une carte couleur de contextualisation géographique, adaptée à la plupart des usages.",
-      "use": "Recommandé pour les applications cartographiques générales. Ses couleurs légères permettent une superposition d'éléments, comme des marqueurs et différents types de données.",
-      "accessibility": "Les contrastes entre les toponymes et les différents aplats des zones géographiques sont travaillés ain d'être bien perceptibles selon une diversité de perceptions visuelles."
+      "name": "Désaturée",
+      "description": "Une carte en niveaux de gris avec des contrastes doux, pour un fond cartographique discret.",
+      "use": "Recommandé pour des applications de datavisualisation et la superposition de données thématiques, notamment des aplats de couleurs. La discrétion de la carte permet de mettre en valeur vos données sans interférences visuelles.",
+      "accessibility": "Les contrastes adoucis permettent une bonne visibilité de vos données superposées. La lisibilité des toponymes est préservée."
     },
     "en": {
-      "name": "Simple",
-      "description": "A colorful map for geographic contextualization, suitable for most uses.",
-      "use": "Recommended for general cartographic applications. Its light colors allow elements such as markers and different types of data to be superimposed.",
-      "accessibility": "Contrasts between toponyms and the different flat areas of the geographical zones are worked on so as to be clearly perceptible according to a diversity of visual perceptions."
+      "name": "Desaturated",
+      "description": "A grayscale map with soft contrasts, for a discreet map background.",
+      "use": "Recommended for datavisualization applications and overlaying thematic data, especially flat colors. The map's unobtrusive appearance allows you to highlight your data without visual interference.",
+      "accessibility": "Soft contrasts make your superimposed data clearly visible. Toponym legibility is preserved."
     },
     "maputnik:renderer": "mlgljs"
   },
@@ -32,24 +32,9 @@
   "transition": {"duration": 300, "delay": 0},
   "layers": [
     {
-      "id": "bckgrd",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "fond_opaque",
-      "minzoom": 0,
-      "maxzoom": 24,
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": {
-          "stops": [
-            [4, "rgba(229, 229, 217, 1)"],
-            [5, "rgba(214, 234, 209, 1)"],
-            [12, "rgba(214, 234, 209, 1)"],
-            [13, "rgba(240, 240, 237, 1)"]
-          ]
-        },
-        "fill-opacity": 1
-      }
+      "id": "background",
+      "type": "background",
+      "paint": {"background-color": "#f6f6f6"}
     },
     {
       "id": "hydro surfacique - Estran",
@@ -58,111 +43,153 @@
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "ZONE_D_ESTRAN"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(162, 216, 224, 1)"}
+      "paint": {"fill-color": "#dddddd"}
     },
     {
-      "id": "orographie : relief - 0m",
+      "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_0"],
-      "layout": {"visibility": "none"},
-      "paint": {
-        "fill-color": "#D6E5BA",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
-      }
-    },
-    {
-      "id": "orographie : relief - 100m",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_100"],
-      "layout": {"visibility": "none"},
-      "paint": {
-        "fill-color": "#F7F2DA",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
-      }
-    },
-    {
-      "id": "orographie : relief - 200m",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_200"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": [
+        "in",
+        "symbo",
+        "ZONE_BOISEE",
+        "ZONE_FORET_FERMEE_FEUIL",
+        "ZONE_FORET_FERMEE_CONI",
+        "ZONE_FORET_FERMEE_MIXTE",
+        "ZONE_PEUPLERAIE"
+      ],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "rgba(218, 218, 206, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
+        "fill-color": "#dddddd",
+        "fill-opacity": {"stops": [[7, 0], [8, 1]]}
       }
     },
     {
-      "id": "orographie : relief - 1000m",
+      "id": "ocs - vegetation - forêt ouverte",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_1000"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["in", "symbo", "ZONE_FORET_OUVERTE"],
       "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "rgba(207, 207, 194, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
-      }
+      "paint": {"fill-color": "#dddddd"}
     },
     {
-      "id": "orographie : relief - 3000m",
+      "id": "ocs - vegetation - lande ligneuse",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_3000"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
       "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "rgba(197, 197, 183, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
-      }
+      "paint": {"fill-color": "#dddddd"}
     },
     {
-      "id": "orographie : relief - 4000m",
+      "id": "ocs - vegetation - vigne",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_4000"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_VIGNE"],
       "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "rgba(187, 187, 173, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
-      }
+      "paint": {"fill-color": "#dddddd"}
     },
     {
-      "id": "orographie : relief - 5000m",
+      "id": "ocs - vegetation - verger",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "HYPSO_5000"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_VERGER"],
       "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "rgba(174, 174, 160, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 4, 1, 5, 0]
-      }
+      "paint": {"fill-color": "#dddddd"}
     },
     {
-      "id": "orographie : relief - glacier",
+      "id": "ocs - vegetation - canne à sucre, bananeraie",
       "type": "fill",
       "source": "plan_ign",
-      "source-layer": "oro_relief",
-      "minzoom": 0,
-      "filter": ["==", "symbo", "GLACIER"],
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_CANNE_BANANE"],
       "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "#FFFFFF",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 5, 1, 6, 0]
-      }
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - vegetation - mangrovre",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MANGROVE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - vegetation - marais",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd", "fill-opacity": 1}
+    },
+    {
+      "id": "hydro surfacique - marais",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "hydro_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - vegetation - marais salant",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_vegetation_surf",
+      "filter": ["==", "symbo", "ZONE_MARAIS_SALANT"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - Zone sable sec",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["all", ["in", "symbo", "ZONE_SABLE_SEC"]],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - Zone sable humide",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["in", "symbo", "ZONE_SABLE_HUMIDE", "FOND_CUVETTE_HUMIDE"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#cecece"}
+    },
+    {
+      "id": "ocs - Zone graviers galets humides",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "GRAVIERS_GALETS_HUM"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - Zone rocher hydro",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "ZONE_ROCHER_HYDRO"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd"}
+    },
+    {
+      "id": "ocs - Zone glacier",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "ocs_nature_sol_surf",
+      "filter": ["==", "symbo", "ZONE_GLACIER"],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-opacity": 1, "fill-color": "rgba(255, 255, 255, 1)"}
     },
     {
       "id": "bati ZAI - Vert",
@@ -197,168 +224,7 @@
         ]
       ],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
-    },
-    {
-      "id": "bati surfacique cimetière",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "bati_surf",
-      "filter": [
-        "in",
-        "symbo",
-        "CIMETIERE_SURF",
-        "CIMETIERE_MILI_SURF",
-        "NECROPOLE_NATIONALE"
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(214, 234, 209, 1)", "fill-opacity": 1}
-    },
-    {
-      "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": [
-        "in",
-        "symbo",
-        "ZONE_BOISEE",
-        "ZONE_FORET_FERMEE_FEUIL",
-        "ZONE_FORET_FERMEE_CONI",
-        "ZONE_FORET_FERMEE_MIXTE",
-        "ZONE_PEUPLERAIE"
-      ],
-      "layout": {"visibility": "visible"},
-      "paint": {
-        "fill-color": "rgba(188, 223, 184, 1)",
-        "fill-opacity": {"stops": [[7, 0], [8, 1]]}
-      }
-    },
-    {
-      "id": "ocs - vegetation - forêt ouverte",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["in", "symbo", "ZONE_FORET_OUVERTE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - lande ligneuse",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(214, 234, 209, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - vigne",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_VIGNE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - verger",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_VERGER"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - canne à sucre, bananeraie",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_CANNE_BANANE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(188, 223, 184, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - mangrovre",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MANGROVE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - marais",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)", "fill-opacity": 1}
-    },
-    {
-      "id": "hydro surfacique - marais",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "hydro_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - vegetation - marais salant",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_vegetation_surf",
-      "filter": ["==", "symbo", "ZONE_MARAIS_SALANT"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - Zone sable sec",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["all", ["in", "symbo", "ZONE_SABLE_SEC"]],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(233, 232, 213, 1)"}
-    },
-    {
-      "id": "ocs - Zone sable humide",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["in", "symbo", "ZONE_SABLE_HUMIDE", "FOND_CUVETTE_HUMIDE"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - Zone graviers galets humides",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "GRAVIERS_GALETS_HUM"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - Zone rocher hydro",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "ZONE_ROCHER_HYDRO"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
-    },
-    {
-      "id": "ocs - Zone glacier",
-      "type": "fill",
-      "source": "plan_ign",
-      "source-layer": "ocs_nature_sol_surf",
-      "filter": ["==", "symbo", "ZONE_GLACIER"],
-      "layout": {"visibility": "visible"},
-      "paint": {"fill-opacity": 1, "fill-color": "rgba(255, 255, 255, 1)"}
+      "paint": {"fill-color": "#e5e5e5", "fill-opacity": 1}
     },
     {
       "id": "bati ZAI - Gris Bleu Elec",
@@ -370,9 +236,9 @@
       "filter": ["==", "nature", "Centrale électrique"],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "#7993B6",
+        "fill-color": "#ffffff",
         "fill-opacity": 0.3,
-        "fill-outline-color": "#7993B6"
+        "fill-outline-color": "#c5c5c5"
       }
     },
     {
@@ -385,8 +251,20 @@
       "filter": ["==", "symbo", "ZONE_BATI"],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "rgba(240, 240, 237, 1)",
-        "fill-opacity": ["interpolate", ["linear"], ["zoom"], 7, 0, 8, 1, 14, 1]
+        "fill-color": "#ffffff",
+        "fill-opacity": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          7,
+          0,
+          8,
+          1,
+          14,
+          1,
+          15,
+          0
+        ]
       }
     },
     {
@@ -396,7 +274,7 @@
       "source-layer": "bati_zone_surf",
       "filter": ["==", "symbo", "ZONE_INDUS_ACTI"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(240, 240, 237, 1)"}
+      "paint": {"fill-color": "#ffffff"}
     },
     {
       "id": "hydro surfacique",
@@ -405,7 +283,7 @@
       "source-layer": "hydro_surf",
       "filter": ["in", "symbo", "SURFACE_D_EAU", "BASSIN", "ZONE_MARINE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(151, 205, 213, 1)"}
+      "paint": {"fill-color": "#cecece"}
     },
     {
       "id": "hydro surfacique temporaire",
@@ -414,7 +292,7 @@
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "SURFACE_D_EAU_TEMP"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(192, 229, 219, 1)"}
+      "paint": {"fill-color": "#dddddd"}
     },
     {
       "id": "réseau hydro  - cours d'eau souterrain",
@@ -430,7 +308,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.5], [17, 6.5]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -450,7 +328,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -469,7 +347,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5],
         "line-opacity": 0.5
@@ -571,6 +449,7 @@
     {
       "id": "Ferre souterrain - trait perpendic fin",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sou",
       "minzoom": 0,
@@ -788,8 +667,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
       }
@@ -808,8 +687,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
       }
@@ -837,10 +716,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]},
         "line-opacity": 0.5
       }
     },
@@ -858,8 +735,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-opacity": 0.5
       }
     },
@@ -877,8 +754,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-opacity": 0.5
       }
     },
@@ -904,10 +781,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]},
         "line-opacity": 0.5
       }
     },
@@ -925,10 +800,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]},
         "line-opacity": 0.5
       }
     },
@@ -954,17 +827,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]},
         "line-opacity": 0.5
       }
     },
@@ -982,17 +846,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]},
         "line-opacity": 0.5
       }
     },
@@ -1018,17 +873,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]},
         "line-opacity": 0.5
       }
     },
@@ -1046,17 +892,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]},
         "line-opacity": 0.5
       }
     },
@@ -1074,10 +911,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]},
         "line-opacity": 0.5
       }
     },
@@ -1095,10 +930,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]},
         "line-opacity": 0.5
       }
     },
@@ -1117,7 +950,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1136,7 +969,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1164,7 +997,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         },
@@ -1185,7 +1018,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1204,7 +1037,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]},
         "line-opacity": 0.5
       }
@@ -1231,7 +1064,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         },
@@ -1252,7 +1085,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -1282,7 +1115,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [6, 1.4],
@@ -1310,7 +1143,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.4],
@@ -1348,7 +1181,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -1377,7 +1210,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -1407,7 +1240,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -1436,10 +1269,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4],
         "line-opacity": 0.5
       }
@@ -1458,7 +1289,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -1470,8 +1301,7 @@
             [17, 26]
           ]
         },
-        "line-dasharray": [2, 2],
-        "line-opacity": 0.5
+        "line-dasharray": [2, 2]
       }
     },
     {
@@ -1488,10 +1318,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4],
         "line-opacity": 0.5
       }
@@ -1508,7 +1336,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.4], [17, 5.9]]}
       }
     },
@@ -1525,7 +1353,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]}
       }
     },
@@ -1542,7 +1370,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5]
       }
@@ -1559,7 +1387,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.5], [17, 4]]},
         "line-dasharray": [6, 2]
       }
@@ -1576,7 +1404,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[7, 2], [12, 2.5]]}
       }
     },
@@ -1592,7 +1420,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[7, 3], [11, 5]]}
       }
     },
@@ -1609,7 +1437,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": [
           "interpolate",
           ["exponential", 1.8],
@@ -1622,6 +1450,21 @@
           10
         ]
       }
+    },
+    {
+      "id": "bati surfacique cimetière",
+      "type": "fill",
+      "source": "plan_ign",
+      "source-layer": "bati_surf",
+      "filter": [
+        "in",
+        "symbo",
+        "CIMETIERE_SURF",
+        "CIMETIERE_MILI_SURF",
+        "NECROPOLE_NATIONALE"
+      ],
+      "layout": {"visibility": "visible"},
+      "paint": {"fill-color": "#dddddd", "fill-opacity": 1}
     },
     {
       "id": "bati sportif surfacique fond",
@@ -1641,7 +1484,7 @@
       ],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "rgba(234, 237, 222, 1)",
+        "fill-color": "#e5e5e5",
         "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
       }
     },
@@ -1667,7 +1510,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(183, 206, 182, 1)",
+        "line-color": "#c5c5c5",
         "line-width": 1,
         "line-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1]
       }
@@ -1706,8 +1549,8 @@
       ],
       "layout": {"visibility": "visible"},
       "paint": {
-        "fill-color": "rgba(213, 213, 208, 1)",
-        "fill-outline-color": "rgba(151, 150, 137, 1)",
+        "fill-color": "#eeeeee",
+        "fill-outline-color": "#c1c1c1",
         "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1],
         "fill-antialias": true
       }
@@ -1719,7 +1562,7 @@
       "source-layer": "bati_surf",
       "filter": ["in", "symbo", "PISTE_DUR", "PISTE_HERBE"],
       "layout": {"visibility": "visible"},
-      "paint": {"fill-color": "rgba(216, 216, 216, 1)"}
+      "paint": {"fill-color": "#eeeeee"}
     },
     {
       "id": "construction linéaire - mur",
@@ -1916,8 +1759,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
@@ -1935,8 +1778,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
@@ -1963,10 +1806,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]}
       }
     },
     {
@@ -1983,8 +1824,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
@@ -2001,8 +1842,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
@@ -2027,10 +1868,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
       }
     },
     {
@@ -2047,10 +1886,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
       }
     },
     {
@@ -2075,17 +1912,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
       }
     },
     {
@@ -2102,17 +1930,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
       }
     },
     {
@@ -2137,17 +1956,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
       }
     },
     {
@@ -2164,17 +1974,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
       }
     },
     {
@@ -2191,10 +1992,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
       }
     },
     {
@@ -2211,10 +2010,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(187, 187, 187, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
       }
     },
     {
@@ -2223,7 +2020,7 @@
       "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route",
-      "minzoom": 5,
+      "minzoom": 0,
       "filter": ["==", "symbo", "NON_REVETUE_CARRO_RESTREINT"],
       "layout": {
         "visibility": "visible",
@@ -2231,7 +2028,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -2249,7 +2046,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -2276,7 +2073,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         }
@@ -2296,7 +2093,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -2314,7 +2111,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -2340,7 +2137,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         }
@@ -2360,7 +2157,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -2389,7 +2186,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 1.1],
@@ -2416,7 +2213,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.4],
@@ -2452,7 +2249,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.6],
@@ -2479,7 +2276,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -2507,7 +2304,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -2534,10 +2331,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4]
       }
     },
@@ -2555,7 +2350,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[4, 0.7], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
         },
@@ -2576,10 +2371,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4]
       }
     },
@@ -2788,7 +2581,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(144, 182, 211, 1)",
+        "line-color": "#7b7b7b",
         "line-width": {"stops": [[8, 1], [13, 2.5]]},
         "line-dasharray": [2, 2],
         "line-opacity": 0.5
@@ -2958,7 +2751,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.5], [17, 6.5]]}
       }
     },
@@ -2974,7 +2767,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.4], [17, 5.9]]}
       }
     },
@@ -2990,7 +2783,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 1.4], [16, 3.5], [17, 5.9]]}
       }
     },
@@ -3006,7 +2799,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(151, 205, 213, 1)",
+        "line-color": "#cecece",
         "line-width": {"stops": [[12, 3.5], [16, 8.7], [17, 14.7]]},
         "line-dasharray": [1, 5]
       }
@@ -3146,8 +2939,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
@@ -3165,8 +2958,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]},
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]},
         "line-dasharray": [2, 2]
       }
     },
@@ -3193,10 +2986,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[12, 2.5], [14, 3.7], [15, 6.8], [16, 8.4], [17, 14]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6.8], [16, 8.4], [17, 14]]}
       }
     },
     {
@@ -3213,8 +3004,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
@@ -3231,8 +3022,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
@@ -3257,10 +3048,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
       }
     },
     {
@@ -3277,10 +3066,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 6], [16, 8.4], [17, 18.3]]}
       }
     },
     {
@@ -3305,17 +3092,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
       }
     },
     {
@@ -3332,17 +3110,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.5],
-            [9, 2.3],
-            [14, 5],
-            [15, 8.1],
-            [16, 11.2],
-            [17, 22]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 8.1], [16, 11.2], [17, 22]]}
       }
     },
     {
@@ -3367,17 +3136,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
       }
     },
     {
@@ -3394,17 +3154,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [
-            [6, 1.8],
-            [9, 2.7],
-            [14, 5.9],
-            [15, 9],
-            [16, 12.2],
-            [17, 22.5]
-          ]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 9], [16, 12.2], [17, 22.5]]}
       }
     },
     {
@@ -3421,10 +3172,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
       }
     },
     {
@@ -3441,10 +3190,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {
-          "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
-        }
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[12, 0], [15, 11], [16, 15], [17, 26]]}
       }
     },
     {
@@ -3461,7 +3208,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -3479,7 +3226,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -3506,7 +3253,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[12, 1.5], [14, 2.6], [15, 5.2], [16, 6.7], [17, 10.8]]
         }
@@ -3526,7 +3273,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -3544,7 +3291,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {"stops": [[14, 2.3], [15, 4.1], [16, 6.3], [17, 13.5]]}
       }
     },
@@ -3570,7 +3317,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 1.3], [14, 2.3], [15, 4.1], [16, 6.1], [17, 13.1]]
         }
@@ -3590,7 +3337,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         },
@@ -3619,7 +3366,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [6, 1.4],
@@ -3646,7 +3393,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [6, 1.5],
@@ -3663,6 +3410,7 @@
     {
       "id": "Routier superieur - filet interieur - route principale",
       "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "routier_route_sup",
       "minzoom": 5,
@@ -3681,7 +3429,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.5],
@@ -3709,7 +3457,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [6, 1.8],
@@ -3737,7 +3485,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -3765,10 +3513,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4]
       }
     },
@@ -3786,7 +3532,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "#e5e5e5",
         "line-width": {
           "stops": [
             [4, 0.7],
@@ -3815,10 +3561,8 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(197, 197, 197, 1)",
-        "line-width": {
-          "stops": [[9, 0.6], [14, 0.7], [15, 1], [16, 1.2], [17, 2.1]]
-        },
+        "line-color": "#c5c5c5",
+        "line-width": {"stops": [[14, 0], [15, 1], [16, 1.2], [17, 2.1]]},
         "line-dasharray": [2, 4]
       }
     },
@@ -3908,7 +3652,6 @@
     {
       "id": "Ferre superieur - voie etroite trait perpendic",
       "type": "line",
-      "metadata": {"cartefacile:group": "streets"},
       "source": "plan_ign",
       "source-layer": "ferre_sup",
       "minzoom": 10,
@@ -4045,7 +3788,7 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "circle-radius": {"stops": [[14, 3], [17, 7], [20, 30]]},
-        "circle-color": "rgba(162, 216, 224, 1)",
+        "circle-color": "#cecece",
         "circle-opacity": 1,
         "circle-stroke-width": 0
       }
@@ -4177,10 +3920,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4199,10 +3942,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4221,10 +3964,10 @@
         "text-keep-upright": true,
         "text-padding": 1,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4243,10 +3986,10 @@
         "text-allow-overlap": false,
         "text-padding": 1,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4265,10 +4008,10 @@
         "text-allow-overlap": false,
         "text-padding": 1,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4284,11 +4027,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
+        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4306,10 +4050,10 @@
         "text-anchor": "center",
         "text-keep-upright": true,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4336,10 +4080,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4375,10 +4119,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4406,10 +4150,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4441,10 +4185,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4463,10 +4207,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4482,12 +4226,13 @@
         "text-field": "{texte}",
         "text-size": 12,
         "text-anchor": "center",
+        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Source Sans Pro Italic"],
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4504,11 +4249,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-padding": 5,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4534,11 +4280,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-padding": 5,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4562,8 +4309,9 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro Regular"],
         "symbol-z-order": "auto",
         "symbol-avoid-edges": false,
         "icon-allow-overlap": false,
@@ -4573,7 +4321,7 @@
         "icon-pitch-alignment": "auto"
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1,
         "text-translate-anchor": "map"
@@ -4593,10 +4341,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4615,10 +4363,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4635,11 +4383,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
+        "text-allow-overlap": true,
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4656,12 +4405,13 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[1, 10], [6, 20]]},
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 10,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#447FB3",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4680,10 +4430,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4716,10 +4466,10 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4746,10 +4496,10 @@
         "text-keep-upright": true,
         "text-padding": 10,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4774,10 +4524,10 @@
         "text-keep-upright": true,
         "text-padding": 5,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -4803,11 +4553,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[13, 11], [16, 16]]},
+        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4840,11 +4591,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
+        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4863,10 +4615,10 @@
         "text-size": {"stops": [[13, 15], [16, 19]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4895,10 +4647,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4917,10 +4669,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4944,11 +4696,12 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
+        "text-allow-overlap": true,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -4986,10 +4739,10 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#863831",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5010,11 +4763,11 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Source Sans Pro Italic"],
         "visibility": "visible"
       },
       "paint": {
-        "text-color": "#5792C2",
+        "text-color": "#666666",
         "text-halo-width": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.5)"
       }
@@ -5039,7 +4792,7 @@
         "text-offset": [0.3, -0.25],
         "text-padding": 3,
         "text-anchor": "bottom-left",
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro"],
         "icon-image": "Metro",
         "icon-size": {"stops": [[15, 0.33], [17, 0.6]]}
       },
@@ -5058,7 +4811,7 @@
         "text-size": 10,
         "text-anchor": "center",
         "text-offset": [0, -1],
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5080,7 +4833,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5098,7 +4851,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5120,7 +4873,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5142,7 +4895,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5164,7 +4917,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5187,7 +4940,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5209,7 +4962,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5231,7 +4984,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5253,7 +5006,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5273,7 +5026,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#447FB3"}
     },
@@ -5291,7 +5044,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -5311,7 +5064,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {"text-color": "#447FB3"}
     },
@@ -5330,7 +5083,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5354,7 +5107,7 @@
         "text-allow-overlap": false,
         "text-offset": [-2, 0],
         "text-padding": 3,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5379,7 +5132,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {"text-color": "#532A2A"}
     },
@@ -5400,7 +5153,7 @@
         "text-size": 10.5,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5425,7 +5178,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5453,7 +5206,7 @@
         "text-size": {"stops": [[12, 11], [16, 13]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5478,7 +5231,7 @@
         "text-size": 9.5,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5503,7 +5256,7 @@
         "text-size": 10,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5531,7 +5284,7 @@
         "text-size": {"stops": [[12, 10], [16, 12]]},
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro"]
       },
       "paint": {
         "text-color": "#120049",
@@ -5558,99 +5311,12 @@
         "text-size": 13,
         "text-allow-overlap": false,
         "text-padding": 2,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
-      }
-    },
-    {
-      "id": "toponyme numéro de route - départementale",
-      "type": "symbol",
-      "metadata": {"cartefacile:group": "street_labels"},
-      "source": "plan_ign",
-      "source-layer": "toponyme_routier_numero_lin",
-      "minzoom": 11,
-      "maxzoom": 16,
-      "filter": ["==", "txt_typo", "Départementale"],
-      "layout": {
-        "visibility": "visible",
-        "symbol-placement": "line",
-        "text-field": "{texte}",
-        "text-size": 10.5,
-        "text-allow-overlap": false,
-        "text-padding": 2,
-        "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "text-rotation-alignment": "viewport"
-      },
-      "paint": {
-        "text-color": "#4D4D4D",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 4
-      }
-    },
-    {
-      "id": "toponyme numéro de route - nationale",
-      "type": "symbol",
-      "metadata": {"cartefacile:group": "street_labels"},
-      "source": "plan_ign",
-      "source-layer": "toponyme_routier_numero_lin",
-      "minzoom": 8,
-      "maxzoom": 16,
-      "filter": ["==", "txt_typo", "Nationale"],
-      "layout": {
-        "visibility": "visible",
-        "symbol-placement": "line",
-        "text-field": "{texte}",
-        "text-size": 12,
-        "text-allow-overlap": false,
-        "text-padding": 0,
-        "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
-      },
-      "paint": {
-        "text-color": "rgba(255, 255, 255, 1)",
-        "text-halo-color": "rgba(150, 150, 150, 1)",
-        "text-halo-width": 4
-      }
-    },
-    {
-      "id": "toponyme numéro de route - autoroute",
-      "type": "symbol",
-      "metadata": {"cartefacile:group": "street_labels"},
-      "source": "plan_ign",
-      "source-layer": "toponyme_routier_numero_lin",
-      "minzoom": 7,
-      "maxzoom": 16,
-      "filter": ["==", "txt_typo", "Autoroute"],
-      "layout": {
-        "visibility": "visible",
-        "symbol-placement": "line",
-        "text-field": "{texte}",
-        "text-size": 12,
-        "text-allow-overlap": false,
-        "text-padding": 0,
-        "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
-      },
-      "paint": {
-        "text-color": "#F0F0F0",
-        "icon-color": "#646464",
-        "text-halo-color": "rgba(133, 133, 133, 1)",
-        "text-halo-width": 4
       }
     },
     {
@@ -5667,7 +5333,7 @@
         "text-size": 10,
         "text-anchor": "center",
         "text-max-angle": 30,
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro Regular"],
         "visibility": "none"
       },
       "paint": {
@@ -5689,7 +5355,7 @@
         "text-size": 11,
         "text-anchor": "center",
         "text-max-angle": 30,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5715,7 +5381,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5741,10 +5407,10 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5762,7 +5428,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5787,9 +5453,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5814,9 +5481,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5837,9 +5505,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": {"stops": [[15, 11], [17, 13.5]]},
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro Regular"],
         "icon-allow-overlap": false
       },
       "paint": {
@@ -5866,7 +5535,7 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5892,10 +5561,10 @@
         "text-size": 14,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5919,7 +5588,7 @@
         "text-anchor": "bottom-left",
         "text-offset": [0.3, 0.1],
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5945,7 +5614,7 @@
         "text-size": 15,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5970,10 +5639,10 @@
         "text-size": 16,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -5995,10 +5664,10 @@
         "text-size": 18,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6017,7 +5686,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -6035,7 +5704,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {"text-color": "#000000"}
     },
@@ -6053,10 +5722,10 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6075,10 +5744,10 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
-        "text-color": "#686042",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6101,7 +5770,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6127,7 +5796,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Source Sans Pro Italic"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6150,10 +5819,10 @@
         "text-allow-overlap": false,
         "text-padding": 10,
         "text-transform": "uppercase",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#2A81A2",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6180,10 +5849,10 @@
         "text-allow-overlap": false,
         "text-padding": 10,
         "text-transform": "uppercase",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
-        "text-color": "#287B00",
+        "text-color": "#666666",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
@@ -6201,9 +5870,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6229,9 +5899,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6257,9 +5928,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro Regular"],
         "icon-allow-overlap": false
       },
       "paint": {
@@ -6286,9 +5958,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6314,9 +5987,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 13,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6342,9 +6016,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6370,9 +6045,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 15,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6398,9 +6074,10 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6425,10 +6102,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6453,10 +6131,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6481,10 +6160,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 12,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6509,10 +6189,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 13,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6537,10 +6218,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 14,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6565,10 +6247,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 15,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6593,10 +6276,11 @@
         "symbol-placement": "point",
         "text-field": "{texte}",
         "text-size": 16,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Bold"]
+        "text-font": ["Source Sans Pro Bold"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6620,7 +6304,7 @@
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6658,7 +6342,7 @@
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6683,13 +6367,12 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-size": 0.4,
         "text-field": "{texte}",
         "text-size": 13,
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"]
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6715,12 +6398,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
+        "icon-image": "Localite",
         "text-field": "{texte}",
         "text-size": {"stops": [[7.5, 12], [12, 13]]},
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Regular"],
+        "text-font": ["Source Sans Pro Regular"],
         "text-transform": "none"
       },
       "paint": {
@@ -6749,17 +6433,17 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": 14,
+        "text-size": {"stops": [[5, 12], [7, 14]]},
+        "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Bold"]
+        "text-font": ["Source Sans Pro Bold"]
       },
       "paint": {
         "text-color": "#000000",
         "text-halo-color": "rgba(255, 255, 255, 0.5)",
-        "text-halo-width": 1,
-        "icon-halo-width": 4
+        "text-halo-width": 1
       }
     },
     {
@@ -6781,51 +6465,16 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
+        "text-size": {"stops": [[3, 12], [6, 15]]},
+        "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Bold"]
+        "text-transform": "none",
+        "text-font": ["Source Sans Pro Bold"]
       },
       "paint": {
-        "text-color": "#222222",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1
-      }
-    },
-    {
-      "id": "toponyme localite importance 3 avec point",
-      "type": "symbol",
-      "source": "plan_ign",
-      "source-layer": "toponyme_localite_ponc",
-      "minzoom": 6,
-      "maxzoom": 7,
-      "filter": [
-        "all",
-        [
-          "in",
-          "txt_typo",
-          "commune 3",
-          "TYPO_A_3",
-          "BAT_COMMUNE_3",
-          "BAT_COMMUNE-3",
-          "BAT_COMMUNE_3_T"
-        ]
-      ],
-      "layout": {
-        "visibility": "visible",
-        "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
-        "text-anchor": "left",
-        "text-padding": 1,
-        "text-font": ["Noto Sans Bold"],
-        "text-justify": "left",
-        "text-offset": [0.5, 0]
-      },
-      "paint": {
-        "text-color": "#222222",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-color": "#000000",
+        "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1
       }
     },
@@ -6851,17 +6500,20 @@
         "icon-image": "circle_11",
         "icon-size": 0.5,
         "text-field": "{texte}",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
+        "text-size": {"stops": [[5, 12], [7, 14]]},
+        "text-allow-overlap": false,
         "text-anchor": "left",
         "text-padding": 1,
-        "text-font": ["Noto Sans Bold"],
+        "text-transform": "none",
+        "text-font": ["Source Sans Pro Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0.5, -0.05]
       },
       "paint": {
-        "text-color": "#222222",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1
+        "text-color": "#000000",
+        "text-halo-color": "rgba(255, 255, 255, 0.5)",
+        "text-halo-width": 1,
+        "icon-halo-width": 4
       }
     },
     {
@@ -6869,7 +6521,7 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "minzoom": 4,
+      "minzoom": 3,
       "maxzoom": 7,
       "filter": [
         "in",
@@ -6885,16 +6537,18 @@
         "icon-image": "circle_11",
         "icon-size": 0.5,
         "text-field": "{texte}",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
+        "text-size": {"stops": [[3, 12], [6, 15]]},
+        "text-allow-overlap": false,
         "text-anchor": "left",
         "text-padding": 1,
-        "text-font": ["Noto Sans Bold"],
+        "text-transform": "none",
+        "text-font": ["Source Sans Pro Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0.5, -0.05]
       },
       "paint": {
-        "text-color": "#222222",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-color": "#000000",
+        "text-halo-color": "rgba(255, 255, 255, 0.5)",
         "text-halo-width": 1,
         "icon-opacity": 1
       }
@@ -6904,63 +6558,74 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "minzoom": 3.5,
-      "maxzoom": 10,
-      "filter": ["all", ["==", "txt_typo", "pays 3"]],
+      "minzoom": 4,
+      "maxzoom": 5,
+      "filter": ["==", "txt_typo", "pays 3"],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          4,
-          12,
-          6,
-          16,
-          10,
-          20
-        ],
+        "text-size": 9,
+        "text-allow-overlap": true,
         "text-anchor": "center",
-        "text-padding": 2,
-        "text-font": ["Noto Sans Bold"]
+        "text-padding": 1,
+        "text-transform": "uppercase",
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#787878",
         "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1
+        "text-halo-width": 1,
+        "text-halo-blur": 1
       }
     },
     {
-      "id": "toponyme pays 1 et 2",
+      "id": "toponyme pays 2",
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
       "minzoom": 2,
-      "maxzoom": 10,
-      "filter": ["all", ["in", "txt_typo", "pays 1", "pays 2"]],
+      "maxzoom": 5,
+      "filter": ["==", "txt_typo", "pays 2"],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
-        "text-size": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          4,
-          12,
-          6,
-          16,
-          10,
-          20
-        ],
+        "text-size": 13,
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 2,
-        "text-font": ["Noto Sans Bold"]
+        "text-transform": "uppercase",
+        "text-font": ["Source Sans Pro Regular"]
       },
       "paint": {
         "text-color": "#787878",
         "text-halo-color": "rgba(255, 255, 255, 1)",
-        "text-halo-width": 1
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "toponyme pays 1",
+      "type": "symbol",
+      "source": "plan_ign",
+      "source-layer": "toponyme_localite_ponc",
+      "minzoom": 2,
+      "maxzoom": 5,
+      "filter": ["==", "txt_typo", "pays 1"],
+      "layout": {
+        "visibility": "visible",
+        "text-field": "{texte}",
+        "text-size": 13,
+        "text-allow-overlap": true,
+        "text-anchor": "center",
+        "text-padding": 2,
+        "text-transform": "uppercase",
+        "text-font": ["Source Sans Pro Regular"]
+      },
+      "paint": {
+        "text-color": "#787878",
+        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
       }
     },
     {
@@ -6968,21 +6633,22 @@
       "type": "symbol",
       "source": "plan_ign",
       "source-layer": "toponyme_localite_ponc",
-      "minzoom": 0.2,
-      "maxzoom": 2,
+      "minzoom": 1,
+      "maxzoom": 3,
       "filter": ["==", "txt_typo", "continent"],
       "layout": {
         "visibility": "visible",
         "text-field": "{texte}",
         "text-size": {"stops": [[1, 10], [2, 15]]},
+        "text-allow-overlap": true,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "uppercase",
-        "text-font": ["Noto Sans Bold"]
+        "text-font": ["Source Sans Pro Bold"]
       },
       "paint": {
-        "text-color": "#787878",
-        "text-halo-color": "rgba(255, 255, 255, 1)",
+        "text-color": "#FFFFFF",
+        "text-halo-color": "#161616",
         "text-halo-width": 2,
         "text-halo-blur": 1,
         "icon-color": "#FFFFFF"
@@ -6990,5 +6656,5 @@
     }
   ],
   "owner": "Carte Facile (IGN)",
-  "id": "9jctx8c"
+  "id": "ke5tfl3"
 }

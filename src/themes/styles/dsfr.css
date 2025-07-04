@@ -1,0 +1,5 @@
+/* Overrides MapLibre pour DSFR */
+
+[data-theme="dsfr"] .maplibregl-ctrl {
+  font-family: 'Marianne', Arial, sans-serif; /* A remplacer par la variable dsfr !!! */
+}

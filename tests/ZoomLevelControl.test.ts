@@ -28,7 +28,7 @@ describe('ZoomLevelControl', () => {
         // Verify that the control has all required MapLibre control classes
         expect(element.className).toContain('maplibregl-ctrl');
         expect(element.className).toContain('maplibregl-ctrl-group');
-        expect(element.className).toContain('maplibregl-ctrl-zoom-level');
+        expect(element.querySelector('.cartefacile-ctrl-zoom-level')).toBeDefined();
     });
 
     it('should display initial zoom level', () => {

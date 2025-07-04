@@ -3,7 +3,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import image from '@rollup/plugin-image';
-import css from 'rollup-plugin-css-only';
+import postcss from 'rollup-plugin-postcss';
+import postcssUrl from 'postcss-url';
 
 export default {
   input: 'src/index.ts',
@@ -34,12 +35,19 @@ export default {
     resolve(),
     commonjs(),
     json(),
-    css({
-      output: 'carte-facile.css'
-    }),
     image({
-      include: ['**/*.webp'],
+      include: ['**/*.webp', '**/*.svg'],
       exclude: 'node_modules/**'
+    }),
+    postcss({
+      plugins: [
+        postcssUrl({
+          url: 'inline', // convertit toutes les urls en base64
+          maxSize: 10,   // taille max en Ko (10 Ko ici)
+          fallback: 'copy'
+        })
+      ],
+      extract: 'carte-facile.css'
     }),
     typescript({ tsconfig: './tsconfig.json' }),
   ],

@@ -1,0 +1,30 @@
+/* Classes CSS réutilisables pour les boutons */
+
+.cartefacile-btn {
+    border-radius: 4px;
+}
+
+.cartefacile-btn-icon::before {
+  content: '';
+  mask-position: 50%;
+  -webkit-mask-position: 50%;
+  mask-size: 20px;
+  -webkit-mask-size: 20px;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #333333;
+}
+
+/* Icônes avec ::before */
+.cartefacile-btn-icon--stack::before {
+  mask-image: url('../../assets/icons/stack-fill.svg');
+  -webkit-mask-image: url('../../assets/icons/stack-fill.svg');
+}
+
+.cartefacile-btn-icon--close-circle::before {
+  mask-image: url('../../assets/icons/close-circle-fill.svg');
+  -webkit-mask-image: url('../../assets/icons/close-circle-fill.svg');
+}

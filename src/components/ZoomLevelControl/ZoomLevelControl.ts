@@ -1,4 +1,5 @@
-import { Map, IControl } from 'maplibre-gl';
+import { Map, IControl, ControlPosition } from 'maplibre-gl';
+import '../../themes/styles/dsfr.css';
 import './ZoomLevelControl.css';
 
 export class ZoomLevelControl implements IControl {
@@ -8,14 +9,18 @@ export class ZoomLevelControl implements IControl {
     onAdd(map: Map): HTMLElement {
         this._map = map;
         this._container = document.createElement('div');
-        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group maplibregl-ctrl-zoom-level';
-        this._container.innerHTML = 'Zoom : <span></span>';
+        this._container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
         
-        const span = this._container.querySelector('span')!;
-        span.textContent = map.getZoom().toFixed(1);
+        const label = document.createElement('div');
+        label.className = 'cartefacile-ctrl-zoom-level';
+        label.textContent = 'Zoom : ';
+        const value = document.createElement('span');
+        value.textContent = map.getZoom().toFixed(1);
+        this._container.appendChild(label);
+        label.appendChild(value);
         
         map.on('zoom', () => {
-            span.textContent = map.getZoom().toFixed(1);
+            value.textContent = map.getZoom().toFixed(1);
         });
         
         return this._container;
@@ -24,5 +29,9 @@ export class ZoomLevelControl implements IControl {
     onRemove() {
         this._container.parentNode?.removeChild(this._container);
         this._map = undefined;
+    }
+
+    getDefaultPosition(): ControlPosition {
+        return 'top-right';
     }
 } 

@@ -1,0 +1,86 @@
+.cartefacile-ctrl-map-selector-panel {
+  padding: 12px;
+  padding-bottom: 16px;
+  width: 240px;
+  box-sizing: border-box;
+  max-width: calc(100% - 20px);
+  overflow-y: auto;
+  position: absolute;
+  z-index: 1000;
+  max-height: calc(100% - 20px);
+}
+
+.cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
+  margin-left: auto;
+}
+
+.cartefacile-ctrl-map-selector-panel h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list {
+  margin-bottom: 16px;
+}
+
+.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list:last-child {
+  margin-bottom: 0;
+}
+
+.cartefacile-ctrl-map-selector-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cartefacile-ctrl-map-selector-card {
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.cartefacile-ctrl-map-selector-card:hover {
+  background-color: rgb(0 0 0/5%);
+}
+
+.cartefacile-ctrl-map-selector-card.active {
+  background-color: #3ea0eb60;
+}
+
+.cartefacile-ctrl-map-selector-card img {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+}
+
+/* Position top-right (par défaut) */
+.cartefacile-ctrl-top-right {
+    top: 10px;
+    right: 10px;
+}
+
+/* Position top-left */
+.cartefacile-ctrl-top-left {
+    top: 10px;
+    left: 10px;
+}
+
+/* Position bottom-right */
+.cartefacile-ctrl-bottom-right {
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Position bottom-left */
+.cartefacile-ctrl-bottom-left {
+    bottom: 10px;
+    left: 10px;
+}
