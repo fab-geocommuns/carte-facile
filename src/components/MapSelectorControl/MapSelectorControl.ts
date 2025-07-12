@@ -24,9 +24,15 @@ function createFromTemplate(template: string): HTMLElement {
 }
 
 /**
- * HTML templates for all UI components
+ * HTML templates for all UI component elements
  */
 const TEMPLATES = {
+    container: `
+        <div class="maplibregl-ctrl maplibregl-ctrl-group"
+             aria-label="Sélecteur de carte">
+        </div>
+    `,
+    
     toggleButton: `
         <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" 
                 title="Sélecteur de carte"
@@ -62,16 +68,12 @@ const TEMPLATES = {
         </div>
     `,
     
-    card: (id: string, title: string, thumbnail: string, type: 'style' | 'overlay') => `
+    card: `
         <div class="cartefacile-ctrl-map-selector-card"
-             data-id="${id}"
-             data-type="${type}"
              tabindex="0"
-             aria-checked="false"
-             role="${type === 'style' ? 'radio' : 'checkbox'}"
-             aria-label="${type === 'style' ? 'Style de carte' : 'Surcouche'} : ${title}">
-          <img src="${thumbnail}" alt="Aperçu de ${title}" role="presentation">
-          <div class="cartefacile-ctrl-map-selector-card__title">${title}</div>
+             aria-checked="false">
+          <img role="presentation">
+          <div class="cartefacile-ctrl-map-selector-card__title"></div>
         </div>
     `
 };
@@ -99,11 +101,13 @@ export class MapSelectorControl implements maplibregl.IControl {
     onAdd(map: maplibregl.Map): HTMLElement {
         this._map = map;
         
-        const container = document.createElement('div');
-        container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
-        container.setAttribute('aria-label', 'Sélecteur de carte');
+        // Create the main control container from the HTML template
+        const container = createFromTemplate(TEMPLATES.container);
         
-        this._toggleButton = this._createToggleButton();
+        // Create the toggle button to open/close the selector panel
+        this._toggleButton = createFromTemplate(TEMPLATES.toggleButton) as HTMLButtonElement;
+        
+        // Create the panel for selecting map styles and overlays
         this._panel = this._createPanel();
         
         // Add panel to map container
@@ -121,11 +125,6 @@ export class MapSelectorControl implements maplibregl.IControl {
         return container;
     }
 
-    /** Creates the main toggle button */
-    private _createToggleButton(): HTMLButtonElement {
-        return createFromTemplate(TEMPLATES.toggleButton) as HTMLButtonElement;
-    }
-
     /** Creates the main selector panel with style and overlay sections */
     private _createPanel(): HTMLDivElement {
         const panel = createFromTemplate(TEMPLATES.panel) as HTMLDivElement;
@@ -139,7 +138,22 @@ export class MapSelectorControl implements maplibregl.IControl {
 
     /** Creates a card element from template */
     private _createCard(id: string, title: string, thumbnail: string, type: 'style' | 'overlay', onClick: () => void): HTMLElement {
-        const card = createFromTemplate(TEMPLATES.card(id, title, thumbnail, type));
+        const card = createFromTemplate(TEMPLATES.card);
+        
+        // Configure card attributes securely
+        card.setAttribute('data-id', id);
+        card.setAttribute('data-type', type);
+        card.setAttribute('role', type === 'style' ? 'radio' : 'checkbox');
+        card.setAttribute('aria-label', `${type === 'style' ? 'Style de carte' : 'Surcouche'} : ${title}`);
+        
+        // Configure image securely
+        const img = card.querySelector('img') as HTMLImageElement;
+        img.src = thumbnail;
+        img.alt = `Aperçu de ${title}`;
+        
+        // Configure title securely  
+        const titleDiv = card.querySelector('.cartefacile-ctrl-map-selector-card__title') as HTMLDivElement;
+        titleDiv.textContent = title;
         
         // Add event listeners
         card.addEventListener('click', onClick);
