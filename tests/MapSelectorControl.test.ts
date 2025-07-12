@@ -42,7 +42,7 @@ describe('MapSelectorControl', () => {
 
     afterEach(() => {
         // Clean up
-        control.onRemove(mockMap as Map);
+        control.onRemove();
         document.body.innerHTML = '';
         jest.clearAllMocks();
     });
@@ -195,7 +195,7 @@ describe('MapSelectorControl', () => {
     describe('State Synchronization', () => {
         it('should sync panel state with map style', () => {
             // Clean up existing control first
-            control.onRemove(mockMap as Map);
+            control.onRemove();
             
             // Mock map with aerial style
             mockMap.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
@@ -212,14 +212,14 @@ describe('MapSelectorControl', () => {
                 expect(aerialCard.classList.contains('active')).toBe(true);
             }
             
-            newControl.onRemove(mockMap as Map);
+            newControl.onRemove();
         });
     });
 
     describe('Configuration Options', () => {
         it('should respect styles option', () => {
             // Clean up existing control first
-            control.onRemove(mockMap as Map);
+            control.onRemove();
             
             const customControl = new MapSelectorControl({
                 styles: ['simple', 'aerial']
@@ -234,12 +234,12 @@ describe('MapSelectorControl', () => {
             expect(panel.querySelector('[data-id="aerial"]')).toBeDefined();
             expect(panel.querySelector('[data-id="desaturated"]')).toBeNull();
             
-            customControl.onRemove(mockMap as Map);
+            customControl.onRemove();
         });
 
         it('should respect overlays option', () => {
             // Clean up existing control first
-            control.onRemove(mockMap as Map);
+            control.onRemove();
             
             const customControl = new MapSelectorControl({
                 overlays: ['cadastre']
@@ -252,7 +252,7 @@ describe('MapSelectorControl', () => {
             expect(overlayCards.length).toBe(1);
             expect(panel.querySelector('[data-id="cadastre"]')).toBeDefined();
             
-            customControl.onRemove(mockMap as Map);
+            customControl.onRemove();
         });
     });
 
@@ -267,7 +267,7 @@ describe('MapSelectorControl', () => {
             const panel = mapContainer.querySelector('#map-selector-panel');
             expect(panel).toBeDefined();
             
-            control.onRemove(mockMap as Map);
+            control.onRemove();
             
             expect(mapContainer.querySelector('#map-selector-panel')).toBeNull();
         });
