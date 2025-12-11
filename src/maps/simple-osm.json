@@ -2493,7 +2493,7 @@
       "layout": {
         "text-field": "{name}",
         "text-font": ["Noto Sans Regular"],
-        "text-size": 12,
+        "text-size": ["interpolate", ["linear"], ["zoom"], 13, 12, 16, 14],
         "visibility": "visible",
         "text-transform": "none"
       },
