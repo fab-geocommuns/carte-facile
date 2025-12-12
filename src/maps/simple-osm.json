@@ -2240,7 +2240,7 @@
       },
       "paint": {
         "text-color": "#863831",
-        "text-halo-color": "#FFFFFF",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
         "text-halo-width": 1,
         "text-halo-blur": 1
       }
@@ -2261,7 +2261,33 @@
       },
       "paint": {
         "text-color": "#863831",
-        "text-halo-color": "#FFFFFF",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "peak_main-no-elevation",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "mountain_peak",
+      "minzoom": 10,
+      "filter": [
+        "all",
+        ["==", "class", "peak"],
+        ["in", "rank", 1],
+        ["!has", "elev"]
+      ],
+      "layout": {
+        "text-field": "{name:latin}\n▲",
+        "text-font": ["Noto Sans Italic"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
+        "text-anchor": "bottom",
+        "visibility": "visible"
+      },
+      "paint": {
+        "text-color": "#863831",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
         "text-halo-width": 1,
         "text-halo-blur": 1
       }
@@ -2272,7 +2298,12 @@
       "source": "openmaptiles",
       "source-layer": "mountain_peak",
       "minzoom": 10,
-      "filter": ["all", ["==", "class", "peak"], ["in", "rank", 1]],
+      "filter": [
+        "all",
+        ["==", "class", "peak"],
+        ["in", "rank", 1],
+        ["has", "ele"]
+      ],
       "layout": {
         "text-field": "{name:latin}\n{ele}m\n▲",
         "text-font": ["Noto Sans Italic"],
@@ -2282,23 +2313,88 @@
       },
       "paint": {
         "text-color": "#863831",
-        "text-halo-color": "#FFFFFF",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
         "text-halo-width": 1,
         "text-halo-blur": 1
       }
     },
     {
-      "id": "water_name",
+      "id": "water_name_ocean",
       "type": "symbol",
       "source": "openmaptiles",
       "source-layer": "water_name",
+      "minzoom": 3,
+      "filter": ["all", ["==", "class", "sea"]],
+      "layout": {
+        "symbol-placement": "point",
+        "text-field": "{name:fr}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": {"stops": [[5, 10], [10, 24]]}
+      },
+      "paint": {
+        "text-color": "rgba(34, 95, 108, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "water_name_bay",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "water_name",
+      "filter": ["all", ["==", "class", "bay"]],
       "layout": {
         "symbol-placement": "line",
         "text-field": "{name}",
         "text-font": ["Noto Sans Regular"],
-        "text-size": 12
+        "text-size": ["interpolate", ["linear"], ["zoom"], 10, 12, 16, 22],
+        "visibility": "visible"
       },
-      "paint": {"text-color": "rgba(102, 132, 143, 1)"}
+      "paint": {
+        "text-color": "rgba(34, 95, 108, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "water_name_river",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "filter": ["all", ["==", "class", "river"]],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 16, 16]
+      },
+      "paint": {
+        "text-color": "rgba(34, 95, 108, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
+    },
+    {
+      "id": "water_name_stream",
+      "type": "symbol",
+      "source": "openmaptiles",
+      "source-layer": "waterway",
+      "filter": ["all", ["==", "class", "stream"]],
+      "layout": {
+        "symbol-placement": "line",
+        "text-field": "{name}",
+        "text-font": ["Noto Sans Regular"],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 12, 9, 16, 12]
+      },
+      "paint": {
+        "text-color": "rgba(34, 95, 108, 1)",
+        "text-halo-color": "rgba(255, 255, 255, 0.2)",
+        "text-halo-width": 1,
+        "text-halo-blur": 1
+      }
     },
     {
       "id": "tname_ref-z13-major",
