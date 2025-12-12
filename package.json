@@ -1,6 +1,6 @@
 {
   "name": "carte-facile",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Une librairie de styles de cartes et surcouches prêtes à l'emploi, pour ajouter des cartes rapidement à votre application avec MapLibre ou d'autres librairies cartographiques.",
   "type": "module",
   "main": "dist/carte-facile.cjs.js",
@@ -37,6 +37,10 @@
   ],
   "author": "Carte facile, IGN",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fab-geocommuns/carte-facile"
+  },
   "peerDependencies": {
     "maplibre-gl": "^5.0.0"
   },
