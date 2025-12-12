@@ -15,6 +15,70 @@ export interface MapSelectorOptions {
 }
 
 /**
+ * Simple utility to create elements from template strings
+ */
+function createFromTemplate(template: string): HTMLElement {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = template.trim();
+    return wrapper.firstElementChild as HTMLElement;
+}
+
+/**
+ * HTML templates for all UI component elements
+ */
+const TEMPLATES = {
+    container: `
+        <div class="maplibregl-ctrl maplibregl-ctrl-group"
+             aria-label="Sélecteur de carte">
+        </div>
+    `,
+    
+    toggleButton: `
+        <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" 
+                title="Sélecteur de carte"
+                aria-label="Ouvrir le sélecteur de cartes et surcouches"
+                aria-expanded="false"
+                aria-controls="map-selector-panel">
+        </button>
+    `,
+    
+    panel: `
+        <div class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel"
+             id="map-selector-panel"
+             role="dialog"
+             aria-label="Sélecteur de cartes et surcouches"
+             style="display: none;">
+          
+          <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close"
+                  title="Fermer"
+                  aria-label="Fermer le sélecteur de cartes">
+          </button>
+          
+          <h3 id="styles-heading">Cartes</h3>
+          <div class="cartefacile-ctrl-map-selector-card-list"
+               role="radiogroup"
+               aria-labelledby="styles-heading">
+          </div>
+          
+          <h3 id="overlays-heading">Surcouches</h3>
+          <div class="cartefacile-ctrl-map-selector-card-list"
+               role="group"
+               aria-labelledby="overlays-heading">
+          </div>
+        </div>
+    `,
+    
+    card: `
+        <div class="cartefacile-ctrl-map-selector-card"
+             tabindex="0"
+             aria-checked="false">
+          <img role="presentation">
+          <div class="cartefacile-ctrl-map-selector-card__title"></div>
+        </div>
+    `
+};
+
+/**
  * MapLibre control for selecting map styles and overlays
  * Provides a toggle button that opens a panel with style and overlay options
  */
@@ -37,16 +101,17 @@ export class MapSelectorControl implements maplibregl.IControl {
     onAdd(map: maplibregl.Map): HTMLElement {
         this._map = map;
         
-        const container = document.createElement('div');
-        container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
-        container.setAttribute('aria-label', 'Sélecteur de carte');
+        // Create the main control container from the HTML template
+        const container = createFromTemplate(TEMPLATES.container);
         
-        this._toggleButton = this._createToggleButton();
-        this._panel = this._createPanel(map);
+        // Create the toggle button to open/close the selector panel
+        this._toggleButton = createFromTemplate(TEMPLATES.toggleButton) as HTMLButtonElement;
+        
+        // Create the panel for selecting map styles and overlays
+        this._panel = this._createPanel();
         
         // Add panel to map container
         map.getContainer().appendChild(this._panel);
-        
         this._setupEventHandlers();
         
         // Sync panel state after map is loaded
@@ -60,91 +125,38 @@ export class MapSelectorControl implements maplibregl.IControl {
         return container;
     }
 
-    /** Creates the main toggle button */
-    private _createToggleButton(): HTMLButtonElement {
-        const button = document.createElement('button');
-        button.className = 'cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack';
-        button.title = 'Sélecteur de carte';
-        button.setAttribute('aria-label', 'Ouvrir le sélecteur de cartes et surcouches');
-        button.setAttribute('aria-expanded', 'false');
-        button.setAttribute('aria-controls', 'map-selector-panel');
-        
-        return button;
-    }
-
     /** Creates the main selector panel with style and overlay sections */
-    private _createPanel(map: maplibregl.Map): HTMLDivElement {
-        const panel = document.createElement('div');
-        panel.className = 'maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel';
-        panel.id = 'map-selector-panel';
-        panel.style.display = 'none';
-        panel.setAttribute('role', 'dialog');
-        panel.setAttribute('aria-label', 'Sélecteur de cartes et surcouches');
-        
-        panel.innerHTML = `
-            <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close" 
-                    title="Fermer" 
-                    aria-label="Fermer le sélecteur de cartes"></button>
-            <h3 id="styles-heading">Cartes</h3>
-            <div class="cartefacile-ctrl-map-selector-card-list" 
-                 role="radiogroup" 
-                 aria-labelledby="styles-heading"></div>
-            <h3 id="overlays-heading">Surcouches</h3>
-            <div class="cartefacile-ctrl-map-selector-card-list" 
-                 role="group" 
-                 aria-labelledby="overlays-heading"></div>
-        `;
+    private _createPanel(): HTMLDivElement {
+        const panel = createFromTemplate(TEMPLATES.panel) as HTMLDivElement;
         
         const [stylesContainer, overlaysContainer] = panel.querySelectorAll('.cartefacile-ctrl-map-selector-card-list');
-        this._createStyleCards(stylesContainer as HTMLDivElement);
-        this._createOverlayCards(overlaysContainer as HTMLDivElement);
+        this._populateCards(stylesContainer as HTMLDivElement, 'style');
+        this._populateCards(overlaysContainer as HTMLDivElement, 'overlay');
         
         return panel;
     }
 
-    /** Creates style selection cards for available map styles */
-    private _createStyleCards(container: HTMLDivElement): void {
-        Object.entries(mapStyles)
-            .filter(([key]) => this._options.styles.includes(key as keyof typeof mapStyles))
-            .forEach(([key, styleObj]) => {
-                const title = (styleObj as any)?.metadata?.fr?.name || 'Style sans nom';
-                const card = this._createCard(key, title, mapThumbnails[key as keyof typeof mapThumbnails] || '', 'style');
-                card.addEventListener('click', () => this._onStyleClick(key, styleObj, container, card));
-                container.appendChild(card);
-            });
-    }
-
-    /** Creates overlay selection cards for available overlays */
-    private _createOverlayCards(container: HTMLDivElement): void {
-        Object.values(Overlay)
-            .filter(id => this._options.overlays.includes(id as OverlayType))
-            .forEach(id => {
-                const overlay = mapOverlays[id as keyof typeof mapOverlays];
-                const title = (overlay?.neutral as any)?.metadata?.fr?.name || 'Surcouche sans nom';
-                const card = this._createCard(id, title, mapThumbnails[id as keyof typeof mapThumbnails] || '', 'overlay');
-                card.addEventListener('click', () => this._onOverlayClick(id, card));
-                container.appendChild(card);
-            });
-    }
-
-    /** Creates a card element with accessibility attributes */
-    private _createCard(id: string, title: string, thumbnail: string, type: 'style' | 'overlay'): HTMLElement {
-        const card = document.createElement('div');
-        card.className = 'cartefacile-ctrl-map-selector-card';
-        card.dataset.id = id;
-        card.dataset.type = type;
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('aria-checked', 'false');
+    /** Creates a card element from template */
+    private _createCard(id: string, title: string, thumbnail: string, type: 'style' | 'overlay', onClick: () => void): HTMLElement {
+        const card = createFromTemplate(TEMPLATES.card);
         
-        if (type === 'style') {
-            card.setAttribute('role', 'radio');
-            card.setAttribute('aria-label', `Style de carte : ${title}`);
-        } else {
-            card.setAttribute('role', 'checkbox');
-            card.setAttribute('aria-label', `Surcouche : ${title}`);
-        }
+        // Configure card attributes securely
+        card.setAttribute('data-id', id);
+        card.setAttribute('data-type', type);
+        card.setAttribute('role', type === 'style' ? 'radio' : 'checkbox');
+        card.setAttribute('aria-label', `${type === 'style' ? 'Style de carte' : 'Surcouche'} : ${title}`);
         
-        // Simple keyboard support
+        // Configure image securely
+        const img = card.querySelector('img') as HTMLImageElement;
+        img.src = thumbnail;
+        img.alt = `Aperçu de ${title}`;
+        
+        // Configure title securely  
+        const titleDiv = card.querySelector('.cartefacile-ctrl-map-selector-card__title') as HTMLDivElement;
+        titleDiv.textContent = title;
+        
+        // Add event listeners
+        card.addEventListener('click', onClick);
         card.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -152,52 +164,64 @@ export class MapSelectorControl implements maplibregl.IControl {
             }
         });
         
-        card.innerHTML = `
-            <img src="${thumbnail}" alt="Aperçu de ${title}" role="presentation">
-            <div class="cartefacile-ctrl-map-selector-card__title">${title}</div>
-        `;
-        
         return card;
+    }
+
+    /** Populates containers with cards based on type */
+    private _populateCards(container: HTMLDivElement, type: 'style' | 'overlay'): void {
+        if (type === 'style') {
+            Object.entries(mapStyles)
+                .filter(([key]) => this._options.styles.includes(key as keyof typeof mapStyles))
+                .forEach(([key, styleObj]) => {
+                    const title = (styleObj as any)?.metadata?.fr?.name || 'Style sans nom';
+                    const thumbnail = mapThumbnails[key as keyof typeof mapThumbnails] || '';
+                    const card = this._createCard(key, title, thumbnail, 'style', 
+                        () => this._onStyleClick(key, styleObj, container, card));
+                    container.appendChild(card);
+                });
+        } else {
+            Object.values(Overlay)
+                .filter(id => this._options.overlays.includes(id as OverlayType))
+                .forEach(id => {
+                    const overlay = mapOverlays[id as keyof typeof mapOverlays];
+                    const title = (overlay?.neutral as any)?.metadata?.fr?.name || 'Surcouche sans nom';
+                    const thumbnail = mapThumbnails[id as keyof typeof mapThumbnails] || '';
+                    const card = this._createCard(id, title, thumbnail, 'overlay', 
+                        () => this._onOverlayClick(id, card));
+                    container.appendChild(card);
+                });
+        }
     }
 
     /** Sets up essential event handlers for AAA compliance */
     private _setupEventHandlers(): void {
         if (!this._panel || !this._toggleButton) return;
 
-        // Toggle button click
         this._toggleButton.addEventListener('click', () => this._togglePanel());
-        
-        // Close button click
         this._panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', () => this._closePanel());
         
-        // Keyboard navigation (AAA requirement)
         this._keydownHandler = (event: KeyboardEvent) => {
             if (this._panel!.style.display === 'none') return;
             
-            switch (event.key) {
-                case 'Escape':
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this._closePanel();
+                this._toggleButton!.focus();
+            } else if (event.key === 'Tab') {
+                const focusableElements = this._panel!.querySelectorAll('button, [tabindex="0"]');
+                const first = focusableElements[0] as HTMLElement;
+                const last = focusableElements[focusableElements.length - 1] as HTMLElement;
+                
+                if (event.shiftKey && document.activeElement === first) {
                     event.preventDefault();
-                    this._closePanel();
-                    this._toggleButton!.focus();
-                    break;
-                case 'Tab':
-                    // Let browser handle Tab naturally, but ensure proper focus cycling
-                    const focusableElements = this._panel!.querySelectorAll('button, [tabindex="0"]');
-                    const first = focusableElements[0] as HTMLElement;
-                    const last = focusableElements[focusableElements.length - 1] as HTMLElement;
-                    
-                    if (event.shiftKey && document.activeElement === first) {
-                        event.preventDefault();
-                        last.focus();
-                    } else if (!event.shiftKey && document.activeElement === last) {
-                        event.preventDefault();
-                        first.focus();
-                    }
-                    break;
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
             }
         };
         
-        // Outside click to close
         this._clickHandler = (event: MouseEvent) => {
             if (this._panel!.style.display !== 'none' && 
                 !this._panel!.contains(event.target as Node) && 
@@ -236,11 +260,9 @@ export class MapSelectorControl implements maplibregl.IControl {
         this._panel.style.display = 'block';
         this._toggleButton.setAttribute('aria-expanded', 'true');
         
-        // Focus management for AAA
+        // Focus first focusable element
         const firstFocusable = this._panel.querySelector('button, [tabindex="0"]') as HTMLElement;
-        if (firstFocusable) {
-            firstFocusable.focus();
-        }
+        firstFocusable?.focus();
     }
 
     /** Closes the panel */
@@ -257,24 +279,20 @@ export class MapSelectorControl implements maplibregl.IControl {
         if (!this._map || !this._panel) return;
 
         try {
-            // Sync style cards
             const currentStyle = this._map.getStyle();
-            const styleCards = this._panel.querySelectorAll('[data-type="style"]');
             
-            styleCards.forEach(card => {
+            // Sync style cards
+            this._panel.querySelectorAll('[data-type="style"]').forEach(card => {
                 const cardElement = card as HTMLElement;
                 const styleId = cardElement.dataset.id;
                 const isActive = currentStyle.name === styleId || (styleId === 'simple' && (!currentStyle.name || currentStyle.name === 'simple'));
                 
                 cardElement.classList.toggle('active', isActive);
                 cardElement.setAttribute('aria-checked', isActive.toString());
-                // Keep all cards accessible via Tab
-                cardElement.setAttribute('tabindex', '0');
             });
 
             // Sync overlay cards
-            const overlayCards = this._panel.querySelectorAll('[data-type="overlay"]');
-            overlayCards.forEach(card => {
+            this._panel.querySelectorAll('[data-type="overlay"]').forEach(card => {
                 const cardElement = card as HTMLElement;
                 const overlayId = cardElement.dataset.id as OverlayType;
                 const overlay = mapOverlays[overlayId];
@@ -289,21 +307,15 @@ export class MapSelectorControl implements maplibregl.IControl {
         }
     }
 
-    /** Ensures the map is available and valid */
-    private _ensureMapAvailable(): boolean {
-        if (!this._map || !this._map.getContainer()) {
-            console.warn('Map is not available');
-            return false;
-        }
-        return true;
-    }
-
     /** Handles style card click - changes map style */
     private _onStyleClick(styleKey: string, styleObj: maplibregl.StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
+        if (!this._map?.getContainer()) {
+            console.warn('Map is not available');
+            return;
+        }
+
         try {
-            if (!this._ensureMapAvailable()) return;
-            
-            this._map!.setStyle(styleObj);
+            this._map.setStyle(styleObj);
             
             // Update radio group
             container.querySelectorAll('.cartefacile-ctrl-map-selector-card').forEach(c => {
@@ -320,17 +332,20 @@ export class MapSelectorControl implements maplibregl.IControl {
 
     /** Handles overlay card click - toggles overlay visibility */
     private _onOverlayClick(overlayId: string, card: HTMLElement): void {
+        if (!this._map?.getContainer()) {
+            console.warn('Map is not available');
+            return;
+        }
+
         try {
-            if (!this._ensureMapAvailable()) return;
-            
             const isActive = card.classList.contains('active');
             
             if (isActive) {
-                removeOverlay(this._map!, overlayId as OverlayType);
+                removeOverlay(this._map, overlayId as OverlayType);
                 card.classList.remove('active');
                 card.setAttribute('aria-checked', 'false');
             } else {
-                addOverlay(this._map!, overlayId as OverlayType);
+                addOverlay(this._map, overlayId as OverlayType);
                 card.classList.add('active');
                 card.setAttribute('aria-checked', 'true');
             }
@@ -340,7 +355,7 @@ export class MapSelectorControl implements maplibregl.IControl {
     }
 
     /** Cleanup when control is removed */
-    onRemove(map: maplibregl.Map): void {
+    onRemove(): void {
         if (this._keydownHandler) {
             document.removeEventListener('keydown', this._keydownHandler);
         }
