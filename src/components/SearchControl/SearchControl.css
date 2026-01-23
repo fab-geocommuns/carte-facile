@@ -1,0 +1,81 @@
+.cartefacile-ctrl-search {
+    display: flex;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.cartefacile-ctrl-search .fr-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.cartefacile-ctrl-search .fr-input {
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 200px;
+    outline: none;
+}
+
+.cartefacile-ctrl-search .fr-btn {
+    border: none;
+    background: #000091;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cartefacile-ctrl-search .fr-btn:hover {
+    background: #1212ff;
+}
+
+/* Liste des résultats (positionnée dans le conteneur de la carte) */
+.cartefacile-ctrl-search__results {
+    display: none;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.cartefacile-ctrl-search__results--visible {
+    display: block;
+}
+
+.cartefacile-ctrl-search__result {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.cartefacile-ctrl-search__result:last-child {
+    border-bottom: none;
+}
+
+.cartefacile-ctrl-search__result:hover,
+.cartefacile-ctrl-search__result--selected {
+    background: #f0f0f0;
+}
+
+.cartefacile-ctrl-search__result-label {
+    display: block;
+}
+
+.cartefacile-ctrl-search__result-desc {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
