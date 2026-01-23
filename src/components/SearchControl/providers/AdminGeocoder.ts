@@ -1,12 +1,27 @@
 import type { Map, LngLatBoundsLike } from 'maplibre-gl';
 import type { SearchProvider, SearchResult } from '../SearchControl';
 
+// API & Sources
 const API_BASE = 'https://geo.api.gouv.fr';
 const VECTOR_SOURCE_ID = 'decoupage-administratif';
 const VECTOR_SOURCE_URL = 'https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json';
+
+// Layer IDs
 const HIGHLIGHT_SOURCE_ID = 'admin-geocoder-source';
 const HIGHLIGHT_LAYER_ID = 'admin-geocoder-highlight';
 const HIGHLIGHT_OUTLINE_ID = 'admin-geocoder-highlight-outline';
+
+// Style
+const HIGHLIGHT_COLOR = '#3b82f6';
+const MASK_COLOR = '#000000';
+const MASK_OPACITY = 0.1;    ;
+const FILL_OPACITY = 0.1;
+const OUTLINE_WIDTH = 3;
+const FIT_PADDING = 160;
+
+// Search limits
+const COMMUNE_LIMIT = 3;
+const OTHER_LIMIT = 2;
 
 type AdminType = 'commune' | 'departement' | 'region' | 'epci';
 
@@ -22,10 +37,35 @@ interface AdminData {
     code: string;
 }
 
+/** API response types */
+interface CommuneResponse {
+    nom: string;
+    code: string;
+    departement?: { nom: string };
+    region?: { nom: string };
+    centre?: { coordinates: [number, number] };
+    contour?: GeoJSON.Polygon;
+}
+
+interface DepartementResponse {
+    nom: string;
+    code: string;
+}
+
+interface RegionResponse {
+    nom: string;
+    code: string;
+}
+
+interface EpciResponse {
+    nom: string;
+    code: string;
+    contour?: GeoJSON.Polygon;
+}
+
 /**
  * Search provider for French administrative divisions.
  * Searches communes, départements, régions and EPCI in parallel.
- * Uses vector tiles for highlight display.
  *
  * @see https://geo.api.gouv.fr/decoupage-administratif
  */
@@ -45,7 +85,7 @@ export const AdminGeocoder: SearchProvider = {
                 searchType('epci', query, controller.signal)
             ]);
 
-            return [...communes, ...departements, ...regions, ...epcis];
+            return [...regions, ...departements, ...communes, ...epcis];
         } finally {
             clearTimeout(timeout);
         }
@@ -55,106 +95,117 @@ export const AdminGeocoder: SearchProvider = {
         const adminData = result.data as AdminData | undefined;
         if (!adminData) return;
 
-        const config = ADMIN_CONFIG[adminData.type];
-
-        // Remove previous highlight
-        if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
-        if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
-        if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
+        removeHighlight(map);
 
         if (adminData.type === 'commune' || adminData.type === 'epci') {
-            // Use contour from API for communes and EPCI
-            const contour = await fetchContour(adminData.type, adminData.code);
-            if (contour) {
-                const bbox = bboxFromCoordinates(contour.coordinates[0] as [number, number][]);
-                if (bbox) {
-                    map.fitBounds(bbox as LngLatBoundsLike, { padding: 50, animate: false });
-                }
-
-                // Create inverted mask (world polygon with contour as hole)
-                const mask: GeoJSON.Polygon = {
-                    type: 'Polygon',
-                    coordinates: [
-                        [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
-                        ...contour.coordinates
-                    ]
-                };
-
-                map.addSource(HIGHLIGHT_SOURCE_ID, {
-                    type: 'geojson',
-                    data: { type: 'Feature', geometry: mask, properties: {} }
-                });
-
-                map.addLayer({
-                    id: HIGHLIGHT_LAYER_ID,
-                    type: 'fill',
-                    source: HIGHLIGHT_SOURCE_ID,
-                    paint: {
-                        'fill-color': '#000000',
-                        'fill-opacity': 0.3
-                    }
-                });
-
-                map.addLayer({
-                    id: HIGHLIGHT_OUTLINE_ID,
-                    type: 'line',
-                    source: HIGHLIGHT_SOURCE_ID,
-                    paint: {
-                        'line-color': '#3b82f6',
-                        'line-width': 3
-                    }
-                });
-            }
+            await highlightWithContour(map, adminData);
         } else {
-            // Use vector tiles for départements and régions
-            const bbox = await fetchBbox(adminData.type, adminData.code);
-            if (bbox) {
-                map.fitBounds(bbox as LngLatBoundsLike, { padding: 50, animate: false });
-            }
-
-            if (!map.getSource(VECTOR_SOURCE_ID)) {
-                map.addSource(VECTOR_SOURCE_ID, {
-                    type: 'vector',
-                    url: VECTOR_SOURCE_URL
-                });
-            }
-
-            map.addLayer({
-                id: HIGHLIGHT_LAYER_ID,
-                type: 'fill',
-                source: VECTOR_SOURCE_ID,
-                'source-layer': config.sourceLayer,
-                filter: ['==', ['get', 'code'], adminData.code],
-                paint: {
-                    'fill-color': '#3b82f6',
-                    'fill-opacity': 0.2
-                }
-            });
-
-            map.addLayer({
-                id: HIGHLIGHT_OUTLINE_ID,
-                type: 'line',
-                source: VECTOR_SOURCE_ID,
-                'source-layer': config.sourceLayer,
-                filter: ['==', ['get', 'code'], adminData.code],
-                paint: {
-                    'line-color': '#3b82f6',
-                    'line-width': 3
-                }
-            });
+            await highlightWithVectorTiles(map, adminData);
         }
     }
 };
 
-/** Generic search function for all admin types */
+/** Remove existing highlight layers and sources */
+function removeHighlight(map: Map): void {
+    if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
+    if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
+    if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
+}
+
+/** Layer options for highlight layers */
+interface LayerOptions {
+    source: string;
+    sourceLayer?: string;
+    filter?: ['==', ['get', string], string];
+    fillColor: string;
+    fillOpacity: number;
+}
+
+/** Add fill and outline layers to map */
+function addHighlightLayers(map: Map, options: LayerOptions): void {
+    const baseLayer = {
+        source: options.source,
+        ...(options.sourceLayer && { 'source-layer': options.sourceLayer }),
+        ...(options.filter && { filter: options.filter })
+    };
+
+    map.addLayer({
+        id: HIGHLIGHT_LAYER_ID,
+        type: 'fill',
+        ...baseLayer,
+        paint: { 'fill-color': options.fillColor, 'fill-opacity': options.fillOpacity }
+    });
+
+    map.addLayer({
+        id: HIGHLIGHT_OUTLINE_ID,
+        type: 'line',
+        ...baseLayer,
+        paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
+    });
+}
+
+/** Highlight communes/EPCI using contour from API (inverted mask) */
+async function highlightWithContour(map: Map, adminData: AdminData): Promise<void> {
+    const contour = await fetchContour(adminData.type, adminData.code);
+    if (!contour) return;
+
+    const bbox = bboxFromCoordinates(contour.coordinates[0] as [number, number][]);
+    if (bbox) {
+        map.fitBounds(bbox as LngLatBoundsLike, { padding: FIT_PADDING, animate: false });
+    }
+
+    // Create inverted mask (world polygon with contour as hole)
+    const mask: GeoJSON.Polygon = {
+        type: 'Polygon',
+        coordinates: [
+            [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
+            ...contour.coordinates
+        ]
+    };
+
+    map.addSource(HIGHLIGHT_SOURCE_ID, {
+        type: 'geojson',
+        data: { type: 'Feature', geometry: mask, properties: {} }
+    });
+
+    addHighlightLayers(map, {
+        source: HIGHLIGHT_SOURCE_ID,
+        fillColor: MASK_COLOR,
+        fillOpacity: MASK_OPACITY
+    });
+}
+
+/** Highlight départements/régions using vector tiles */
+async function highlightWithVectorTiles(map: Map, adminData: AdminData): Promise<void> {
+    const config = ADMIN_CONFIG[adminData.type];
+
+    const bbox = await fetchBbox(adminData.type, adminData.code);
+    if (bbox) {
+        map.fitBounds(bbox as LngLatBoundsLike, { padding: FIT_PADDING, animate: false });
+    }
+
+    if (!map.getSource(VECTOR_SOURCE_ID)) {
+        map.addSource(VECTOR_SOURCE_ID, { type: 'vector', url: VECTOR_SOURCE_URL });
+    }
+
+    addHighlightLayers(map, {
+        source: VECTOR_SOURCE_ID,
+        sourceLayer: config.sourceLayer,
+        filter: ['==', ['get', 'code'], adminData.code],
+        fillColor: HIGHLIGHT_COLOR,
+        fillOpacity: FILL_OPACITY
+    });
+}
+
+/** Search for admin entities by type */
 async function searchType(type: AdminType, query: string, signal: AbortSignal): Promise<SearchResult[]> {
     const config = ADMIN_CONFIG[type];
-    const limit = type === 'commune' ? '3' : '2';
+    const limit = type === 'commune' ? COMMUNE_LIMIT : OTHER_LIMIT;
 
     const params = new URLSearchParams({
         nom: query,
         fields: type === 'commune' ? 'nom,code,departement,region' : 'nom,code',
-        limit
+        limit: String(limit)
     });
 
     if (type === 'commune') {
@@ -168,29 +219,31 @@ async function searchType(type: AdminType, query: string, signal: AbortSignal): 
         const data = await response.json();
         if (!Array.isArray(data)) return [];
 
-        return data.map((item: any) => {
-            let description: string;
-            if (type === 'commune') {
-                const parts = [item.departement?.nom, item.region?.nom].filter(Boolean);
-                description = parts.length > 0 ? `Commune · ${parts.join(', ')}` : 'Commune';
-            } else if (type === 'departement') {
-                description = `Département (${item.code})`;
-            } else if (type === 'region') {
-                description = 'Région';
-            } else {
-                description = 'EPCI';
-            }
-
-            return {
-                id: `${type}-${item.code}`,
-                label: item.nom,
-                description,
-                data: { type, code: item.code } as AdminData
-            };
-        });
+        return data.map((item: CommuneResponse | DepartementResponse | RegionResponse | EpciResponse) => ({
+            id: `${type}-${item.code}`,
+            label: item.nom,
+            description: buildDescription(type, item),
+            data: { type, code: item.code } as AdminData
+        }));
     } catch {
         return [];
     }
+}
+
+/** Build description based on admin type */
+function buildDescription(type: AdminType, item: CommuneResponse | DepartementResponse | RegionResponse | EpciResponse): string {
+    if (type === 'commune') {
+        const commune = item as CommuneResponse;
+        const parts = [commune.departement?.nom, commune.region?.nom].filter(Boolean);
+        return parts.length > 0 ? `Commune · ${parts.join(', ')}` : 'Commune';
+    }
+    if (type === 'departement') {
+        return `Département (${item.code})`;
+    }
+    if (type === 'region') {
+        return 'Région';
+    }
+    return 'EPCI';
 }
 
 /** Fetch bbox for départements and régions */
@@ -198,88 +251,102 @@ async function fetchBbox(type: AdminType, code: string): Promise<[number, number
     try {
         if (type === 'departement') {
             return await fetchDepartementBbox(code);
-        } else {
-            return await fetchRegionBbox(code);
         }
+        return await fetchRegionBbox(code);
     } catch {
         return null;
     }
 }
 
-/** Fetch contour geometry from API (for communes and EPCI) */
+/** Fetch contour geometry from API */
 async function fetchContour(type: AdminType, code: string): Promise<GeoJSON.Polygon | null> {
     const endpoint = ADMIN_CONFIG[type].endpoint;
-    const response = await fetch(`${API_BASE}/${endpoint}/${code}?fields=contour`, {
-        signal: AbortSignal.timeout(5000)
-    });
 
-    if (!response.ok) return null;
+    try {
+        const response = await fetch(`${API_BASE}/${endpoint}/${code}?fields=contour`, {
+            signal: AbortSignal.timeout(5000)
+        });
+        if (!response.ok) return null;
 
-    const data = await response.json();
-    return data.contour || null;
+        const data = await response.json();
+        return data.contour || null;
+    } catch {
+        return null;
+    }
 }
 
 /** Calculate bbox from communes centers in a département */
 async function fetchDepartementBbox(code: string): Promise<[number, number, number, number] | null> {
-    const response = await fetch(`${API_BASE}/departements/${code}/communes?fields=centre`, {
-        signal: AbortSignal.timeout(5000)
-    });
+    try {
+        const response = await fetch(`${API_BASE}/departements/${code}/communes?fields=centre`, {
+            signal: AbortSignal.timeout(5000)
+        });
+        if (!response.ok) return null;
 
-    if (!response.ok) return null;
+        const communes: CommuneResponse[] = await response.json();
+        if (!Array.isArray(communes) || communes.length === 0) return null;
 
-    const communes = await response.json();
-    if (!Array.isArray(communes) || communes.length === 0) return null;
+        const centers = communes
+            .filter(c => c.centre?.coordinates)
+            .map(c => c.centre!.coordinates);
 
-    const centers = communes
-        .filter((c: any) => c.centre?.coordinates)
-        .map((c: any) => c.centre.coordinates as [number, number]);
-
-    return bboxFromCoordinates(centers);
+        return bboxFromCoordinates(centers);
+    } catch {
+        return null;
+    }
 }
 
 /** Calculate bbox from communes centers in a région */
 async function fetchRegionBbox(code: string): Promise<[number, number, number, number] | null> {
-    const response = await fetch(`${API_BASE}/regions/${code}/departements?fields=code`, {
-        signal: AbortSignal.timeout(5000)
-    });
+    try {
+        const response = await fetch(`${API_BASE}/regions/${code}/departements?fields=code`, {
+            signal: AbortSignal.timeout(5000)
+        });
+        if (!response.ok) return null;
 
-    if (!response.ok) return null;
+        const departements: DepartementResponse[] = await response.json();
+        if (!Array.isArray(departements) || departements.length === 0) return null;
 
-    const departements = await response.json();
-    if (!Array.isArray(departements) || departements.length === 0) return null;
+        const allCenters: [number, number][] = [];
 
-    // Fetch communes centers for all départements
-    const allCenters: [number, number][] = [];
-    await Promise.all(
-        departements.map(async (dept: any) => {
-            const communesResponse = await fetch(
-                `${API_BASE}/departements/${dept.code}/communes?fields=centre&limit=50`,
-                { signal: AbortSignal.timeout(5000) }
-            );
-            if (communesResponse.ok) {
-                const communes = await communesResponse.json();
-                communes
-                    .filter((c: any) => c.centre?.coordinates)
-                    .forEach((c: any) => allCenters.push(c.centre.coordinates));
-            }
-        })
-    );
+        await Promise.all(
+            departements.map(async dept => {
+                try {
+                    const communesResponse = await fetch(
+                        `${API_BASE}/departements/${dept.code}/communes?fields=centre&limit=50`,
+                        { signal: AbortSignal.timeout(5000) }
+                    );
+                    if (!communesResponse.ok) return;
 
-    return allCenters.length > 0 ? bboxFromCoordinates(allCenters) : null;
+                    const communes: CommuneResponse[] = await communesResponse.json();
+                    communes
+                        .filter(c => c.centre?.coordinates)
+                        .forEach(c => allCenters.push(c.centre!.coordinates));
+                } catch {
+                    // Ignore individual failures
+                }
+            })
+        );
+
+        return allCenters.length > 0 ? bboxFromCoordinates(allCenters) : null;
+    } catch {
+        return null;
+    }
 }
 
 /** Calculate bbox from array of coordinates */
 function bboxFromCoordinates(coords: [number, number][]): [number, number, number, number] | null {
     if (coords.length === 0) return null;
 
-    const lngs = coords.map(c => c[0]);
-    const lats = coords.map(c => c[1]);
+    let minLng = Infinity, minLat = Infinity;
+    let maxLng = -Infinity, maxLat = -Infinity;
 
-    return [
-        Math.min(...lngs),
-        Math.min(...lats),
-        Math.max(...lngs),
-        Math.max(...lats)
-    ];
+    for (const [lng, lat] of coords) {
+        if (lng < minLng) minLng = lng;
+        if (lng > maxLng) maxLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+    }
+
+    return [minLng, minLat, maxLng, maxLat];
 }
-
