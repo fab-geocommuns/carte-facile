@@ -12,6 +12,8 @@ export interface SearchResult {
     center?: [number, number];
     /** Bounding box [west, south, east, north] */
     bbox?: [number, number, number, number];
+    /** Additional data (geometry, properties, etc.) */
+    data?: unknown;
 }
 
 /**

@@ -50,7 +50,7 @@ export const GeopfGeocoder: SearchProvider = {
     //Centers the map on the selected result.
     onSelect(result: SearchResult, map: Map): void {
         if (result.center) {
-            map.jumpTo({ center: result.center, zoom: 16 });
+            map.jumpTo({ center: result.center, zoom: 17 });
         }
     }
 };
