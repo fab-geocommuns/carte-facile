@@ -39,12 +39,20 @@ export const GeopfGeocoder: SearchProvider = {
             return [];
         }
 
-        return data.features.map((feature: any) => ({
-            id: feature.properties.id,
-            label: feature.properties.label,
-            description: feature.properties.context,
-            center: feature.geometry.coordinates as [number, number]
-        }));
+        return data.features
+            .filter((feature: any) => feature.properties.type !== 'municipality')
+            .map((feature: any) => {
+                const { id, name, label: fullLabel } = feature.properties;
+                const suffix = name && fullLabel.startsWith(name)
+                    ? fullLabel.slice(name.length).trim()
+                    : undefined;
+                return {
+                    id,
+                    label: name ?? fullLabel,
+                    description: suffix || undefined,
+                    center: feature.geometry.coordinates as [number, number]
+                };
+            });
     },
     
     //Centers the map on the selected result.

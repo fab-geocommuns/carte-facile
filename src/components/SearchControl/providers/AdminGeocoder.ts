@@ -14,7 +14,7 @@ const HIGHLIGHT_OUTLINE_ID = 'admin-geocoder-highlight-outline';
 // Style
 const HIGHLIGHT_COLOR = '#3b82f6';
 const MASK_COLOR = '#000000';
-const MASK_OPACITY = 0.1;    ;
+const MASK_OPACITY = 0.1;
 const FILL_OPACITY = 0.1;
 const OUTLINE_WIDTH = 3;
 const FIT_PADDING = 160;
@@ -41,6 +41,7 @@ interface AdminData {
 interface CommuneResponse {
     nom: string;
     code: string;
+    codesPostaux?: string[];
     departement?: { nom: string };
     region?: { nom: string };
     centre?: { coordinates: [number, number] };
@@ -89,6 +90,10 @@ export const AdminGeocoder: SearchProvider = {
         } finally {
             clearTimeout(timeout);
         }
+    },
+
+    onClear(map: Map): void {
+        removeHighlight(map);
     },
 
     async onSelect(result: SearchResult, map: Map): Promise<void> {
@@ -204,7 +209,7 @@ async function searchType(type: AdminType, query: string, signal: AbortSignal): 
 
     const params = new URLSearchParams({
         nom: query,
-        fields: type === 'commune' ? 'nom,code,departement,region' : 'nom,code',
+        fields: type === 'commune' ? 'nom,code,codesPostaux,departement' : 'nom,code',
         limit: String(limit)
     });
 
@@ -231,19 +236,16 @@ async function searchType(type: AdminType, query: string, signal: AbortSignal): 
 }
 
 /** Build description based on admin type */
-function buildDescription(type: AdminType, item: CommuneResponse | DepartementResponse | RegionResponse | EpciResponse): string {
+function buildDescription(type: AdminType, item: CommuneResponse | DepartementResponse | RegionResponse | EpciResponse): string | undefined {
     if (type === 'commune') {
         const commune = item as CommuneResponse;
-        const parts = [commune.departement?.nom, commune.region?.nom].filter(Boolean);
-        return parts.length > 0 ? `Commune · ${parts.join(', ')}` : 'Commune';
+        const parts = [commune.codesPostaux?.[0], commune.departement?.nom].filter(Boolean);
+        return parts.length > 0 ? `(${parts.join(', ')})` : undefined;
     }
     if (type === 'departement') {
-        return `Département (${item.code})`;
+        return `(${item.code})`;
     }
-    if (type === 'region') {
-        return 'Région';
-    }
-    return 'EPCI';
+    return undefined;
 }
 
 /** Fetch bbox for départements and régions */
