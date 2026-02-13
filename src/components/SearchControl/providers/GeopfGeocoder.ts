@@ -17,10 +17,14 @@ const FIT_PADDING = 160;
 
 // Search limits
 const ADDRESS_LIMIT = 5;
-const ADMIN_LIMIT = 5;
+const POI_LIMIT = 5;
 
 interface AddressData {
     type: 'address';
+}
+
+interface PoiData {
+    type: 'poi';
 }
 
 interface AdminData {
@@ -28,12 +32,12 @@ interface AdminData {
     truegeometry: GeoJSON.Polygon | GeoJSON.MultiPolygon;
 }
 
-type ResultData = AddressData | AdminData;
+type ResultData = AddressData | PoiData | AdminData;
 
 /**
  * Unified search provider for the French Geoplateforme geocoding API.
- * Searches addresses and administrative divisions (communes, départements,
- * régions, EPCI) in parallel, with boundary highlighting for admin results.
+ * Searches addresses and POI (administrative divisions, transport, monuments, etc.)
+ * in parallel, with boundary highlighting for administrative results.
  *
  * @see https://data.geopf.fr/geocodage/openapi
  */
@@ -42,12 +46,12 @@ export const GeopfGeocoder: SearchProvider = {
     placeholder: 'Rechercher...',
 
     async search(query: string): Promise<SearchResult[]> {
-        const [addresses, admin] = await Promise.all([
+        const [addresses, pois] = await Promise.all([
             searchAddresses(query),
-            searchAdmin(query)
+            searchPoi(query)
         ]);
 
-        return [...admin, ...addresses];
+        return [...pois, ...addresses];
     },
 
     onClear(map: Map): void {
@@ -60,26 +64,24 @@ export const GeopfGeocoder: SearchProvider = {
 
         removeHighlight(map);
 
-        if (data.type === 'address') {
+        if (data.type === 'address' || data.type === 'poi') {
             if (result.center) {
                 map.jumpTo({ center: result.center, zoom: 17 });
             }
             return;
         }
 
-        // Normalize to array of polygon rings (each polygon's outer + inner rings)
+        // Admin: display inverted mask with contour
         const rings: number[][][] = data.truegeometry.type === 'Polygon'
             ? data.truegeometry.coordinates
             : data.truegeometry.coordinates.flat();
 
-        // Compute bbox from all outer rings
         const allCoords = rings.flat() as [number, number][];
         const bbox = bboxFromCoordinates(allCoords);
         if (bbox) {
             map.fitBounds(bbox as LngLatBoundsLike, { padding: FIT_PADDING, animate: false });
         }
 
-        // Inverted mask: world polygon with each ring as a hole
         const mask: GeoJSON.Polygon = {
             type: 'Polygon',
             coordinates: [
@@ -146,15 +148,14 @@ async function searchAddresses(query: string): Promise<SearchResult[]> {
     }
 }
 
-/** Search administrative divisions via the POI index */
-async function searchAdmin(query: string): Promise<SearchResult[]> {
+/** Search all POI (administrative, transport, monuments, etc.) */
+async function searchPoi(query: string): Promise<SearchResult[]> {
     try {
         const params = new URLSearchParams({
             q: query,
             index: 'poi',
-            category: 'administratif',
             returntruegeometry: 'true',
-            limit: String(ADMIN_LIMIT)
+            limit: String(POI_LIMIT)
         });
 
         const response = await fetch(`${API_URL}?${params}`, {
@@ -165,33 +166,55 @@ async function searchAdmin(query: string): Promise<SearchResult[]> {
         const data = await response.json();
         if (!Array.isArray(data.features)) return [];
 
-        return data.features
-            .filter((f: any) => f.properties.truegeometry)
-            .map((f: any) => {
+        return data.features.map((f: any) => {
+            const categories: string[] = f.properties.category || [];
+            const isAdmin = categories.includes('administratif') && f.properties.truegeometry;
+
+            if (isAdmin) {
                 const truegeometry = typeof f.properties.truegeometry === 'string'
                     ? JSON.parse(f.properties.truegeometry)
                     : f.properties.truegeometry;
                 return {
                     id: f.properties.toponym || f.properties.id,
                     label: f.properties.toponym,
-                    description: buildAdminDescription(f.properties),
+                    description: buildPoiDescription(f.properties),
                     data: { type: 'admin', truegeometry } as AdminData
                 };
-            });
+            }
+
+            return {
+                id: f.properties.toponym || f.properties.id,
+                label: f.properties.toponym,
+                description: buildPoiDescription(f.properties),
+                center: f.geometry.coordinates as [number, number],
+                data: { type: 'poi' } as PoiData
+            };
+        });
     } catch {
         return [];
     }
 }
 
-/** Build a description string from admin POI properties */
-function buildAdminDescription(props: any): string | undefined {
+/** Build a description string from POI properties */
+function buildPoiDescription(props: any): string | undefined {
     const categories: string[] = props.category || [];
+
+    // Administrative types
     if (categories.includes('région')) return '(région)';
     if (categories.includes('département')) return '(département)';
     if (categories.includes('epci')) return '(intercommunalité)';
     if (categories.includes('arrondissement municipal')) return '(arrondissement)';
-    const postcodes: string[] = props.postcode || [];
-    return postcodes.length > 0 ? `(${postcodes[0]})` : undefined;
+    if (categories.includes('commune')) {
+        const postcodes: string[] = props.postcode || [];
+        return postcodes.length > 0 ? `(${postcodes[0]})` : undefined;
+    }
+
+    // Other POI: use the most specific subcategory
+    const mainCategories = ['administratif', 'transport', 'construction', 'hydrographie',
+        'zone d\'activité ou d\'intérêt', 'zone d\'habitation', 'cimetière', 'réservoir',
+        'élément topographique ou forestier', 'poste de transformation'];
+    const subcategory = categories.find(c => !mainCategories.includes(c));
+    return subcategory ? `(${subcategory})` : undefined;
 }
 
 /** Remove existing highlight layers and sources */
