@@ -56,3 +56,21 @@
     margin-left: 6px;
     color: #888;
 }
+
+/* Clear button: small, discreet, visible only after a search result is selected */
+.cartefacile-ctrl-search__btn-clear {
+    display: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0 4px;
+    opacity: 0.5;
+}
+
+.cartefacile-ctrl-search__btn-clear:hover {
+    opacity: 1;
+}
+
+.cartefacile-ctrl-search--has-selection .cartefacile-ctrl-search__btn-clear {
+    display: block;
+}

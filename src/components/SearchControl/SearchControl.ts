@@ -62,10 +62,16 @@ const TEMPLATE = `
         aria-controls="cartefacile-search-results"
         aria-autocomplete="list"
     >
-    <button title="Rechercher" 
-            class="cartefacile-btn 
-            cartefacile-btn-icon 
-            cartefacile-btn-icon--close-circle"
+    <button title="Effacer la recherche"
+            class="cartefacile-btn-icon
+            cartefacile-btn-icon--close
+            cartefacile-ctrl-search__btn-clear"
+    ></button>
+    <button title="Rechercher"
+            class="cartefacile-btn
+            cartefacile-btn-icon
+            cartefacile-btn-icon--search
+            cartefacile-ctrl-search__btn-search"
     ></button>
 </div>
 `;
@@ -82,6 +88,7 @@ export class SearchControl implements IControl {
     private _map?: Map;
     private _container!: HTMLDivElement;
     private _input!: HTMLInputElement;
+    private _searchButton!: HTMLButtonElement;
     private _clearButton!: HTMLButtonElement;
     private _resultsList!: HTMLUListElement;
 
@@ -95,6 +102,7 @@ export class SearchControl implements IControl {
     private _onDocumentClick?: (e: MouseEvent) => void;
     private _searchCounter = 0;
     private _currentQuery = '';
+    private _lastSelectedEntry?: { result: SearchResult; provider: SearchProvider };
 
     constructor(options: SearchControlOptions) {
         this._providers = Array.isArray(options.providers) ? options.providers : [options.providers];
@@ -116,7 +124,8 @@ export class SearchControl implements IControl {
 
         this._input = this._container.querySelector('input')!;
         this._input.placeholder = this._options.placeholder;
-        this._clearButton = this._container.querySelector('button')!;
+        this._clearButton = this._container.querySelector('.cartefacile-ctrl-search__btn-clear')!;
+        this._searchButton = this._container.querySelector('.cartefacile-ctrl-search__btn-search')!;
 
         // Results list added to map container (avoids overflow issues with MapLibre controls)
         this._resultsList = document.createElement('ul');
@@ -149,7 +158,7 @@ export class SearchControl implements IControl {
     }
 
     private _setupEvents(): void {
-        // Debounced search
+        // Debounced search + toggle clear button visibility
         this._input.addEventListener('input', () => {
             clearTimeout(this._debounceTimeout);
             const value = this._input.value;
@@ -177,7 +186,7 @@ export class SearchControl implements IControl {
                     break;
                 case 'Enter':
                     e.preventDefault();
-                    if (this._selectedIndex >= 0) this._selectResult(this._selectedIndex);
+                    this._confirmSelection();
                     break;
                 case 'Escape':
                     this._hideResults();
@@ -185,9 +194,14 @@ export class SearchControl implements IControl {
             }
         });
 
+        // Search button: confirm current or re-trigger last selection
+        this._searchButton.addEventListener('click', () => this._confirmSelection());
+
         // Clear button
         this._clearButton.addEventListener('click', () => {
             this._input.value = '';
+            this._lastSelectedEntry = undefined;
+            this._container.classList.remove('cartefacile-ctrl-search--has-selection');
             if (this._map) {
                 for (const provider of this._providers) {
                     provider.onClear?.(this._map);
@@ -279,11 +293,30 @@ export class SearchControl implements IControl {
         this._input.setAttribute('aria-expanded', 'true');
     }
 
+    /** Confirm current selection from results list, or re-trigger last selection */
+    private _confirmSelection(): void {
+        if (this._resultEntries.length > 0) {
+            const index = this._selectedIndex >= 0 ? this._selectedIndex : 0;
+            this._selectResult(index);
+        } else if (this._lastSelectedEntry) {
+            this._applySelection(this._lastSelectedEntry);
+        }
+    }
+
     private async _selectResult(index: number): Promise<void> {
         const entry = this._resultEntries[index];
-        if (!this._map || !entry) return;
+        if (!entry) return;
 
-        // Clear all providers before selecting (e.g. remove previous highlights)
+        this._lastSelectedEntry = entry;
+        this._input.value = entry.result.label;
+        this._container.classList.add('cartefacile-ctrl-search--has-selection');
+        this._hideResults();
+        await this._applySelection(entry);
+    }
+
+    private async _applySelection(entry: { result: SearchResult; provider: SearchProvider }): Promise<void> {
+        if (!this._map) return;
+
         for (const provider of this._providers) {
             provider.onClear?.(this._map);
         }
@@ -293,9 +326,6 @@ export class SearchControl implements IControl {
         } catch (error) {
             console.warn(`SearchControl: onSelect failed for provider "${entry.provider.name}"`, error);
         }
-
-        this._input.value = entry.result.label;
-        this._hideResults();
     }
 
     private _setSelectedIndex(index: number): void {
