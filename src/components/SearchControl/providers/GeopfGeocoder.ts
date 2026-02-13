@@ -1,3 +1,4 @@
+import maplibregl from 'maplibre-gl';
 import type { Map, LngLatBoundsLike } from 'maplibre-gl';
 import type { SearchProvider, SearchResult } from '../SearchControl';
 
@@ -12,6 +13,7 @@ const HIGHLIGHT_OUTLINE_ID = 'admin-highlight-outline';
 const HIGHLIGHT_COLOR = '#3b82f6';
 const MASK_COLOR = '#000000';
 const MASK_OPACITY = 0.1;
+const FILL_OPACITY = 0.1;
 const OUTLINE_WIDTH = 3;
 const FIT_PADDING = 160;
 
@@ -19,12 +21,19 @@ const FIT_PADDING = 160;
 const ADDRESS_LIMIT = 5;
 const POI_LIMIT = 5;
 
+// Minimum vertices for a truegeometry to be considered a real contour (not just a bbox)
+const MIN_CONTOUR_VERTICES = 8;
+
+// Module-level marker reference for cleanup
+let currentMarker: maplibregl.Marker | null = null;
+
 interface AddressData {
     type: 'address';
 }
 
 interface PoiData {
     type: 'poi';
+    truegeometry?: GeoJSON.Polygon | GeoJSON.MultiPolygon;
 }
 
 interface AdminData {
@@ -37,7 +46,7 @@ type ResultData = AddressData | PoiData | AdminData;
 /**
  * Unified search provider for the French Geoplateforme geocoding API.
  * Searches addresses and POI (administrative divisions, transport, monuments, etc.)
- * in parallel, with boundary highlighting for administrative results.
+ * in parallel, with boundary highlighting for administrative results and building POI.
  *
  * @see https://data.geopf.fr/geocodage/openapi
  */
@@ -64,50 +73,23 @@ export const GeopfGeocoder: SearchProvider = {
 
         removeHighlight(map);
 
-        if (data.type === 'address' || data.type === 'poi') {
-            if (result.center) {
-                map.jumpTo({ center: result.center, zoom: 17 });
-            }
+        // Admin: inverted mask + fitBounds
+        if (data.type === 'admin') {
+            showContour(map, data.truegeometry, true);
             return;
         }
 
-        // Admin: display inverted mask with contour
-        const rings: number[][][] = data.truegeometry.type === 'Polygon'
-            ? data.truegeometry.coordinates
-            : data.truegeometry.coordinates.flat();
-
-        const allCoords = rings.flat() as [number, number][];
-        const bbox = bboxFromCoordinates(allCoords);
-        if (bbox) {
-            map.fitBounds(bbox as LngLatBoundsLike, { padding: FIT_PADDING, animate: false });
+        // POI or address: pin marker + center map
+        if (result.center) {
+            if (data.type === 'poi' && data.truegeometry) {
+                showContour(map, data.truegeometry, false);
+            } else {
+                map.jumpTo({ center: result.center, zoom: 17 });
+            }
+            currentMarker = new maplibregl.Marker({ color: HIGHLIGHT_COLOR })
+                .setLngLat(result.center)
+                .addTo(map);
         }
-
-        const mask: GeoJSON.Polygon = {
-            type: 'Polygon',
-            coordinates: [
-                [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
-                ...rings
-            ]
-        };
-
-        map.addSource(HIGHLIGHT_SOURCE_ID, {
-            type: 'geojson',
-            data: { type: 'Feature', geometry: mask, properties: {} }
-        });
-
-        map.addLayer({
-            id: HIGHLIGHT_LAYER_ID,
-            type: 'fill',
-            source: HIGHLIGHT_SOURCE_ID,
-            paint: { 'fill-color': MASK_COLOR, 'fill-opacity': MASK_OPACITY }
-        });
-
-        map.addLayer({
-            id: HIGHLIGHT_OUTLINE_ID,
-            type: 'line',
-            source: HIGHLIGHT_SOURCE_ID,
-            paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
-        });
     }
 };
 
@@ -171,9 +153,7 @@ async function searchPoi(query: string): Promise<SearchResult[]> {
             const isAdmin = categories.includes('administratif') && f.properties.truegeometry;
 
             if (isAdmin) {
-                const truegeometry = typeof f.properties.truegeometry === 'string'
-                    ? JSON.parse(f.properties.truegeometry)
-                    : f.properties.truegeometry;
+                const truegeometry = parseGeometry(f.properties.truegeometry);
                 return {
                     id: f.properties.toponym || f.properties.id,
                     label: f.properties.toponym,
@@ -182,12 +162,17 @@ async function searchPoi(query: string): Promise<SearchResult[]> {
                 };
             }
 
+            const truegeometry = f.properties.truegeometry
+                ? parseGeometry(f.properties.truegeometry)
+                : undefined;
+            const hasRealContour = truegeometry ? countVertices(truegeometry) >= MIN_CONTOUR_VERTICES : false;
+
             return {
                 id: f.properties.toponym || f.properties.id,
                 label: f.properties.toponym,
                 description: buildPoiDescription(f.properties),
                 center: f.geometry.coordinates as [number, number],
-                data: { type: 'poi' } as PoiData
+                data: { type: 'poi', truegeometry: hasRealContour ? truegeometry : undefined } as PoiData
             };
         });
     } catch {
@@ -209,16 +194,79 @@ function buildPoiDescription(props: any): string | undefined {
         return postcodes.length > 0 ? `(${postcodes[0]})` : undefined;
     }
 
-    // Other POI: use the most specific subcategory
-    const mainCategories = ['administratif', 'transport', 'construction', 'hydrographie',
-        'zone d\'activité ou d\'intérêt', 'zone d\'habitation', 'cimetière', 'réservoir',
-        'élément topographique ou forestier', 'poste de transformation'];
-    const subcategory = categories.find(c => !mainCategories.includes(c));
-    return subcategory ? `(${subcategory})` : undefined;
+    // Other POI: city name
+    const cities: string[] = props.city || [];
+    return cities.length > 0 ? `(${cities[0]})` : undefined;
 }
 
-/** Remove existing highlight layers and sources */
+/** Parse truegeometry from API response (may be a JSON string) */
+function parseGeometry(raw: any): GeoJSON.Polygon | GeoJSON.MultiPolygon {
+    return typeof raw === 'string' ? JSON.parse(raw) : raw;
+}
+
+/** Count total vertices in a geometry */
+function countVertices(geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon): number {
+    const rings = geometry.type === 'Polygon'
+        ? geometry.coordinates
+        : geometry.coordinates.flat();
+    return rings.reduce((sum, ring) => sum + ring.length, 0);
+}
+
+/** Display a contour on the map, optionally as an inverted mask */
+function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon, invertedMask: boolean): void {
+    const rings: number[][][] = geometry.type === 'Polygon'
+        ? geometry.coordinates
+        : geometry.coordinates.flat();
+
+    const allCoords = rings.flat() as [number, number][];
+    const bbox = bboxFromCoordinates(allCoords);
+    if (bbox) {
+        map.fitBounds(bbox as LngLatBoundsLike, {
+            padding: FIT_PADDING,
+            animate: false,
+            maxZoom: invertedMask ? undefined : 18
+        });
+    }
+
+    const geojson: GeoJSON.Polygon = invertedMask
+        ? {
+            type: 'Polygon',
+            coordinates: [
+                [[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]],
+                ...rings
+            ]
+        }
+        : { type: 'Polygon', coordinates: rings };
+
+    map.addSource(HIGHLIGHT_SOURCE_ID, {
+        type: 'geojson',
+        data: { type: 'Feature', geometry: geojson, properties: {} }
+    });
+
+    map.addLayer({
+        id: HIGHLIGHT_LAYER_ID,
+        type: 'fill',
+        source: HIGHLIGHT_SOURCE_ID,
+        paint: {
+            'fill-color': invertedMask ? MASK_COLOR : HIGHLIGHT_COLOR,
+            'fill-opacity': invertedMask ? MASK_OPACITY : FILL_OPACITY
+        }
+    });
+
+    map.addLayer({
+        id: HIGHLIGHT_OUTLINE_ID,
+        type: 'line',
+        source: HIGHLIGHT_SOURCE_ID,
+        paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
+    });
+}
+
+/** Remove existing highlight layers, sources and markers */
 function removeHighlight(map: Map): void {
+    if (currentMarker) {
+        currentMarker.remove();
+        currentMarker = null;
+    }
     if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
     if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
     if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
