@@ -1,26 +1,35 @@
 .cartefacile-ctrl-search {
     display: flex;
+    min-width: 260px;
 }
 
 .cartefacile-ctrl-search-label {
     display: none;
 }
 
+/* Field: groups input + clear button as one visual unit */
+.cartefacile-ctrl-search__field {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
 .cartefacile-ctrl-search-input {
+    flex: 1;
+    min-width: 0;
     border: none;
-    border-right: 1px solid;
-    padding: 0.25rem 0.5rem;
+    /* padding-right leaves room for the clear button (~28px) */
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
     background: none;
     border-radius: 4px 0 0 4px;
 }
 
-/* Liste des résultats */
+/* Results list */
 .cartefacile-ctrl-search__results {
     display: none;
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
     margin: 4px 0 0;
     padding: 0;
     list-style: none;
@@ -39,7 +48,7 @@
 .cartefacile-ctrl-search__result {
     padding: 10px 12px;
     cursor: pointer;
-    font-size: 14px;
+    line-height: 1.3;
     border-bottom: 1px solid #eee;
 }
 
@@ -52,25 +61,56 @@
     background: #f0f0f0;
 }
 
-.cartefacile-ctrl-search__result-desc {
-    margin-left: 6px;
-    color: #888;
+.cartefacile-ctrl-search__result-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
 
-/* Clear button: small, discreet, visible only after a search result is selected */
-.cartefacile-ctrl-search__btn-clear {
+.cartefacile-ctrl-search__result-label,
+.cartefacile-ctrl-search__result-desc {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cartefacile-ctrl-search__result-label {
+    font-size: 14px;
+}
+
+.cartefacile-ctrl-search__result-desc {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Search button stretches to match the field height and is square */
+.cartefacile-ctrl-search .cartefacile-ctrl-search__btn-search {
+    align-self: stretch;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Clear button: inside the field, visible only when field has content */
+.cartefacile-ctrl-search .cartefacile-ctrl-search__btn-clear {
     display: none;
+    position: absolute;
+    right: 2px;
     border: none;
     background: none;
     cursor: pointer;
-    padding: 0 4px;
-    opacity: 0.5;
+    padding: 2px 4px;
+    opacity: 0.4;
+    line-height: 1;
 }
 
-.cartefacile-ctrl-search__btn-clear:hover {
-    opacity: 1;
+.cartefacile-ctrl-search .cartefacile-ctrl-search__btn-clear:hover {
+    opacity: 0.8;
 }
 
-.cartefacile-ctrl-search--has-selection .cartefacile-ctrl-search__btn-clear {
+.cartefacile-ctrl-search--has-value .cartefacile-ctrl-search__btn-clear {
     display: block;
 }
