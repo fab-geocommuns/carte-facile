@@ -1,6 +1,8 @@
 .cartefacile-ctrl-search {
     display: flex;
-    min-width: 260px;
+    width: 320px;
+    /* Shrinks on small screens to avoid overlapping controls on the opposite side */
+    max-width: calc(100vw - 112px);
 }
 
 /* Visually hidden but readable by screen readers */
@@ -36,13 +38,11 @@
 .cartefacile-ctrl-search__results {
     display: none;
     position: absolute;
-    margin: 4px 0 0;
     padding: 0;
     list-style: none;
     background: white;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    max-height: 300px;
     overflow-y: auto;
     z-index: 10;
 }
@@ -52,9 +52,9 @@
 }
 
 .cartefacile-ctrl-search__result {
-    padding: 10px 12px;
+    padding: 12px 16px;
     cursor: pointer;
-    line-height: 1.3;
+    line-height: 1.4;
     border-bottom: 1px solid #eee;
 }
 
@@ -84,19 +84,21 @@
     font-size: 14px;
 }
 
+/* Secondary info below the label: location suffix and description */
 .cartefacile-ctrl-search__result-desc {
-    font-size: 11px;
+    font-size: 12px;
     color: #888;
     margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Pin icon for point results (POI, addresses) */
 .cartefacile-ctrl-search__result--has-pin {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .cartefacile-ctrl-search__result--has-pin::before {

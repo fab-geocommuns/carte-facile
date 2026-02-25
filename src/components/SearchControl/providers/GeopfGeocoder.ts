@@ -253,11 +253,12 @@ async function searchAddresses(query: string): Promise<SearchResult[]> {
             .filter(f => f.properties.type !== 'municipality')
             .map(f => {
                 const { id, name, label: fullLabel, citycode, postcode, city, type: addrType } = f.properties;
-                const suffix = name && fullLabel.startsWith(name) ? fullLabel.slice(name.length).trim() : undefined;
+                const streetName = name ?? fullLabel;
+                const locationSuffix = city ? (postcode ? `${city}, ${postcode}` : city) : undefined;
                 return {
                     id,
-                    label: name ?? fullLabel,
-                    description: suffix || undefined,
+                    label: streetName,
+                    locationSuffix,
                     type: 'address',
                     icon: 'pin',
                     center: f.geometry.coordinates,
@@ -284,23 +285,25 @@ function mapPoiFeature(
     const props = f.properties;
     const cats: string[] = props.category ?? [];
 
-    let label = props.toponym;
+    const label = props.toponym;
     let description: string | undefined;
 
+    let locationSuffix: string | undefined;
     if (invertedMask) {
         // Admin POI (commune, région, etc.): keep category description
         description = buildAdminDescription(props);
     } else {
-        // Other POI (gare, église, etc.): append city to label when not already present
+        // Other POI (gare, église, etc.): show city in gray after the name
         const cityName = props.city?.[0];
         if (cityName && !props.toponym.toLowerCase().includes(cityName.toLowerCase())) {
-            label = `${props.toponym}, ${cityName}`;
+            locationSuffix = cityName;
         }
     }
 
     return {
         id: props.toponym ?? props.id,
         label,
+        locationSuffix,
         description,
         type: resolveType(cats),
         icon: invertedMask ? undefined : 'pin',

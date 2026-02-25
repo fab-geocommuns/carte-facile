@@ -14,6 +14,8 @@ export interface SearchResult {
     type?: string;
     /** Icon to display in the results list (e.g. 'pin'). Set by the provider. */
     icon?: 'pin';
+    /** Location context displayed in gray after the label (city, postcode, etc.) */
+    locationSuffix?: string;
     /** Coordinates [longitude, latitude] */
     center?: [number, number];
     /** Bounding box [west, south, east, north] */
@@ -321,6 +323,13 @@ export class SearchControl implements IControl {
         label.innerHTML = this._highlightText(entry.result.label, query);
         text.appendChild(label);
 
+        if (entry.result.locationSuffix) {
+            const location = document.createElement('span');
+            location.className = 'cartefacile-ctrl-search__result-desc';
+            location.textContent = entry.result.locationSuffix;
+            text.appendChild(location);
+        }
+
         if (entry.result.description) {
             const desc = document.createElement('span');
             desc.className = 'cartefacile-ctrl-search__result-desc';
@@ -339,9 +348,26 @@ export class SearchControl implements IControl {
     private _positionDropdown(): void {
         const rect = this._container.getBoundingClientRect();
         const mapRect = this._map!.getContainer().getBoundingClientRect();
-        this._dropdown.style.top = `${rect.bottom - mapRect.top + 4}px`;
-        this._dropdown.style.left = `${rect.left - mapRect.left}px`;
+
         this._dropdown.style.width = `${rect.width}px`;
+
+        // Vertical: open below if there is more room below, above otherwise
+        if (mapRect.bottom - rect.bottom >= rect.top - mapRect.top) {
+            this._dropdown.style.top = `${rect.bottom - mapRect.top + 4}px`;
+            this._dropdown.style.bottom = '';
+        } else {
+            this._dropdown.style.top = '';
+            this._dropdown.style.bottom = `${mapRect.bottom - rect.top + 4}px`;
+        }
+
+        // Horizontal: align to the same side as the control
+        if (rect.left + rect.width / 2 <= mapRect.left + mapRect.width / 2) {
+            this._dropdown.style.left = `${rect.left - mapRect.left}px`;
+            this._dropdown.style.right = '';
+        } else {
+            this._dropdown.style.left = '';
+            this._dropdown.style.right = `${mapRect.right - rect.right}px`;
+        }
     }
 
     // If the dropdown is open: select the highlighted item, or the first one by default.
@@ -360,7 +386,9 @@ export class SearchControl implements IControl {
         if (!entry) return;
 
         this._confirmedEntry = entry;
-        this._input.value = entry.result.label;
+        this._input.value = entry.result.locationSuffix
+            ? `${entry.result.label}, ${entry.result.locationSuffix}`
+            : entry.result.label;
         this._container.classList.add('cartefacile-ctrl-search--has-value');
         this._hideDropdown();
         await this._applyEntry(entry);
