@@ -295,7 +295,7 @@ function mapPoiFeature(
     } else {
         // Other POI (gare, église, etc.): show city in gray after the name
         const cityName = props.city?.[0];
-        if (cityName && !props.toponym.toLowerCase().includes(cityName.toLowerCase())) {
+        if (cityName) {
             locationSuffix = cityName;
         }
     }

@@ -353,11 +353,11 @@ export class SearchControl implements IControl {
 
         // Vertical: open below if there is more room below, above otherwise
         if (mapRect.bottom - rect.bottom >= rect.top - mapRect.top) {
-            this._dropdown.style.top = `${rect.bottom - mapRect.top + 4}px`;
+            this._dropdown.style.top = `${rect.bottom - mapRect.top + 8}px`;
             this._dropdown.style.bottom = '';
         } else {
             this._dropdown.style.top = '';
-            this._dropdown.style.bottom = `${mapRect.bottom - rect.top + 4}px`;
+            this._dropdown.style.bottom = `${mapRect.bottom - rect.top + 8}px`;
         }
 
         // Horizontal: align to the same side as the control
