@@ -1,5 +1,5 @@
-import { OverlayType, OverlayVariant, MapOverlays, LayerConfig, LayerGroup, LayerGroupType } from './types';
-import type { StyleSpecification } from 'maplibre-gl';
+import { OverlayType, OverlayVariant, MapOverlays, OverlayConfig, LayerConfig, LayerGroupType } from './types';
+import type { StyleSpecification, LayerSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
 import desaturatedIgn from './desaturated.json';
@@ -66,20 +66,20 @@ import levelsColorLayers from './overlays/level-curves/color.layers.json';
  * - neutral: for standard map styles (simple, desaturated)
  * - color: for aerial map style
  */
-export const mapOverlays = {
+export const mapOverlays: MapOverlays = {
   cadastre: {
-    neutral: { ...cadastreCommon, layers: cadastreNeutralLayers },
-    color: { ...cadastreCommon, layers: cadastreColorLayers }
+    neutral: { ...(cadastreCommon as Omit<OverlayConfig, 'layers'>), layers: cadastreNeutralLayers as LayerSpecification[] },
+    color:   { ...(cadastreCommon as Omit<OverlayConfig, 'layers'>), layers: cadastreColorLayers as LayerSpecification[] }
   },
   administrativeBoundaries: {
-    neutral: { ...adminCommon, layers: adminNeutralLayers },
-    color: { ...adminCommon, layers: adminColorLayers }
+    neutral: { ...(adminCommon as Omit<OverlayConfig, 'layers'>), layers: adminNeutralLayers as LayerSpecification[] },
+    color:   { ...(adminCommon as Omit<OverlayConfig, 'layers'>), layers: adminColorLayers as LayerSpecification[] }
   },
   levelCurves: {
-    neutral: { ...levelsCommon, layers: levelsNeutralLayers },
-    color: { ...levelsCommon, layers: levelsColorLayers }
+    neutral: { ...(levelsCommon as Omit<OverlayConfig, 'layers'>), layers: levelsNeutralLayers as LayerSpecification[] },
+    color:   { ...(levelsCommon as Omit<OverlayConfig, 'layers'>), layers: levelsColorLayers as LayerSpecification[] }
   }
-} as const;
+};
 
 /**
  * Gets the appropriate overlay variant based on the current map style
@@ -88,36 +88,38 @@ function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
   return map.getStyle().name === 'aerial' ? 'color' : 'neutral';
 }
 
+/** Stores styledata update callbacks per map instance, keyed by overlay type */
+const overlayUpdaters = new WeakMap<maplibregl.Map, Map<OverlayType, () => void>>();
+
 /**
  * Adds one or more overlays to the map
  * @param map - The MapLibre map instance
  * @param type - The type of overlay(s) to add (cadastre, administrative-boundaries, or level-curves)
  */
 export function addOverlay(
-  map: maplibregl.Map, 
+  map: maplibregl.Map,
   type: OverlayType | OverlayType[]
 ): void {
   const types = Array.isArray(type) ? type : [type];
-  
+
   const update = () => {
     types.forEach(singleType => {
       const overlay = mapOverlays[singleType][getOverlayVariant(map)];
       Object.entries(overlay.sources).forEach(([id, source]) => {
-        if (!map.getSource(id)) map.addSource(id, source as any);
+        if (!map.getSource(id)) map.addSource(id, source);
       });
       overlay.layers.forEach(layer => {
-        if (!map.getLayer(layer.id)) map.addLayer(layer as any);
+        if (!map.getLayer(layer.id)) map.addLayer(layer);
       });
     });
   };
 
   if (map.loaded()) update();
   else map.once('load', update);
-  
-  // Store the update function on the map instance for each overlay type
-  types.forEach(singleType => {
-    (map as any)[`_overlay_update_${singleType}`] = update;
-  });
+
+  if (!overlayUpdaters.has(map)) overlayUpdaters.set(map, new Map());
+  const updaters = overlayUpdaters.get(map)!;
+  types.forEach(singleType => updaters.set(singleType, update));
   map.on('styledata', update);
 }
 
@@ -150,10 +152,10 @@ export function removeOverlay(
     });
 
     // Remove the styledata event listener for this overlay
-    const update = (map as any)[`_overlay_update_${singleType}`];
+    const update = overlayUpdaters.get(map)?.get(singleType);
     if (update) {
       map.off('styledata', update);
-      delete (map as any)[`_overlay_update_${singleType}`];
+      overlayUpdaters.get(map)?.delete(singleType);
     }
   });
 }

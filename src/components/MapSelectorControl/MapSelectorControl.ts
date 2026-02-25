@@ -14,6 +14,9 @@ export interface MapSelectorOptions {
     overlays?: OverlayType[];
 }
 
+/** Shape of the custom `metadata.fr` field present in the project's map styles */
+type MapStyleMetadata = { fr?: { name?: string } };
+
 /**
  * Simple utility to create elements from template strings
  */
@@ -173,7 +176,7 @@ export class MapSelectorControl implements maplibregl.IControl {
             Object.entries(mapStyles)
                 .filter(([key]) => this._options.styles.includes(key as keyof typeof mapStyles))
                 .forEach(([key, styleObj]) => {
-                    const title = (styleObj as any)?.metadata?.fr?.name || 'Style sans nom';
+                    const title = (styleObj.metadata as MapStyleMetadata | undefined)?.fr?.name ?? 'Style sans nom';
                     const thumbnail = mapThumbnails[key as keyof typeof mapThumbnails] || '';
                     const card = this._createCard(key, title, thumbnail, 'style', 
                         () => this._onStyleClick(key, styleObj, container, card));
@@ -184,7 +187,7 @@ export class MapSelectorControl implements maplibregl.IControl {
                 .filter(id => this._options.overlays.includes(id as OverlayType))
                 .forEach(id => {
                     const overlay = mapOverlays[id as keyof typeof mapOverlays];
-                    const title = (overlay?.neutral as any)?.metadata?.fr?.name || 'Surcouche sans nom';
+                    const title = (overlay?.neutral.metadata as MapStyleMetadata | undefined)?.fr?.name ?? 'Surcouche sans nom';
                     const thumbnail = mapThumbnails[id as keyof typeof mapThumbnails] || '';
                     const card = this._createCard(id, title, thumbnail, 'overlay', 
                         () => this._onOverlayClick(id, card));

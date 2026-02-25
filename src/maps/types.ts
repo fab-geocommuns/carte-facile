@@ -1,3 +1,5 @@
+import type { SourceSpecification, LayerSpecification } from 'maplibre-gl';
+
 /**
  * Layer configuration following Mapbox/Maplibre specification
  */
@@ -30,9 +32,9 @@ export type OverlayType = typeof Overlay[keyof typeof Overlay];
 export type OverlayVariant = 'neutral' | 'color';
 
 export interface OverlayConfig {
-  sources: Record<string, any>;
-  metadata?: Record<string, any>;
-  layers: any[];
+  sources: Record<string, SourceSpecification>;
+  metadata?: Record<string, unknown>;
+  layers: LayerSpecification[];
 }
 
 export type MapOverlays = {
