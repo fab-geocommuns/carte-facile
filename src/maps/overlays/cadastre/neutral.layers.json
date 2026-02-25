@@ -7,12 +7,12 @@
     "metadata": {
       "cartefacile:group": "cadastral_sections"
     },
-    "minzoom": 14,
+    "minzoom": 11,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgba(255, 255, 255, 1)",
       "line-opacity": 1,
-      "line-width": {"stops": [[14, 4], [19, 9]]}
+      "line-width": {"stops": [[11, 2], [14, 3], [19, 9]]}
     }
   },
   {
@@ -23,12 +23,12 @@
     "metadata": {
       "cartefacile:group": "cadastral_sections"
     },
-    "minzoom": 14,
+    "minzoom": 11,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgba(88, 88, 88, 1)",
       "line-opacity": 1,
-      "line-width": {"stops": [[14, 2], [19, 6]]}
+      "line-width": {"stops": [[11, 1], [14, 2], [19, 6]]}
     }
   },
   {
@@ -39,11 +39,11 @@
     "metadata": {
       "cartefacile:group": "cadastral_parcels"
     },
-    "minzoom": 16.5,
+    "minzoom": 15,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgba(255, 255, 255, 1)",
-      "line-width": {"stops": [[16.5, 2.4], [19, 4]]}
+      "line-width": {"stops": [[15, 2], [16.5, 2.4], [19, 4]]}
     }
   },
   {
@@ -54,11 +54,11 @@
     "metadata": {
       "cartefacile:group": "cadastral_parcels"
     },
-    "minzoom": 16.5,
+    "minzoom": 15,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgba(88, 88, 88, 1)",
-      "line-width": {"stops": [[16.5, 1.4], [19, 3]]}
+      "line-width": {"stops": [[15, 1],[16.5, 1.4], [19, 3]]}
     }
   },
   {
@@ -69,7 +69,7 @@
     "metadata": {
       "cartefacile:group": "cadastral_parcels"
     },
-    "minzoom": 16.5,
+    "minzoom": 15,
     "layout": {
       "text-field": "{numero}",
       "text-font": ["Source Sans Pro Bold"],
@@ -91,10 +91,11 @@
     "metadata": {
       "cartefacile:group": "cadastral_sections"
     },
-    "minzoom": 14,
+    "minzoom": 11,
     "layout": {
       "text-field": "{code}",
       "text-font": ["Source Sans Pro Bold"],
+      "text-size": {"stops": [[11, 12], [16, 16]]},
       "visibility": "visible"
     },
     "paint": {
