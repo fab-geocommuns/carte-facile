@@ -2,6 +2,7 @@ import type { Map, IControl, ControlPosition } from 'maplibre-gl';
 import '../../themes/styles/dsfr.css';
 import '../Button/Button.css';
 import './SearchControl.css';
+import { GeopfGeocoder } from './providers/GeopfGeocoder';
 
 /**
  * Search result returned by a provider
@@ -41,7 +42,7 @@ export interface SearchProvider {
  * SearchControl configuration options
  */
 export interface SearchControlOptions {
-    providers: SearchProvider | SearchProvider[];
+    providers?: SearchProvider | SearchProvider[];
     placeholder?: string;
     /** Delay before triggering search (default: 300ms) */
     debounceMs?: number;
@@ -133,8 +134,9 @@ export class SearchControl implements IControl {
     private _requestId = 0;
     private _confirmedEntry?: ResultEntry;
 
-    constructor(options: SearchControlOptions) {
-        this._providers = Array.isArray(options.providers) ? options.providers : [options.providers];
+    constructor(options: SearchControlOptions = {}) {
+        const providers = options.providers ?? GeopfGeocoder;
+        this._providers = Array.isArray(providers) ? providers : [providers];
         this._options = {
             placeholder: options.placeholder ?? this._providers[0]?.placeholder ?? 'Rechercher',
             debounceMs: options.debounceMs ?? 300,
