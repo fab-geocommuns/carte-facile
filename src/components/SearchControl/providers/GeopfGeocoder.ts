@@ -105,6 +105,7 @@ class GeopfGeocoderProvider implements SearchProvider {
     readonly placeholder = 'Rechercher...';
 
     private _marker: maplibregl.Marker | null = null;
+    private _styledataHandler: (() => void) | null = null;
 
     async search(query: string): Promise<SearchResult[]> {
         // allSettled: a single failing endpoint doesn't block the others
@@ -158,7 +159,7 @@ class GeopfGeocoderProvider implements SearchProvider {
         // Display contour — isolated so that a rendering failure never prevents map movement
         if (geometry) {
             try {
-                showContour(map, geometry, invertedMask);
+                this._styledataHandler = showContour(map, geometry, invertedMask);
             } catch (e) {
                 console.warn('GeopfGeocoder: showContour failed', e);
             }
@@ -173,6 +174,10 @@ class GeopfGeocoderProvider implements SearchProvider {
     }
 
     private _removeHighlight(map: Map): void {
+        if (this._styledataHandler) {
+            map.off('styledata', this._styledataHandler);
+            this._styledataHandler = null;
+        }
         this._marker?.remove();
         this._marker = null;
         if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
@@ -369,27 +374,39 @@ function computeBbox(geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon): [number,
     return [minLng, minLat, maxLng, maxLat];
 }
 
-function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon, invertedMask: boolean): void {
+function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon, invertedMask: boolean): () => void {
     const rings = geometry.type === 'Polygon' ? geometry.coordinates : geometry.coordinates.flat();
 
     const geojson: GeoJSON.Polygon = invertedMask
         ? { type: 'Polygon', coordinates: [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]], ...rings] }
         : { type: 'Polygon', coordinates: rings };
 
-    map.addSource(HIGHLIGHT_SOURCE_ID, {
-        type: 'geojson',
-        data: { type: 'Feature', geometry: geojson, properties: {} }
-    });
-    map.addLayer({
-        id: HIGHLIGHT_LAYER_ID,
-        type: 'fill',
-        source: HIGHLIGHT_SOURCE_ID,
-        paint: { 'fill-color': invertedMask ? MASK_COLOR : HIGHLIGHT_COLOR, 'fill-opacity': invertedMask ? MASK_OPACITY : FILL_OPACITY }
-    });
-    map.addLayer({
-        id: HIGHLIGHT_OUTLINE_ID,
-        type: 'line',
-        source: HIGHLIGHT_SOURCE_ID,
-        paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
-    });
+    const update = () => {
+        if (!map.getSource(HIGHLIGHT_SOURCE_ID)) {
+            map.addSource(HIGHLIGHT_SOURCE_ID, {
+                type: 'geojson',
+                data: { type: 'Feature', geometry: geojson, properties: {} }
+            });
+        }
+        if (!map.getLayer(HIGHLIGHT_LAYER_ID)) {
+            map.addLayer({
+                id: HIGHLIGHT_LAYER_ID,
+                type: 'fill',
+                source: HIGHLIGHT_SOURCE_ID,
+                paint: { 'fill-color': invertedMask ? MASK_COLOR : HIGHLIGHT_COLOR, 'fill-opacity': invertedMask ? MASK_OPACITY : FILL_OPACITY }
+            });
+        }
+        if (!map.getLayer(HIGHLIGHT_OUTLINE_ID)) {
+            map.addLayer({
+                id: HIGHLIGHT_OUTLINE_ID,
+                type: 'line',
+                source: HIGHLIGHT_SOURCE_ID,
+                paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
+            });
+        }
+    };
+
+    update();
+    map.on('styledata', update);
+    return update;
 }
