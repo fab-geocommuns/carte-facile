@@ -4582,12 +4582,7 @@
         "text-padding": 10,
         "text-font": ["Noto Sans Regular"],
         "symbol-z-order": "auto",
-        "symbol-avoid-edges": false,
-        "icon-allow-overlap": false,
-        "icon-ignore-placement": false,
-        "icon-rotation-alignment": "auto",
-        "icon-keep-upright": false,
-        "icon-pitch-alignment": "auto"
+        "symbol-avoid-edges": false
       },
       "paint": {
         "text-color": "rgba(34, 95, 108, 1)",
@@ -5079,9 +5074,7 @@
         "text-offset": [0.3, -0.25],
         "text-padding": 3,
         "text-anchor": "bottom-left",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Metro",
-        "icon-size": {"stops": [[15, 0.33], [17, 0.6]]}
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#3C3C3C", "icon-color": "#646464"}
     },
@@ -5607,12 +5600,7 @@
         "text-allow-overlap": false,
         "text-padding": 0,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "rgba(255, 255, 255, 1)",
@@ -5637,12 +5625,7 @@
         "text-allow-overlap": false,
         "text-padding": 0,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#F0F0F0",

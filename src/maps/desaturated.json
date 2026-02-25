@@ -4303,12 +4303,7 @@
         "text-padding": 10,
         "text-font": ["Noto Sans Regular"],
         "symbol-z-order": "auto",
-        "symbol-avoid-edges": false,
-        "icon-allow-overlap": false,
-        "icon-ignore-placement": false,
-        "icon-rotation-alignment": "auto",
-        "icon-keep-upright": false,
-        "icon-pitch-alignment": "auto"
+        "symbol-avoid-edges": false
       },
       "paint": {
         "text-color": "rgba(90, 90, 90, 1)",

@@ -3386,13 +3386,7 @@
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 16, 16],
         "text-padding": 10,
         "text-font": ["Noto Sans Regular"],
-        "symbol-z-order": "auto",
-        "symbol-avoid-edges": false,
-        "icon-allow-overlap": false,
-        "icon-ignore-placement": false,
-        "icon-rotation-alignment": "auto",
-        "icon-keep-upright": false,
-        "icon-pitch-alignment": "auto"
+        "symbol-z-order": "auto"
       },
       "paint": {
         "text-color": "rgba(88, 228, 255, 1)",
