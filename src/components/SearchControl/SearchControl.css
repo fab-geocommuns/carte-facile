@@ -3,8 +3,14 @@
     min-width: 260px;
 }
 
-.cartefacile-ctrl-search-label {
-    display: none;
+/* Visually hidden but readable by screen readers */
+.cartefacile-ctrl-search__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
 }
 
 /* Field: groups input + clear button as one visual unit */
@@ -16,7 +22,7 @@
     border-right: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-.cartefacile-ctrl-search-input {
+.cartefacile-ctrl-search__input {
     flex: 1;
     min-width: 0;
     border: none;
@@ -58,7 +64,7 @@
 
 .cartefacile-ctrl-search__result:hover,
 .cartefacile-ctrl-search__result--selected {
-    background: #f0f0f0;
+    background: rgb(0 0 0 / 5%);
 }
 
 .cartefacile-ctrl-search__result-text {
@@ -87,28 +93,27 @@
 }
 
 /* Search button stretches to match the field height and is square */
+/* Double selector intentional: overrides MapLibre's .maplibregl-ctrl-group button (0,1,1) */
 .cartefacile-ctrl-search .cartefacile-ctrl-search__btn-search {
-    align-self: stretch;
     height: 2rem;
     width: 2rem;
     border-radius: 0 4px 4px 0;
 }
 
 /* Clear button: inside the field, visible only when field has content */
+/* Double selector intentional: overrides MapLibre's .maplibregl-ctrl-group button (0,1,1) */
 .cartefacile-ctrl-search .cartefacile-ctrl-search__btn-clear {
     display: none;
     position: absolute;
     right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
     border: none;
     background: none;
     cursor: pointer;
     padding: 2px 4px;
     opacity: 0.4;
     line-height: 1;
-}
-
-.cartefacile-ctrl-search .cartefacile-ctrl-search__btn-clear:hover {
-    opacity: 0.8;
 }
 
 .cartefacile-ctrl-search--has-value .cartefacile-ctrl-search__btn-clear {

@@ -64,17 +64,15 @@ const TEMPLATE = `
      role="search"
      aria-label="Barre de recherche"
     >
-    <label class="cartefacile-ctrl-search-label" for="cartefacile-search-input">Rechercher</label>
+    <label class="cartefacile-ctrl-search__label">Rechercher</label>
     <div class="cartefacile-ctrl-search__field">
         <input
-            class="cartefacile-ctrl-search-input"
+            class="cartefacile-ctrl-search__input"
             placeholder="Rechercher"
-            id="cartefacile-search-input"
             type="search"
             autocomplete="off"
             role="combobox"
             aria-expanded="false"
-            aria-controls="cartefacile-search-results"
             aria-autocomplete="list"
         >
         <button title="Effacer la recherche"
@@ -101,6 +99,9 @@ const TEMPLATE = `
  * }));
  */
 export class SearchControl implements IControl {
+    private static _instanceCounter = 0;
+
+    private _instanceId = 0;
     private _map?: Map;
     private _container!: HTMLDivElement;
     private _input!: HTMLInputElement;
@@ -134,20 +135,27 @@ export class SearchControl implements IControl {
     onAdd(map: Map): HTMLElement {
         this._map = map;
 
+        this._instanceId = ++SearchControl._instanceCounter;
+        const inputId = `cartefacile-search-input-${this._instanceId}`;
+        const resultsId = `cartefacile-search-results-${this._instanceId}`;
+
         const wrapper = document.createElement('div');
         wrapper.innerHTML = TEMPLATE.trim();
         this._container = wrapper.firstElementChild as HTMLDivElement;
         this._container.classList.add('maplibregl-ctrl');
 
         this._input = this._container.querySelector('input')!;
+        this._input.id = inputId;
         this._input.placeholder = this._options.placeholder;
+        this._input.setAttribute('aria-controls', resultsId);
+        this._container.querySelector('label')!.setAttribute('for', inputId);
         this._clearButton = this._container.querySelector('.cartefacile-ctrl-search__btn-clear')!;
         this._searchButton = this._container.querySelector('.cartefacile-ctrl-search__btn-search')!;
 
         // Results list added to map container (avoids overflow issues with MapLibre controls)
         this._resultsList = document.createElement('ul');
         this._resultsList.className = 'cartefacile-ctrl-search__results';
-        this._resultsList.id = 'cartefacile-search-results';
+        this._resultsList.id = resultsId;
         this._resultsList.setAttribute('role', 'listbox');
         map.getContainer().appendChild(this._resultsList);
 
@@ -279,7 +287,7 @@ export class SearchControl implements IControl {
         this._resultEntries.forEach((entry, index) => {
             const item = document.createElement('li');
             item.className = 'cartefacile-ctrl-search__result';
-            item.id = `cartefacile-search-result-${index}`;
+            item.id = `cartefacile-search-result-${this._instanceId}-${index}`;
             item.setAttribute('role', 'option');
             item.setAttribute('aria-selected', 'false');
 
@@ -365,7 +373,7 @@ export class SearchControl implements IControl {
             li.setAttribute('aria-selected', String(isSelected));
         });
 
-        this._input.setAttribute('aria-activedescendant', `cartefacile-search-result-${this._selectedIndex}`);
+        this._input.setAttribute('aria-activedescendant', `cartefacile-search-result-${this._instanceId}-${this._selectedIndex}`);
     }
 
     /** Returns HTML with matching query words wrapped in <strong>, XSS-safe */

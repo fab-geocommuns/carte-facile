@@ -23,6 +23,36 @@ const MIN_CONTOUR_VERTICES = 8;
 
 let currentMarker: maplibregl.Marker | null = null;
 
+/** Raw feature shape returned by the Geoplateforme POI index */
+interface GeopfPoiProperties {
+    toponym: string;
+    id: string;
+    category?: string[];
+    citycode?: string[];
+    postcode?: string[];
+    city?: string[];
+    truegeometry?: string | GeoJSON.Polygon | GeoJSON.MultiPolygon;
+}
+interface GeopfPoiFeature {
+    geometry: { coordinates: [number, number] };
+    properties: GeopfPoiProperties;
+}
+
+/** Raw feature shape returned by the Geoplateforme address index */
+interface GeopfAddressProperties {
+    id: string;
+    name?: string;
+    label: string;
+    citycode?: string;
+    postcode?: string;
+    city?: string;
+    type?: string;
+}
+interface GeopfAddressFeature {
+    geometry: { coordinates: [number, number] };
+    properties: GeopfAddressProperties;
+}
+
 /**
  * Data exposed by GeopfGeocoder results.
  * Cast `result.data` to this type in your `onSelect` callback to access
@@ -158,29 +188,9 @@ async function searchAdminPoi(query: string): Promise<SearchResult[]> {
         const data = await response.json();
         if (!Array.isArray(data.features)) return [];
 
-        return data.features.map((f: any) => {
-            const props = f.properties;
-            const cats: string[] = Array.isArray(props.category) ? props.category : [];
-            const citycodeRaw = props.citycode;
-            const postcodeRaw = props.postcode;
-            const cityRaw = props.city;
-            const geometry = props.truegeometry ? parseGeometry(props.truegeometry) : undefined;
-            return {
-                id: props.toponym ?? props.id,
-                label: props.toponym,
-                description: buildPoiDescription(props),
-                type: resolveType(cats),
-                center: f.geometry.coordinates as [number, number],
-                data: {
-                    properties: props,
-                    citycode: Array.isArray(citycodeRaw) ? citycodeRaw[0] : citycodeRaw,
-                    postcode: Array.isArray(postcodeRaw) ? postcodeRaw[0] : postcodeRaw,
-                    cityName: Array.isArray(cityRaw) ? cityRaw[0] : cityRaw,
-                    category: cats,
-                    geometry,
-                    invertedMask: true
-                } satisfies GeopfResultData
-            };
+        return (data.features as GeopfPoiFeature[]).map(f => {
+            const geometry = f.properties.truegeometry ? parseGeometry(f.properties.truegeometry) : undefined;
+            return mapPoiFeature(f, geometry, true);
         });
     } catch {
         return [];
@@ -202,36 +212,17 @@ async function searchOtherPoi(query: string): Promise<SearchResult[]> {
         const data = await response.json();
         if (!Array.isArray(data.features)) return [];
 
-        return data.features
-            .filter((f: any) => {
-                const cats: string[] = f.properties.category ?? [];
+        return (data.features as GeopfPoiFeature[])
+            .filter(f => {
+                const cats = f.properties.category ?? [];
                 // Exclude admin (handled by searchAdminPoi) and habitat types
                 // that merely duplicate commune results (e.g. "lieu-dit habité")
                 return !cats.includes('administratif') && !cats.includes('lieu-dit habité');
             })
-            .map((f: any) => {
-                const props = f.properties;
-                const cats: string[] = Array.isArray(props.category) ? props.category : [];
-                const citycodeRaw = props.citycode;
-                const postcodeRaw = props.postcode;
-                const cityRaw = props.city;
-                const rawGeometry = props.truegeometry ? parseGeometry(props.truegeometry) : undefined;
+            .map(f => {
+                const rawGeometry = f.properties.truegeometry ? parseGeometry(f.properties.truegeometry) : undefined;
                 const geometry = rawGeometry && countVertices(rawGeometry) >= MIN_CONTOUR_VERTICES ? rawGeometry : undefined;
-                return {
-                    id: props.toponym ?? props.id,
-                    label: props.toponym,
-                    description: buildPoiDescription(props),
-                    type: resolveType(cats),
-                    center: f.geometry.coordinates as [number, number],
-                    data: {
-                        properties: props,
-                        citycode: Array.isArray(citycodeRaw) ? citycodeRaw[0] : citycodeRaw,
-                        postcode: Array.isArray(postcodeRaw) ? postcodeRaw[0] : postcodeRaw,
-                        cityName: Array.isArray(cityRaw) ? cityRaw[0] : cityRaw,
-                        category: cats,
-                        geometry
-                    } satisfies GeopfResultData
-                };
+                return mapPoiFeature(f, geometry);
             });
     } catch {
         return [];
@@ -247,20 +238,19 @@ async function searchAddresses(query: string): Promise<SearchResult[]> {
         const data = await response.json();
         if (!Array.isArray(data.features)) return [];
 
-        return data.features
-            .filter((f: any) => f.properties.type !== 'municipality')
-            .map((f: any) => {
-                const props = f.properties;
-                const { id, name, label: fullLabel, citycode, postcode, city, type: addrType } = props;
+        return (data.features as GeopfAddressFeature[])
+            .filter(f => f.properties.type !== 'municipality')
+            .map(f => {
+                const { id, name, label: fullLabel, citycode, postcode, city, type: addrType } = f.properties;
                 const suffix = name && fullLabel.startsWith(name) ? fullLabel.slice(name.length).trim() : undefined;
                 return {
                     id,
                     label: name ?? fullLabel,
                     description: suffix || undefined,
                     type: 'address',
-                    center: f.geometry.coordinates as [number, number],
+                    center: f.geometry.coordinates,
                     data: {
-                        properties: props,
+                        properties: f.properties as unknown as Record<string, unknown>,
                         citycode,
                         postcode,
                         cityName: city,
@@ -273,7 +263,33 @@ async function searchAddresses(query: string): Promise<SearchResult[]> {
     }
 }
 
-function buildPoiDescription(props: any): string | undefined {
+/** Maps a raw POI feature to a SearchResult. Shared by searchAdminPoi and searchOtherPoi. */
+function mapPoiFeature(
+    f: GeopfPoiFeature,
+    geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon | undefined,
+    invertedMask = false
+): SearchResult {
+    const props = f.properties;
+    const cats: string[] = props.category ?? [];
+    return {
+        id: props.toponym ?? props.id,
+        label: props.toponym,
+        description: buildPoiDescription(props),
+        type: resolveType(cats),
+        center: f.geometry.coordinates,
+        data: {
+            properties: props as unknown as Record<string, unknown>,
+            citycode: props.citycode?.[0],
+            postcode: props.postcode?.[0],
+            cityName: props.city?.[0],
+            category: cats,
+            geometry,
+            invertedMask
+        } satisfies GeopfResultData
+    };
+}
+
+function buildPoiDescription(props: GeopfPoiProperties): string | undefined {
     const categories: string[] = props.category ?? [];
 
     if (categories.includes('région')) return 'région';
