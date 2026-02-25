@@ -16,7 +16,7 @@ const OUTLINE_COLOR = '#4e80ee';
 const OUTLINE_BORDER_COLOR = '#395FB1';
 const OUTLINE_WIDTH = 1;
 const OUTLINE_BORDER_WIDTH = OUTLINE_WIDTH + 1; // 1px border on each side
-const FIT_PADDING_RATIO = 0.15;
+const FIT_PADDING_RATIO = 0.08;
 
 const ADDRESS_LIMIT = 5;
 const POI_LIMIT = 5;
