@@ -37,12 +37,12 @@
     "metadata": {
       "cartefacile:group": "cadastral_sections"
     },
-    "minzoom": 11,
+    "minzoom": 12,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgba(40, 40, 40, 1)",
       "line-opacity": 1,
-      "line-width": {"stops": [[11, 2], [14, 3], [19, 9]]}
+      "line-width": {"stops": [[12, 2], [14, 3], [19, 9]]}
     }
   },
   {
@@ -53,34 +53,12 @@
     "metadata": {
       "cartefacile:group": "cadastral_sections"
     },
-    "minzoom": 11,
+    "minzoom": 12,
     "layout": {"visibility": "visible"},
     "paint": {
       "line-color": "rgb(255,202,0)",
       "line-opacity": 1,
-      "line-width": {"stops": [[11, 1], [14, 2], [19, 6]]}
-    }
-  },
-  {
-    "id": "Cadastre - Sections - Label",
-    "type": "symbol",
-    "source": "cadastre",
-    "source-layer": "sections",
-    "metadata": {
-      "cartefacile:group": "cadastral_sections"
-    },
-    "minzoom": 11,
-    "layout": {
-      "text-field": "{code}",
-      "text-font": ["Source Sans Pro Bold"],
-      "text-size": {"stops": [[11, 12], [16, 16]]},
-      "visibility": "visible"
-    },
-    "paint": {
-      "text-color": "rgb(255,202,0)",
-      "text-halo-color": "rgba(40, 40, 40, 1)",
-      "text-halo-width": 2,
-      "text-halo-blur": 0.4
+      "line-width": {"stops": [[12, 1], [14, 2], [19, 6]]}
     }
   },
   {
@@ -102,6 +80,28 @@
       "text-color": "rgb(255,202,0)",
       "text-halo-color": "rgba(40, 40, 40, 1)",
       "text-halo-width": 1.4,
+      "text-halo-blur": 0.4
+    }
+  },
+  {
+    "id": "Cadastre - Sections - Label",
+    "type": "symbol",
+    "source": "cadastre",
+    "source-layer": "sections",
+    "metadata": {
+      "cartefacile:group": "cadastral_sections"
+    },
+    "minzoom": 12,
+    "layout": {
+      "text-field": "{code}",
+      "text-font": ["Source Sans Pro Bold"],
+      "text-size": {"stops": [[12, 12], [16, 16]]},
+      "visibility": "visible"
+    },
+    "paint": {
+      "text-color": "rgb(255,202,0)",
+      "text-halo-color": "rgba(40, 40, 40, 1)",
+      "text-halo-width": 2,
       "text-halo-blur": 0.4
     }
   }
