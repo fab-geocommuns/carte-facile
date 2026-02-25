@@ -28,3 +28,13 @@
   mask-image: url('../../assets/icons/close-circle-fill.svg');
   -webkit-mask-image: url('../../assets/icons/close-circle-fill.svg');
 }
+
+.cartefacile-btn-icon--close::before {
+  mask-image: url('../../assets/icons/close-fill.svg');
+  -webkit-mask-image: url('../../assets/icons/close-fill.svg');
+}
+
+.cartefacile-btn-icon--search::before {
+  mask-image: url('../../assets/icons/search-line.svg');
+  -webkit-mask-image: url('../../assets/icons/search-line.svg');
+}

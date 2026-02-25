@@ -27,7 +27,6 @@
       "attribution": "© IGN"
     }
   },
-  "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
   "glyphs": "https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf",
   "transition": {"duration": 300, "delay": 0},
   "layers": [
@@ -4582,12 +4581,7 @@
         "text-padding": 10,
         "text-font": ["Noto Sans Regular"],
         "symbol-z-order": "auto",
-        "symbol-avoid-edges": false,
-        "icon-allow-overlap": false,
-        "icon-ignore-placement": false,
-        "icon-rotation-alignment": "auto",
-        "icon-keep-upright": false,
-        "icon-pitch-alignment": "auto"
+        "symbol-avoid-edges": false
       },
       "paint": {
         "text-color": "rgba(34, 95, 108, 1)",
@@ -5079,9 +5073,7 @@
         "text-offset": [0.3, -0.25],
         "text-padding": 3,
         "text-anchor": "bottom-left",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Metro",
-        "icon-size": {"stops": [[15, 0.33], [17, 0.6]]}
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "#3C3C3C", "icon-color": "#646464"}
     },
@@ -5607,12 +5599,7 @@
         "text-allow-overlap": false,
         "text-padding": 0,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "rgba(255, 255, 255, 1)",
@@ -5637,12 +5624,7 @@
         "text-allow-overlap": false,
         "text-padding": 0,
         "text-anchor": "center",
-        "text-font": ["Noto Sans Regular"],
-        "icon-image": "Ecluse",
-        "icon-rotation-alignment": "viewport",
-        "text-rotation-alignment": "viewport",
-        "icon-text-fit": "both",
-        "icon-size": 0
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#F0F0F0",
@@ -6684,15 +6666,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -6720,15 +6700,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -6755,15 +6733,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
