@@ -242,7 +242,9 @@ async function searchOtherPoi(query: string): Promise<SearchResult[]> {
             .map(f => {
                 const rawGeometry = f.properties.truegeometry ? parseGeometry(f.properties.truegeometry) : undefined;
                 const geometry = rawGeometry && countVertices(rawGeometry) >= MIN_CONTOUR_VERTICES ? rawGeometry : undefined;
-                return mapPoiFeature(f, geometry);
+                const cats: string[] = f.properties.category ?? [];
+                const isTerritory = cats.includes('quartier');
+                return mapPoiFeature(f, geometry, isTerritory);
             });
     } catch {
         return [];
@@ -340,6 +342,10 @@ function buildAdminDescription(props: GeopfPoiProperties): string | undefined {
         const postcodes: string[] = props.postcode ?? [];
         return postcodes.length > 0 ? `commune · ${postcodes[0]}` : 'commune';
     }
+    if (categories.includes('quartier')) {
+        const city = props.city?.[0];
+        return city ? `quartier · ${city}` : 'quartier';
+    }
 
     return undefined;
 }
@@ -349,6 +355,7 @@ function resolveType(categories: string[]): string {
     if (categories.includes('département')) return 'department';
     if (categories.includes('epci')) return 'community';
     if (categories.includes('commune') || categories.includes('arrondissement municipal')) return 'city';
+    if (categories.includes('quartier')) return 'neighborhood';
     if (categories.some(c => c.includes('gare'))) return 'train';
     if (categories.includes('administratif')) return 'admin';
     return 'poi';
