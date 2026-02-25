@@ -92,6 +92,28 @@
     letter-spacing: 0.04em;
 }
 
+/* Pin icon for point results (POI, addresses) */
+.cartefacile-ctrl-search__result--has-pin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cartefacile-ctrl-search__result--has-pin::before {
+    content: '';
+    display: block;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #888;
+    mask-image: url('../../assets/icons/map-pin-line.svg');
+    -webkit-mask-image: url('../../assets/icons/map-pin-line.svg');
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
 /* Search button stretches to match the field height and is square */
 /* Double selector intentional: overrides MapLibre's .maplibregl-ctrl-group button (0,1,1) */
 .cartefacile-ctrl-search .cartefacile-ctrl-search__btn-search {

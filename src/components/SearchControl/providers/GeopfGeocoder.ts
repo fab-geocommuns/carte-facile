@@ -21,8 +21,6 @@ const POI_LIMIT = 5;
 // A truegeometry with fewer vertices than this is just a bounding box, not a real contour
 const MIN_CONTOUR_VERTICES = 8;
 
-let currentMarker: maplibregl.Marker | null = null;
-
 /** Raw feature shape returned by the Geoplateforme POI index */
 interface GeopfPoiProperties {
     toponym: string;
@@ -102,25 +100,28 @@ export interface GeopfResultData {
  *
  * @see https://data.geopf.fr/geocodage/openapi
  */
-export const GeopfGeocoder: SearchProvider = {
-    name: 'geopf',
-    placeholder: 'Rechercher...',
+class GeopfGeocoderProvider implements SearchProvider {
+    readonly name = 'geopf';
+    readonly placeholder = 'Rechercher...';
+
+    private _marker: maplibregl.Marker | null = null;
 
     async search(query: string): Promise<SearchResult[]> {
-        const [admin, poi, addresses] = await Promise.all([
+        // allSettled: a single failing endpoint doesn't block the others
+        const results = await Promise.allSettled([
             searchAdminPoi(query),
             searchOtherPoi(query),
             searchAddresses(query)
         ]);
-        return [...admin, ...poi, ...addresses];
-    },
+        return results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
+    }
 
     onClear(map: Map): void {
-        removeHighlight(map);
-    },
+        this._removeHighlight(map);
+    }
 
     async onSelect(result: SearchResult, map: Map): Promise<void> {
-        removeHighlight(map);
+        this._removeHighlight(map);
 
         const { geometry, invertedMask = false } = (result.data as GeopfResultData) ?? {};
 
@@ -165,12 +166,22 @@ export const GeopfGeocoder: SearchProvider = {
 
         // Display pin marker — not shown for admin boundaries (contour is sufficient)
         if (result.center && !invertedMask) {
-            currentMarker = new maplibregl.Marker({ color: HIGHLIGHT_COLOR })
+            this._marker = new maplibregl.Marker({ color: HIGHLIGHT_COLOR })
                 .setLngLat(result.center)
                 .addTo(map);
         }
     }
-};
+
+    private _removeHighlight(map: Map): void {
+        this._marker?.remove();
+        this._marker = null;
+        if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
+        if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
+        if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
+    }
+}
+
+export const GeopfGeocoder: SearchProvider = new GeopfGeocoderProvider();
 
 /** Search administrative boundaries (communes, régions, etc.) */
 async function searchAdminPoi(query: string): Promise<SearchResult[]> {
@@ -248,6 +259,7 @@ async function searchAddresses(query: string): Promise<SearchResult[]> {
                     label: name ?? fullLabel,
                     description: suffix || undefined,
                     type: 'address',
+                    icon: 'pin',
                     center: f.geometry.coordinates,
                     data: {
                         properties: f.properties as unknown as Record<string, unknown>,
@@ -271,11 +283,27 @@ function mapPoiFeature(
 ): SearchResult {
     const props = f.properties;
     const cats: string[] = props.category ?? [];
+
+    let label = props.toponym;
+    let description: string | undefined;
+
+    if (invertedMask) {
+        // Admin POI (commune, région, etc.): keep category description
+        description = buildAdminDescription(props);
+    } else {
+        // Other POI (gare, église, etc.): append city to label when not already present
+        const cityName = props.city?.[0];
+        if (cityName && !props.toponym.toLowerCase().includes(cityName.toLowerCase())) {
+            label = `${props.toponym}, ${cityName}`;
+        }
+    }
+
     return {
         id: props.toponym ?? props.id,
-        label: props.toponym,
-        description: buildPoiDescription(props),
+        label,
+        description,
         type: resolveType(cats),
+        icon: invertedMask ? undefined : 'pin',
         center: f.geometry.coordinates,
         data: {
             properties: props as unknown as Record<string, unknown>,
@@ -289,7 +317,7 @@ function mapPoiFeature(
     };
 }
 
-function buildPoiDescription(props: GeopfPoiProperties): string | undefined {
+function buildAdminDescription(props: GeopfPoiProperties): string | undefined {
     const categories: string[] = props.category ?? [];
 
     if (categories.includes('région')) return 'région';
@@ -299,12 +327,6 @@ function buildPoiDescription(props: GeopfPoiProperties): string | undefined {
     if (categories.includes('commune')) {
         const postcodes: string[] = props.postcode ?? [];
         return postcodes.length > 0 ? `commune · ${postcodes[0]}` : 'commune';
-    }
-
-    if (categories.length > 0) {
-        const typeLabel = CATEGORY_LABELS[categories[0]] ?? categories[0];
-        const cities: string[] = props.city ?? [];
-        return cities.length > 0 ? `${typeLabel} · ${cities[0]}` : typeLabel;
     }
 
     return undefined;
@@ -319,11 +341,6 @@ function resolveType(categories: string[]): string {
     if (categories.includes('administratif')) return 'admin';
     return 'poi';
 }
-
-const CATEGORY_LABELS: Record<string, string> = {
-    'gare voyageurs et fret': 'gare',
-    'lieu-dit habité': 'lieu-dit',
-};
 
 function parseGeometry(raw: unknown): GeoJSON.Polygon | GeoJSON.MultiPolygon {
     return typeof raw === 'string' ? JSON.parse(raw) : raw as GeoJSON.Polygon | GeoJSON.MultiPolygon;
@@ -372,12 +389,4 @@ function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
         source: HIGHLIGHT_SOURCE_ID,
         paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
     });
-}
-
-function removeHighlight(map: Map): void {
-    currentMarker?.remove();
-    currentMarker = null;
-    if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
-    if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
-    if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
 }

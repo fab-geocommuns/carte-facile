@@ -12,6 +12,8 @@ export interface SearchResult {
     description?: string;
     /** Result type key set by the provider (e.g. 'address', 'city', 'train', 'poi'). */
     type?: string;
+    /** Icon to display in the results list (e.g. 'pin'). Set by the provider. */
+    icon?: 'pin';
     /** Coordinates [longitude, latitude] */
     center?: [number, number];
     /** Bounding box [west, south, east, north] */
@@ -59,6 +61,16 @@ export interface SearchControlOptions {
     onSelect?: (result: SearchResult) => void;
 }
 
+interface ResolvedOptions {
+    placeholder: string;
+    debounceMs: number;
+    minChars: number;
+    maxResults: number;
+    onSelect?: (result: SearchResult) => void;
+}
+
+type ResultEntry = { result: SearchResult; provider: SearchProvider };
+
 const TEMPLATE = `
 <div class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-search"
      role="search"
@@ -99,27 +111,25 @@ const TEMPLATE = `
  * }));
  */
 export class SearchControl implements IControl {
-    private static _instanceCounter = 0;
+    private static _idCounter = 0;
 
-    private _instanceId = 0;
+    private _id = 0;
     private _map?: Map;
     private _container!: HTMLDivElement;
     private _input!: HTMLInputElement;
     private _searchButton!: HTMLButtonElement;
     private _clearButton!: HTMLButtonElement;
-    private _resultsList!: HTMLUListElement;
+    private _dropdown!: HTMLUListElement;
 
     private _providers: SearchProvider[];
-    private _options: { placeholder: string; debounceMs: number; minChars: number; maxResults: number; onSelect?: (result: SearchResult) => void };
+    private _options: ResolvedOptions;
 
     private _debounceTimeout?: number;
-    /** Flat list of displayed results with their provider reference */
-    private _resultEntries: { result: SearchResult; provider: SearchProvider }[] = [];
+    private _dropdownEntries: ResultEntry[] = [];
     private _selectedIndex = -1;
-    private _onDocumentClick?: (e: MouseEvent) => void;
-    private _searchCounter = 0;
-    private _currentQuery = '';
-    private _lastSelectedEntry?: { result: SearchResult; provider: SearchProvider };
+    private _documentClickHandler?: (e: MouseEvent) => void;
+    private _requestId = 0;
+    private _confirmedEntry?: ResultEntry;
 
     constructor(options: SearchControlOptions) {
         this._providers = Array.isArray(options.providers) ? options.providers : [options.providers];
@@ -135,45 +145,47 @@ export class SearchControl implements IControl {
     onAdd(map: Map): HTMLElement {
         this._map = map;
 
-        this._instanceId = ++SearchControl._instanceCounter;
-        const inputId = `cartefacile-search-input-${this._instanceId}`;
-        const resultsId = `cartefacile-search-results-${this._instanceId}`;
+        this._id = ++SearchControl._idCounter;
+        const inputId = `cartefacile-search-input-${this._id}`;
+        const dropdownId = `cartefacile-search-results-${this._id}`;
 
         const wrapper = document.createElement('div');
         wrapper.innerHTML = TEMPLATE.trim();
         this._container = wrapper.firstElementChild as HTMLDivElement;
-        this._container.classList.add('maplibregl-ctrl');
 
         this._input = this._container.querySelector('input')!;
         this._input.id = inputId;
         this._input.placeholder = this._options.placeholder;
-        this._input.setAttribute('aria-controls', resultsId);
+        this._input.setAttribute('aria-controls', dropdownId);
         this._container.querySelector('label')!.setAttribute('for', inputId);
         this._clearButton = this._container.querySelector('.cartefacile-ctrl-search__btn-clear')!;
         this._searchButton = this._container.querySelector('.cartefacile-ctrl-search__btn-search')!;
 
-        // Results list added to map container (avoids overflow issues with MapLibre controls)
-        this._resultsList = document.createElement('ul');
-        this._resultsList.className = 'cartefacile-ctrl-search__results';
-        this._resultsList.id = resultsId;
-        this._resultsList.setAttribute('role', 'listbox');
-        map.getContainer().appendChild(this._resultsList);
+        // Results list appended to map container (avoids overflow clipping by MapLibre controls)
+        this._dropdown = document.createElement('ul');
+        this._dropdown.className = 'cartefacile-ctrl-search__results';
+        this._dropdown.id = dropdownId;
+        this._dropdown.setAttribute('role', 'listbox');
+        map.getContainer().appendChild(this._dropdown);
 
-        this._setupEvents();
+        this._bindInputEvents();
+        this._bindButtonEvents();
+        this._bindDocumentEvents();
+
         return this._container;
     }
 
     onRemove(): void {
         clearTimeout(this._debounceTimeout);
-        if (this._onDocumentClick) {
-            document.removeEventListener('click', this._onDocumentClick);
+        if (this._documentClickHandler) {
+            document.removeEventListener('click', this._documentClickHandler);
         }
         if (this._map) {
             for (const provider of this._providers) {
                 provider.onClear?.(this._map);
             }
         }
-        this._resultsList.remove();
+        this._dropdown.remove();
         this._container.remove();
         this._map = undefined;
     }
@@ -182,8 +194,7 @@ export class SearchControl implements IControl {
         return 'top-left';
     }
 
-    private _setupEvents(): void {
-        // Debounced search + toggle clear button visibility
+    private _bindInputEvents(): void {
         this._input.addEventListener('input', () => {
             clearTimeout(this._debounceTimeout);
             const value = this._input.value;
@@ -191,16 +202,15 @@ export class SearchControl implements IControl {
             this._container.classList.toggle('cartefacile-ctrl-search--has-value', value.length > 0);
 
             if (value.length < this._options.minChars) {
-                this._hideResults();
+                this._hideDropdown();
                 return;
             }
 
             this._debounceTimeout = window.setTimeout(() => this._search(value), this._options.debounceMs);
         });
 
-        // Keyboard navigation
         this._input.addEventListener('keydown', (e) => {
-            if (this._resultEntries.length === 0) return;
+            if (this._dropdownEntries.length === 0) return;
 
             switch (e.key) {
                 case 'ArrowDown':
@@ -216,137 +226,147 @@ export class SearchControl implements IControl {
                     this._confirmSelection();
                     break;
                 case 'Escape':
-                    this._hideResults();
+                    this._hideDropdown();
                     break;
             }
         });
+    }
 
-        // Search button: confirm current or re-trigger last selection
+    private _bindButtonEvents(): void {
         this._searchButton.addEventListener('click', () => this._confirmSelection());
 
-        // Clear button
         this._clearButton.addEventListener('click', () => {
             this._input.value = '';
-            this._lastSelectedEntry = undefined;
+            this._confirmedEntry = undefined;
             this._container.classList.remove('cartefacile-ctrl-search--has-value');
             if (this._map) {
                 for (const provider of this._providers) {
                     provider.onClear?.(this._map);
                 }
             }
-            this._hideResults();
+            this._hideDropdown();
             this._input.focus();
         });
+    }
 
-        // Close on outside click
-        this._onDocumentClick = (e: MouseEvent) => {
-            if (!this._container.contains(e.target as Node)) this._hideResults();
+    private _bindDocumentEvents(): void {
+        this._documentClickHandler = (e: MouseEvent) => {
+            if (!this._container.contains(e.target as Node)) this._hideDropdown();
         };
-        document.addEventListener('click', this._onDocumentClick);
+        document.addEventListener('click', this._documentClickHandler);
     }
 
     private async _search(query: string): Promise<void> {
         if (!this._map) return;
 
-        const requestId = ++this._searchCounter;
-
-        this._currentQuery = query;
+        const requestId = ++this._requestId;
 
         const settled = await Promise.allSettled(
             this._providers.map(provider => provider.search(query))
         );
 
-        // Ignore stale results if a newer search was triggered
-        if (requestId !== this._searchCounter) return;
+        // Discard stale results if a newer search was triggered while awaiting
+        if (requestId !== this._requestId) return;
 
-        this._resultEntries = [];
+        const entries: ResultEntry[] = [];
         for (let i = 0; i < this._providers.length; i++) {
             const outcome = settled[i];
             if (outcome.status === 'fulfilled') {
-                const results = outcome.value.slice(0, this._options.maxResults);
-                for (const result of results) {
-                    this._resultEntries.push({ result, provider: this._providers[i] });
+                for (const result of outcome.value.slice(0, this._options.maxResults)) {
+                    entries.push({ result, provider: this._providers[i] });
                 }
             } else {
                 console.warn(`SearchControl: provider "${this._providers[i].name}" failed`, outcome.reason);
             }
         }
 
+        this._dropdownEntries = entries;
         this._selectedIndex = -1;
-        this._displayResults();
+        this._renderDropdown(query);
     }
 
-    private _displayResults(): void {
-        this._resultsList.innerHTML = '';
+    private _renderDropdown(query: string): void {
+        this._dropdown.innerHTML = '';
 
-        if (this._resultEntries.length === 0) {
-            this._hideResults();
+        if (this._dropdownEntries.length === 0) {
+            this._hideDropdown();
             return;
         }
 
-        this._resultEntries.forEach((entry, index) => {
-            const item = document.createElement('li');
-            item.className = 'cartefacile-ctrl-search__result';
-            item.id = `cartefacile-search-result-${this._instanceId}-${index}`;
-            item.setAttribute('role', 'option');
-            item.setAttribute('aria-selected', 'false');
-
-            const text = document.createElement('span');
-            text.className = 'cartefacile-ctrl-search__result-text';
-
-            const label = document.createElement('span');
-            label.className = 'cartefacile-ctrl-search__result-label';
-            label.innerHTML = this._highlightText(entry.result.label, this._currentQuery);
-            text.appendChild(label);
-
-            if (entry.result.description) {
-                const desc = document.createElement('span');
-                desc.className = 'cartefacile-ctrl-search__result-desc';
-                const descText = entry.result.description;
-                desc.textContent = descText.charAt(0).toUpperCase() + descText.slice(1);
-                text.appendChild(desc);
-            }
-
-            item.appendChild(text);
-            item.addEventListener('click', () => this._selectResult(index));
-            item.addEventListener('mouseenter', () => this._setSelectedIndex(index));
-
-            this._resultsList.appendChild(item);
+        this._dropdownEntries.forEach((entry, index) => {
+            this._dropdown.appendChild(this._createResultItem(entry, index, query));
         });
 
-        // Position list below input (calculated because list is in map container)
-        const rect = this._container.getBoundingClientRect();
-        const mapRect = this._map!.getContainer().getBoundingClientRect();
-        this._resultsList.style.top = `${rect.bottom - mapRect.top + 4}px`;
-        this._resultsList.style.left = `${rect.left - mapRect.left}px`;
-        this._resultsList.style.width = `${rect.width}px`;
-
-        this._resultsList.classList.add('cartefacile-ctrl-search__results--visible');
+        this._positionDropdown();
+        this._dropdown.classList.add('cartefacile-ctrl-search__results--visible');
         this._input.setAttribute('aria-expanded', 'true');
     }
 
-    /** Confirm current selection from results list, or re-trigger last selection */
+    private _createResultItem(entry: ResultEntry, index: number, query: string): HTMLLIElement {
+        const item = document.createElement('li');
+        item.className = 'cartefacile-ctrl-search__result';
+        item.id = `cartefacile-search-result-${this._id}-${index}`;
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', 'false');
+
+        if (entry.result.icon === 'pin') {
+            item.classList.add('cartefacile-ctrl-search__result--has-pin');
+        }
+
+        const text = document.createElement('span');
+        text.className = 'cartefacile-ctrl-search__result-text';
+
+        const label = document.createElement('span');
+        label.className = 'cartefacile-ctrl-search__result-label';
+        label.innerHTML = this._highlightText(entry.result.label, query);
+        text.appendChild(label);
+
+        if (entry.result.description) {
+            const desc = document.createElement('span');
+            desc.className = 'cartefacile-ctrl-search__result-desc';
+            const d = entry.result.description;
+            desc.textContent = d.charAt(0).toUpperCase() + d.slice(1);
+            text.appendChild(desc);
+        }
+
+        item.appendChild(text);
+        item.addEventListener('click', () => this._selectEntry(index));
+        item.addEventListener('mouseenter', () => this._setSelectedIndex(index));
+
+        return item;
+    }
+
+    private _positionDropdown(): void {
+        const rect = this._container.getBoundingClientRect();
+        const mapRect = this._map!.getContainer().getBoundingClientRect();
+        this._dropdown.style.top = `${rect.bottom - mapRect.top + 4}px`;
+        this._dropdown.style.left = `${rect.left - mapRect.left}px`;
+        this._dropdown.style.width = `${rect.width}px`;
+    }
+
+    // If the dropdown is open: select the highlighted item, or the first one by default.
+    // If the dropdown is closed: re-apply the last confirmed selection (e.g. search button clicked again).
     private _confirmSelection(): void {
-        if (this._resultEntries.length > 0) {
+        if (this._dropdownEntries.length > 0) {
             const index = this._selectedIndex >= 0 ? this._selectedIndex : 0;
-            this._selectResult(index);
-        } else if (this._lastSelectedEntry) {
-            this._applySelection(this._lastSelectedEntry);
+            this._selectEntry(index);
+        } else if (this._confirmedEntry) {
+            this._applyEntry(this._confirmedEntry);
         }
     }
 
-    private async _selectResult(index: number): Promise<void> {
-        const entry = this._resultEntries[index];
+    private async _selectEntry(index: number): Promise<void> {
+        const entry = this._dropdownEntries[index];
         if (!entry) return;
 
-        this._lastSelectedEntry = entry;
+        this._confirmedEntry = entry;
         this._input.value = entry.result.label;
         this._container.classList.add('cartefacile-ctrl-search--has-value');
-        this._hideResults();
-        await this._applySelection(entry);
+        this._hideDropdown();
+        await this._applyEntry(entry);
     }
 
-    private async _applySelection(entry: { result: SearchResult; provider: SearchProvider }): Promise<void> {
+    private async _applyEntry(entry: ResultEntry): Promise<void> {
         if (!this._map) return;
 
         for (const provider of this._providers) {
@@ -363,40 +383,36 @@ export class SearchControl implements IControl {
     }
 
     private _setSelectedIndex(index: number): void {
-        const max = this._resultEntries.length - 1;
-        // Wrap around: after last → first, before first → last
+        const max = this._dropdownEntries.length - 1;
         this._selectedIndex = index < 0 ? max : index > max ? 0 : index;
 
-        this._resultsList.querySelectorAll('li').forEach((li, i) => {
-            const isSelected = i === this._selectedIndex;
-            li.classList.toggle('cartefacile-ctrl-search__result--selected', isSelected);
-            li.setAttribute('aria-selected', String(isSelected));
+        this._dropdown.querySelectorAll('li').forEach((li, i) => {
+            const selected = i === this._selectedIndex;
+            li.classList.toggle('cartefacile-ctrl-search__result--selected', selected);
+            li.setAttribute('aria-selected', String(selected));
         });
 
-        this._input.setAttribute('aria-activedescendant', `cartefacile-search-result-${this._instanceId}-${this._selectedIndex}`);
+        this._input.setAttribute('aria-activedescendant', `cartefacile-search-result-${this._id}-${this._selectedIndex}`);
     }
 
-    /** Returns HTML with matching query words wrapped in <strong>, XSS-safe */
+    /** Returns HTML with matching query words wrapped in <strong>. XSS-safe. */
     private _highlightText(text: string, query: string): string {
-        // Escape HTML entities first to prevent XSS
         const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         if (!query) return escaped;
 
-        // Build a regex that matches any word from the query (case-insensitive, accent-insensitive not needed: API already matched)
         const words = query.trim().split(/\s+/).filter(Boolean).map(
             w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         );
         if (words.length === 0) return escaped;
 
-        const pattern = new RegExp(`(${words.join('|')})`, 'gi');
-        return escaped.replace(pattern, '<strong>$1</strong>');
+        return escaped.replace(new RegExp(`(${words.join('|')})`, 'gi'), '<strong>$1</strong>');
     }
 
-    private _hideResults(): void {
-        this._resultsList.classList.remove('cartefacile-ctrl-search__results--visible');
+    private _hideDropdown(): void {
+        this._dropdown.classList.remove('cartefacile-ctrl-search__results--visible');
         this._input.setAttribute('aria-expanded', 'false');
         this._input.removeAttribute('aria-activedescendant');
-        this._resultEntries = [];
+        this._dropdownEntries = [];
         this._selectedIndex = -1;
     }
 }
