@@ -27,7 +27,6 @@
       "attribution": "© IGN"
     }
   },
-  "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
   "glyphs": "https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf",
   "transition": {"duration": 300, "delay": 0},
   "layers": [
@@ -5724,15 +5723,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -5760,15 +5757,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -5795,15 +5790,13 @@
       "layout": {
         "visibility": "visible",
         "symbol-placement": "point",
-        "icon-image": "circle_11",
-        "icon-size": 0.5,
-        "text-field": "{texte}",
+        "text-field": ["concat", "• ", ["get", "texte"]],
         "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],
         "text-justify": "left",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",

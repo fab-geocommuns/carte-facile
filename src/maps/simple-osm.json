@@ -2728,16 +2728,13 @@
       "maxzoom": 7,
       "filter": ["any", ["in", "capital", 6], ["==", "class", "city"]],
       "layout": {
-        "text-field": "{name:fr}",
+        "text-field": ["concat", "• ", ["get", "name:fr"]],
         "text-font": ["Noto Sans Bold"],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
-        "icon-anchor": "center",
         "text-justify": "left",
         "text-anchor": "left",
-        "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -2755,16 +2752,13 @@
       "maxzoom": 7,
       "filter": ["all", ["in", "capital", 4, 5]],
       "layout": {
-        "text-field": "{name:fr}",
+        "text-field": ["concat", "• ", ["get", "name:fr"]],
         "text-font": ["Noto Sans Bold"],
         "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
-        "icon-anchor": "center",
         "text-justify": "left",
         "text-anchor": "left",
-        "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
@@ -2782,16 +2776,13 @@
       "maxzoom": 7,
       "filter": ["all", ["in", "capital", 2]],
       "layout": {
-        "text-field": "{name:fr}",
+        "text-field": ["concat", "• ", ["get", "name:fr"]],
         "text-font": ["Noto Sans Bold"],
         "text-size": ["interpolate", ["linear"], ["zoom"], 4, 10, 7, 16],
-        "icon-anchor": "center",
         "text-justify": "left",
         "text-anchor": "left",
-        "icon-size": 0.5,
-        "icon-image": "circle_11",
         "visibility": "visible",
-        "text-offset": [0.5, 0]
+        "text-offset": [0, 0]
       },
       "paint": {
         "text-color": "#222222",
