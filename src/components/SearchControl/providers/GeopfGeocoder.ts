@@ -4,15 +4,18 @@ import type { SearchProvider, SearchResult } from '../SearchControl';
 
 const API_URL = 'https://data.geopf.fr/geocodage/search';
 
-const HIGHLIGHT_SOURCE_ID = 'admin-highlight-source';
-const HIGHLIGHT_LAYER_ID = 'admin-highlight';
-const HIGHLIGHT_OUTLINE_ID = 'admin-highlight-outline';
+const OUTLINE_SOURCE_ID = 'search-outline-source';
+const OUTLINE_FILL_ID = 'search-outline-fill';
+const OUTLINE_LINE_BORDER_ID = 'search-outline-line-border';
+const OUTLINE_LINE_ID = 'search-outline-line';
 
-const HIGHLIGHT_COLOR = '#3b82f6';
 const MASK_COLOR = '#000000';
 const MASK_OPACITY = 0.075;
-const FILL_OPACITY = 0.1;
-const OUTLINE_WIDTH = 2;
+const OUTLINE_FILL_OPACITY = 0.1;
+const OUTLINE_COLOR = '#4e80ee';
+const OUTLINE_BORDER_COLOR = '#395FB1';
+const OUTLINE_WIDTH = 1;
+const OUTLINE_BORDER_WIDTH = OUTLINE_WIDTH + 1; // 1px border on each side
 const FIT_PADDING_RATIO = 0.15;
 
 const ADDRESS_LIMIT = 5;
@@ -118,11 +121,11 @@ class GeopfGeocoderProvider implements SearchProvider {
     }
 
     onClear(map: Map): void {
-        this._removeHighlight(map);
+        this._clearResult(map);
     }
 
     async onSelect(result: SearchResult, map: Map): Promise<void> {
-        this._removeHighlight(map);
+        this._clearResult(map);
 
         const { geometry, invertedMask = false } = (result.data as GeopfResultData) ?? {};
 
@@ -167,22 +170,23 @@ class GeopfGeocoderProvider implements SearchProvider {
 
         // Display pin marker — not shown for admin boundaries (contour is sufficient)
         if (result.center && !invertedMask) {
-            this._marker = new maplibregl.Marker({ color: HIGHLIGHT_COLOR })
+            this._marker = new maplibregl.Marker({ color: OUTLINE_COLOR })
                 .setLngLat(result.center)
                 .addTo(map);
         }
     }
 
-    private _removeHighlight(map: Map): void {
+    private _clearResult(map: Map): void {
         if (this._styledataHandler) {
             map.off('styledata', this._styledataHandler);
             this._styledataHandler = null;
         }
         this._marker?.remove();
         this._marker = null;
-        if (map.getLayer(HIGHLIGHT_LAYER_ID)) map.removeLayer(HIGHLIGHT_LAYER_ID);
-        if (map.getLayer(HIGHLIGHT_OUTLINE_ID)) map.removeLayer(HIGHLIGHT_OUTLINE_ID);
-        if (map.getSource(HIGHLIGHT_SOURCE_ID)) map.removeSource(HIGHLIGHT_SOURCE_ID);
+        if (map.getLayer(OUTLINE_FILL_ID)) map.removeLayer(OUTLINE_FILL_ID);
+        if (map.getLayer(OUTLINE_LINE_ID)) map.removeLayer(OUTLINE_LINE_ID);
+        if (map.getLayer(OUTLINE_LINE_BORDER_ID)) map.removeLayer(OUTLINE_LINE_BORDER_ID);
+        if (map.getSource(OUTLINE_SOURCE_ID)) map.removeSource(OUTLINE_SOURCE_ID);
     }
 }
 
@@ -382,26 +386,34 @@ function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
         : { type: 'Polygon', coordinates: rings };
 
     const update = () => {
-        if (!map.getSource(HIGHLIGHT_SOURCE_ID)) {
-            map.addSource(HIGHLIGHT_SOURCE_ID, {
+        if (!map.getSource(OUTLINE_SOURCE_ID)) {
+            map.addSource(OUTLINE_SOURCE_ID, {
                 type: 'geojson',
                 data: { type: 'Feature', geometry: geojson, properties: {} }
             });
         }
-        if (!map.getLayer(HIGHLIGHT_LAYER_ID)) {
+        if (!map.getLayer(OUTLINE_FILL_ID)) {
             map.addLayer({
-                id: HIGHLIGHT_LAYER_ID,
+                id: OUTLINE_FILL_ID,
                 type: 'fill',
-                source: HIGHLIGHT_SOURCE_ID,
-                paint: { 'fill-color': invertedMask ? MASK_COLOR : HIGHLIGHT_COLOR, 'fill-opacity': invertedMask ? MASK_OPACITY : FILL_OPACITY }
+                source: OUTLINE_SOURCE_ID,
+                paint: { 'fill-color': invertedMask ? MASK_COLOR : OUTLINE_COLOR, 'fill-opacity': invertedMask ? MASK_OPACITY : OUTLINE_FILL_OPACITY }
             });
         }
-        if (!map.getLayer(HIGHLIGHT_OUTLINE_ID)) {
+        if (!map.getLayer(OUTLINE_LINE_BORDER_ID)) {
             map.addLayer({
-                id: HIGHLIGHT_OUTLINE_ID,
+                id: OUTLINE_LINE_BORDER_ID,
                 type: 'line',
-                source: HIGHLIGHT_SOURCE_ID,
-                paint: { 'line-color': HIGHLIGHT_COLOR, 'line-width': OUTLINE_WIDTH }
+                source: OUTLINE_SOURCE_ID,
+                paint: { 'line-color': OUTLINE_BORDER_COLOR, 'line-width': OUTLINE_BORDER_WIDTH }
+            });
+        }
+        if (!map.getLayer(OUTLINE_LINE_ID)) {
+            map.addLayer({
+                id: OUTLINE_LINE_ID,
+                type: 'line',
+                source: OUTLINE_SOURCE_ID,
+                paint: { 'line-color': OUTLINE_COLOR, 'line-width': OUTLINE_WIDTH }
             });
         }
     };
