@@ -1,4 +1,4 @@
-import type { Map, IControl, ControlPosition, MapMouseEvent } from 'maplibre-gl';
+import type { Map, IControl, ControlPosition, MapMouseEvent, MapGeoJSONFeature } from 'maplibre-gl';
 import '../../themes/styles/dsfr.css';
 import '../Button/Button.css';
 import './AudioReaderControl.css';
@@ -86,32 +86,40 @@ export class AudioReaderControl implements IControl {
             'aria-label',
             this._active ? 'Désactiver la lecture audio' : 'Activer la lecture audio'
         );
-        if (!this._active) speechSynthesis.cancel();
+        if (window.speechSynthesis) speechSynthesis.cancel();
     }
 
     private _readAt(point: maplibregl.PointLike): void {
         if (!this._map) return;
 
         const features = this._map.queryRenderedFeatures(point);
+        if (features.length === 0) return;
+
+        // Prefer a feature with an explicit name
         for (const feature of features) {
             const name = this._resolveName(feature);
             if (!name) continue;
-
             const group = this._resolveGroup(feature);
-            const text = group ? `${name}, ${group}` : name;
-
-            speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = this._lang;
-            u.rate = this._speechRate;
-            speechSynthesis.speak(u);
-
-            if (this._liveRegion) this._liveRegion.textContent = text;
+            this._speak(group ? `${name}, ${group}` : name);
             return;
         }
+
+        // Fallback: read the symbo property of the first feature
+        const symbo = features[0].properties?.['symbo'];
+        if (symbo) this._speak(String(symbo));
     }
 
-    private _resolveName(feature: maplibregl.MapGeoJSONFeature): string | null {
+    private _speak(text: string): void {
+        if (!window.speechSynthesis) return;
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = this._lang;
+        u.rate = this._speechRate;
+        speechSynthesis.speak(u);
+        if (this._liveRegion) this._liveRegion.textContent = text;
+    }
+
+    private _resolveName(feature: MapGeoJSONFeature): string | null {
         for (const prop of NAME_PROPS) {
             const val = feature.properties?.[prop];
             if (typeof val === 'string' && val.trim()) return val.trim();
@@ -119,7 +127,7 @@ export class AudioReaderControl implements IControl {
         return null;
     }
 
-    private _resolveGroup(feature: maplibregl.MapGeoJSONFeature): string {
+    private _resolveGroup(feature: MapGeoJSONFeature): string {
         const styleLayer = this._map?.getStyle().layers?.find(l => l.id === feature.layer.id) as any;
         const group = styleLayer?.metadata?.['cartefacile:group'];
         if (group && GROUP_LABELS[group]) return GROUP_LABELS[group];
