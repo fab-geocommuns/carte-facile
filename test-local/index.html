@@ -33,7 +33,6 @@
       //CarteFacile.setTheme(map, 'dsfr');
       map.addControl(new CarteFacile.ZoomLevelControl);      
       map.addControl(new maplibregl.NavigationControl);
-      map.addControl(new maplibregl.GeolocateControl);
       //map.addControl(new maplibregl.GlobeControl);
       //map.addControl(new maplibregl.TerrainControl);
       map.addControl(new CarteFacile.MapSelectorControl);
@@ -51,6 +50,9 @@
           console.log(properties.citycode);  // Afficher dans la console le code INSEE
         },
       }));
+      map.addControl(new maplibregl.GeolocateControl(), 'top-left');
+
+      map.addControl(new CarteFacile.LayersControl);
       
 
       //CarteFacile.addOverlay(map, [CarteFacile.Overlay.cadastre, CarteFacile.Overlay.administrativeBoundaries]);

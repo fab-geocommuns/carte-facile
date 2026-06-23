@@ -38,3 +38,8 @@
   mask-image: url('../../assets/icons/search-line.svg');
   -webkit-mask-image: url('../../assets/icons/search-line.svg');
 }
+
+.cartefacile-btn-icon--eye-off::before {
+  mask-image: url('../../assets/icons/eye-off-fill.svg');
+  -webkit-mask-image: url('../../assets/icons/eye-off-fill.svg');
+}

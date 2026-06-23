@@ -3,6 +3,8 @@ export * from './maps/maps';
 export { ZoomLevelControl } from './components/ZoomLevelControl/ZoomLevelControl';
 export { MapSelectorControl } from './components/MapSelectorControl/MapSelectorControl';
 export { SearchControl } from './components/SearchControl/SearchControl';
+export { LayersControl } from './components/LayersControl/LayersControl';
+export type { LayersControlOptions } from './components/LayersControl/LayersControl';
 export type { SearchResult, SearchProvider } from './components/SearchControl/SearchControl';
 export { GeopfGeocoder } from './components/SearchControl/providers/GeopfGeocoder';
 export type { GeopfResultData } from './components/SearchControl/providers/GeopfGeocoder';
