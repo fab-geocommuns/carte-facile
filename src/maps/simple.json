@@ -22,7 +22,7 @@
   "sources": {
     "plan_ign": {
       "type": "vector",
-      "tiles": ["https://data.geopf.fr/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf"],
+      "url": "https://data.geopf.fr/tms/1.0.0/PLAN.IGN/metadata.json",
       "maxzoom": 18.9,
       "attribution": "© IGN"
     }
@@ -52,6 +52,7 @@
     {
       "id": "hydro surfacique - Estran",
       "type": "fill",
+      "metadata": {"cartefacile:group": "water_polygons"},
       "source": "plan_ign",
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "ZONE_D_ESTRAN"],
@@ -152,6 +153,7 @@
     {
       "id": "orographie : relief - glacier",
       "type": "fill",
+      "metadata": {"cartefacile:group": "water_polygons"},
       "source": "plan_ign",
       "source-layer": "oro_relief",
       "minzoom": 0,
@@ -215,6 +217,7 @@
     {
       "id": "ocs - vegetation - zone boiséee, foret fermee, peupleraie",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": [
@@ -235,6 +238,7 @@
     {
       "id": "ocs - vegetation - forêt ouverte",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["in", "symbo", "ZONE_FORET_OUVERTE"],
@@ -244,6 +248,7 @@
     {
       "id": "ocs - vegetation - lande ligneuse",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_LANDE_LIGNEUSE"],
@@ -253,6 +258,7 @@
     {
       "id": "ocs - vegetation - vigne",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_VIGNE"],
@@ -262,6 +268,7 @@
     {
       "id": "ocs - vegetation - verger",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_VERGER"],
@@ -271,6 +278,7 @@
     {
       "id": "ocs - vegetation - canne à sucre, bananeraie",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_CANNE_BANANE"],
@@ -280,6 +288,7 @@
     {
       "id": "ocs - vegetation - mangrovre",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_MANGROVE"],
@@ -289,6 +298,7 @@
     {
       "id": "ocs - vegetation - marais",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_MARAIS"],
@@ -298,6 +308,7 @@
     {
       "id": "hydro surfacique - marais",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "ZONE_MARAIS"],
@@ -307,6 +318,7 @@
     {
       "id": "ocs - vegetation - marais salant",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_vegetation_surf",
       "filter": ["==", "symbo", "ZONE_MARAIS_SALANT"],
@@ -316,6 +328,7 @@
     {
       "id": "ocs - Zone sable sec",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_nature_sol_surf",
       "filter": ["all", ["in", "symbo", "ZONE_SABLE_SEC"]],
@@ -325,6 +338,7 @@
     {
       "id": "ocs - Zone sable humide",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_nature_sol_surf",
       "filter": ["in", "symbo", "ZONE_SABLE_HUMIDE", "FOND_CUVETTE_HUMIDE"],
@@ -334,6 +348,7 @@
     {
       "id": "ocs - Zone graviers galets humides",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_nature_sol_surf",
       "filter": ["==", "symbo", "GRAVIERS_GALETS_HUM"],
@@ -343,6 +358,7 @@
     {
       "id": "ocs - Zone rocher hydro",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "ocs_nature_sol_surf",
       "filter": ["==", "symbo", "ZONE_ROCHER_HYDRO"],
@@ -352,6 +368,7 @@
     {
       "id": "ocs - Zone glacier",
       "type": "fill",
+      "metadata": {"cartefacile:group": "water_polygons"},
       "source": "plan_ign",
       "source-layer": "ocs_nature_sol_surf",
       "filter": ["==", "symbo", "ZONE_GLACIER"],
@@ -361,6 +378,7 @@
     {
       "id": "bati ZAI - Gris Bleu Elec",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "bati_zai",
       "minzoom": 0,
@@ -376,6 +394,7 @@
     {
       "id": "zone batie",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "bati_zone_surf",
       "minzoom": 7,
@@ -390,6 +409,7 @@
     {
       "id": "zone d'activité",
       "type": "fill",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "bati_zone_surf",
       "filter": ["==", "symbo", "ZONE_INDUS_ACTI"],
@@ -398,6 +418,7 @@
     },
     {
       "id": "hydro surfacique",
+      "metadata": {"cartefacile:group": "water_polygons"},
       "type": "fill",
       "source": "plan_ign",
       "source-layer": "hydro_surf",
@@ -408,6 +429,7 @@
     {
       "id": "hydro surfacique temporaire",
       "type": "fill",
+      "metadata": {"cartefacile:group": "water_polygons"},
       "source": "plan_ign",
       "source-layer": "hydro_surf",
       "filter": ["==", "symbo", "SURFACE_D_EAU_TEMP"],
@@ -417,6 +439,7 @@
     {
       "id": "réseau hydro  - cours d'eau souterrain",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sou",
       "minzoom": 16,
@@ -437,6 +460,7 @@
     {
       "id": "réseau hydro - filet interieur - aqueduc souterrain",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sou",
       "minzoom": 16,
@@ -457,6 +481,7 @@
     {
       "id": "réseau hydro - carre - aqueduc souterrain",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sou",
       "minzoom": 16,
@@ -1498,6 +1523,7 @@
     {
       "id": "réseau hydro - canal",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "filter": ["==", "symbo", "CANAL"],
@@ -1514,6 +1540,7 @@
     {
       "id": "réseau hydro - filet interieur - aqueduc",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "minzoom": 12,
@@ -1531,6 +1558,7 @@
     {
       "id": "réseau hydro - carre - aqueduc",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "minzoom": 12,
@@ -1549,6 +1577,7 @@
     {
       "id": "réseau hydro - cours d'eau temporaire",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "filter": ["in", "symbo", "COURS_D_EAU_TEMP", "COURS_D_EAU_TEMP_MOY"],
@@ -1566,6 +1595,7 @@
     {
       "id": "réseau hydro - cours d'eau moyen ",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "filter": ["==", "symbo", "COURS_D_EAU_MOY"],
@@ -1582,6 +1612,7 @@
     {
       "id": "réseau hydro - cours d'eau large ",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "filter": ["==", "symbo", "COURS_D_EAU_LAR"],
@@ -1598,6 +1629,7 @@
     {
       "id": "réseau hydro - cours d'eau",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau",
       "minzoom": 3,
@@ -1625,6 +1657,7 @@
     {
       "id": "bati sportif surfacique fond",
       "type": "fill",
+      "metadata": {"cartefacile:group": "sites"},
       "source": "plan_ign",
       "source-layer": "bati_surf",
       "minzoom": 14,
@@ -1647,6 +1680,7 @@
     {
       "id": "bati sportif surfacique",
       "type": "line",
+      "metadata": {"cartefacile:group": "sites"},
       "source": "plan_ign",
       "source-layer": "bati_surf",
       "minzoom": 14,
@@ -1706,7 +1740,7 @@
       "layout": {"visibility": "visible"},
       "paint": {
         "fill-color": "rgba(213, 213, 208, 1)",
-        "fill-outline-color": "rgba(151, 150, 137, 1)",
+        "fill-outline-color": "rgba(101, 101, 84, 1)",
         "fill-opacity": ["interpolate", ["linear"], ["zoom"], 14, 0, 15, 1],
         "fill-antialias": true
       }
@@ -1714,6 +1748,7 @@
     {
       "id": "bati transport surfacique - piste",
       "type": "fill",
+      "metadata": {"cartefacile:group": "public_transport"},
       "source": "plan_ign",
       "source-layer": "bati_surf",
       "filter": ["in", "symbo", "PISTE_DUR", "PISTE_HERBE"],
@@ -1749,6 +1784,7 @@
     {
       "id": "construction hydrographique linéaire - Barrage",
       "type": "line",
+      "metadata": {"cartefacile:group": "dam_lines"},
       "source": "plan_ign",
       "source-layer": "bati_lin",
       "minzoom": 13,
@@ -1766,6 +1802,7 @@
     {
       "id": "construction hydrographique linéaire - Quai",
       "type": "line",
+      "metadata": {"cartefacile:group": "pier_lines"},
       "source": "plan_ign",
       "source-layer": "bati_lin",
       "minzoom": 12,
@@ -1873,7 +1910,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(255, 255, 255, 1)",
+        "line-color": "rgba(210, 28, 177, 1)",
         "line-width": {
           "stops": [[14, 1], [15, 1.2], [16, 1.4], [17, 2], [18, 6]]
         },
@@ -1898,6 +1935,24 @@
         "line-width": {
           "stops": [[14, 1], [15, 1.2], [16, 1.4], [17, 2], [18, 7]]
         }
+      }
+    },
+    {
+      "id": "Routier a niveau - filet extérieur - route non classee",
+      "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
+      "source": "plan_ign",
+      "source-layer": "routier_route",
+      "minzoom": 5,
+      "filter": ["in", "symbo", "NON_CLASSEE_4", "NON_CLASSEE"],
+      "layout": {
+        "visibility": "visible",
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3], [15, 5.4], [16, 7.7], [17, 16.8]]}
       }
     },
     {
@@ -1969,42 +2024,6 @@
       }
     },
     {
-      "id": "Routier a niveau - filet extérieur - route non classee restreint",
-      "type": "line",
-      "metadata": {"cartefacile:group": "streets"},
-      "source": "plan_ign",
-      "source-layer": "routier_route",
-      "minzoom": 5,
-      "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT"],
-      "layout": {
-        "visibility": "visible",
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
-      }
-    },
-    {
-      "id": "Routier a niveau - filet extérieur - route non classee",
-      "type": "line",
-      "metadata": {"cartefacile:group": "streets"},
-      "source": "plan_ign",
-      "source-layer": "routier_route",
-      "minzoom": 5,
-      "filter": ["in", "symbo", "NON_CLASSEE_4", "NON_CLASSEE"],
-      "layout": {
-        "visibility": "visible",
-        "line-cap": "round",
-        "line-join": "round"
-      },
-      "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
-        "line-width": {"stops": [[14, 3], [15, 5.4], [16, 7.7], [17, 16.8]]}
-      }
-    },
-    {
       "id": "Routier a niveau - filet extérieur - route locale",
       "type": "line",
       "metadata": {"cartefacile:group": "streets"},
@@ -2026,7 +2045,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
+        "line-color": "rgba(119, 119, 119, 1)",
         "line-width": {
           "stops": [[9, 2], [14, 3.5], [15, 6], [16, 8.4], [17, 18.3]]
         }
@@ -2074,7 +2093,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
+        "line-color": "rgba(119, 119, 119, 1)",
         "line-width": {
           "stops": [
             [6, 1.5],
@@ -2115,6 +2134,24 @@
       }
     },
     {
+      "id": "Routier a niveau - filet extérieur - route non classee restreint",
+      "type": "line",
+      "metadata": {"cartefacile:group": "streets"},
+      "source": "plan_ign",
+      "source-layer": "routier_route",
+      "minzoom": 5,
+      "filter": ["==", "symbo", "NON_CLASSEE_RESTREINT"],
+      "layout": {
+        "visibility": "visible",
+        "line-cap": "round",
+        "line-join": "round"
+      },
+      "paint": {
+        "line-color": "rgba(198, 197, 183, 1)",
+        "line-width": {"stops": [[14, 3.2], [15, 5.4], [16, 7.7], [17, 16.8]]}
+      }
+    },
+    {
       "id": "Routier a niveau - filet extérieur - route principale",
       "type": "line",
       "metadata": {"cartefacile:group": "streets"},
@@ -2136,7 +2173,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
+        "line-color": "rgba(119, 119, 119, 1)",
         "line-width": {
           "stops": [
             [6, 1.8],
@@ -2190,7 +2227,7 @@
         "line-join": "round"
       },
       "paint": {
-        "line-color": "rgba(198, 197, 183, 1)",
+        "line-color": "rgba(119, 119, 119, 1)",
         "line-width": {
           "stops": [[6, 2.5], [9, 3.5], [14, 7.5], [15, 11], [16, 15], [17, 26]]
         }
@@ -2880,6 +2917,7 @@
     {
       "id": "Routier surfacique",
       "type": "fill",
+      "metadata": {"cartefacile:group": "street_polygons"},
       "source": "plan_ign",
       "source-layer": "routier_surf",
       "filter": [
@@ -2897,6 +2935,7 @@
       "id": "Routier surfacique - Dalle de protection",
       "type": "fill",
       "source": "plan_ign",
+      "metadata": {"cartefacile:group": "street_polygons"},
       "source-layer": "routier_surf",
       "maxzoom": 18,
       "filter": ["==", "symbo", "DALLE_DE_PROTECTION"],
@@ -2910,6 +2949,7 @@
     {
       "id": "Routier surfacique - Escalier surfacique",
       "type": "fill",
+      "metadata": {"cartefacile:group": "street_polygons"},
       "source": "plan_ign",
       "source-layer": "routier_surf",
       "maxzoom": 18,
@@ -2924,6 +2964,7 @@
     {
       "id": "Routier surfacique - Péage surfacique",
       "type": "fill",
+      "metadata": {"cartefacile:group": "street_polygons"},
       "source": "plan_ign",
       "source-layer": "routier_surf",
       "maxzoom": 18,
@@ -2938,6 +2979,7 @@
     {
       "id": "bati transport surfacique - bati peage",
       "type": "fill",
+      "metadata": {"cartefacile:group": "street_polygons"},
       "source": "plan_ign",
       "source-layer": "bati_surf",
       "minzoom": 13,
@@ -2948,6 +2990,7 @@
     {
       "id": "réseau hydro  - cours d'eau superieur",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sup",
       "filter": ["in", "symbo", "COURS_D_EAU_SUP", "COURS_D_EAU_MOY_SUP"],
@@ -2964,6 +3007,7 @@
     {
       "id": "réseau hydro - canal superieur",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sup",
       "filter": ["==", "symbo", "CANAL_SUP"],
@@ -2980,6 +3024,7 @@
     {
       "id": "réseau hydro - filet interieur - aqueduc superieur",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sup",
       "filter": ["==", "symbo", "AQUEDUC_SUP"],
@@ -2996,6 +3041,7 @@
     {
       "id": "réseau hydro - carre - aqueduc superieur",
       "type": "line",
+      "metadata": {"cartefacile:group": "water_lines"},
       "source": "plan_ign",
       "source-layer": "hydro_reseau_sup",
       "filter": ["==", "symbo", "AQUEDUC_SUP"],
@@ -4166,6 +4212,7 @@
     {
       "id": "toponyme - ocs lineaire 3",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_lin",
       "filter": ["==", "txt_typo", "OCS_FORET_3"],
@@ -4189,6 +4236,7 @@
     {
       "id": "toponyme - ocs lineaire 2",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_lin",
       "filter": ["==", "txt_typo", "OCS_FORET_2"],
@@ -4212,6 +4260,7 @@
     {
       "id": "toponyme - ocs lineaire 1",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_lin",
       "filter": ["==", "txt_typo", "OCS_FORET_1"],
@@ -4235,6 +4284,7 @@
     {
       "id": "toponyme - ocs ponc 3",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_ponc",
       "filter": ["==", "txt_typo", "OCS_FORET_3"],
@@ -4258,6 +4308,7 @@
     {
       "id": "toponyme - ocs ponc 2",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_ponc",
       "filter": ["==", "txt_typo", "OCS_FORET_2"],
@@ -4281,6 +4332,7 @@
     {
       "id": "toponyme - ocs ponc 1",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "land"},
       "source": "plan_ign",
       "source-layer": "toponyme_ocs_ponc",
       "filter": ["==", "txt_typo", "OCS_FORET_1"],
@@ -4302,6 +4354,7 @@
     {
       "id": "toponyme - hydro lineaire glacier",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_lines_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "filter": ["in", "txt_typo", "ORO_GLACIER_1", "ORO_GLACIER_2"],
@@ -4312,7 +4365,7 @@
         "text-anchor": "center",
         "text-keep-upright": true,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "rgba(34, 95, 108, 1)",
@@ -4324,6 +4377,7 @@
     {
       "id": "toponyme - hydro lineaire 4",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_lines_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "minzoom": 13,
@@ -4355,6 +4409,7 @@
     {
       "id": "toponyme - hydro lineaire 3",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_lines_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "minzoom": 11,
@@ -4395,6 +4450,7 @@
     {
       "id": "toponyme - hydro lineaire 2",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_lines_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "minzoom": 9,
@@ -4427,6 +4483,7 @@
     {
       "id": "toponyme - hydro lineaire 1",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_lines_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "minzoom": 7,
@@ -4463,6 +4520,7 @@
     {
       "id": "toponyme - hydro lineaire ocean",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "ocean"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_lin",
       "filter": ["==", "txt_typo", "OCEAN_MER"],
@@ -4487,6 +4545,7 @@
     {
       "id": "toponyme - hydro ponc glacier",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "filter": ["==", "txt_typo", "ORO_GLACIER_2"],
@@ -4496,7 +4555,7 @@
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 16, 18],
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "visibility": "visible"
       },
       "paint": {
@@ -4509,6 +4568,7 @@
     {
       "id": "toponyme - hydro ponc 5",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 15,
@@ -4531,6 +4591,7 @@
     {
       "id": "toponyme - hydro ponc 4",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 13,
@@ -4562,6 +4623,7 @@
     {
       "id": "toponyme - hydro ponc 3",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 9,
@@ -4594,6 +4656,7 @@
     {
       "id": "toponyme - hydro ponc 2B",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 7,
@@ -4617,6 +4680,7 @@
     {
       "id": "toponyme - hydro ponc 2",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 8,
@@ -4640,6 +4704,7 @@
     {
       "id": "toponyme - hydro ponc 1",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "water_polygons_labels"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 5,
@@ -4662,6 +4727,7 @@
     {
       "id": "toponyme - hydro ponc ocean",
       "type": "symbol",
+      "metadata": {"cartefacile:group": "ocean"},
       "source": "plan_ign",
       "source-layer": "toponyme_hydro_ponc",
       "minzoom": 1,
@@ -4696,7 +4762,7 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#863831",
@@ -4733,7 +4799,7 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#863831",
@@ -4764,7 +4830,7 @@
         "text-keep-upright": true,
         "text-padding": 10,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#863831",
@@ -4793,7 +4859,7 @@
         "text-keep-upright": true,
         "text-padding": 5,
         "text-max-angle": 45,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#863831",
@@ -4824,7 +4890,7 @@
         "text-field": "{texte}",
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -4863,7 +4929,7 @@
         "text-field": "{texte}",
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center",
         "icon-anchor": "bottom"
       },
@@ -4888,7 +4954,7 @@
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -4921,7 +4987,7 @@
         "text-field": "{texte}",
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-allow-overlap": false,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -4945,7 +5011,7 @@
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -4975,7 +5041,7 @@
         "text-field": "{texte}",
         "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 15, 14],
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -5018,7 +5084,7 @@
         "text-size": 12,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "text-anchor": "center"
       },
       "paint": {
@@ -5044,7 +5110,7 @@
         "text-keep-upright": true,
         "text-max-angle": 45,
         "text-padding": 10,
-        "text-font": ["Noto Sans Italic"],
+        "text-font": ["Noto Sans Regular"],
         "visibility": "visible"
       },
       "paint": {
@@ -5112,7 +5178,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5130,7 +5196,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5152,7 +5218,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5174,7 +5240,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5196,7 +5262,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5665,7 +5731,7 @@
       "minzoom": 15,
       "layout": {
         "symbol-placement": "line",
-        "text-field": "{nom_desabrege}",
+        "text-field": ["downcase", ["get", "nom_desabrege"]],
         "text-size": 11,
         "text-anchor": "center",
         "text-max-angle": 30,
@@ -5823,7 +5889,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5841,7 +5907,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {"text-color": "rgba(76, 76, 76, 1)"}
     },
@@ -5859,7 +5925,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#287B00",
@@ -5881,7 +5947,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#686042",
@@ -5907,7 +5973,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -5933,7 +5999,7 @@
         "text-size": 11,
         "text-allow-overlap": false,
         "text-padding": 1,
-        "text-font": ["Noto Sans Italic"]
+        "text-font": ["Noto Sans Regular"]
       },
       "paint": {
         "text-color": "#000000",
@@ -6439,11 +6505,11 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": 16,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
-        "text-font": ["Noto Sans Bold"]
+        "text-font": ["Noto Sans Bold"],
+        "text-size": 20
       },
       "paint": {
         "text-color": "#222222",
@@ -6535,7 +6601,7 @@
         "symbol-placement": "point",
         "icon-size": 0.4,
         "text-field": "{texte}",
-        "text-size": ["interpolate", ["linear"], ["zoom"], 9, 10, 14, 14],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 9, 12, 14, 16],
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
@@ -6566,7 +6632,7 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": {"stops": [[7.5, 12], [12, 14]]},
+        "text-size": {"stops": [[7.5, 14], [12, 16]]},
         "text-allow-overlap": false,
         "text-anchor": "center",
         "text-padding": 1,
@@ -6600,7 +6666,7 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": "{texte}",
-        "text-size": 14,
+        "text-size": 18,
         "text-anchor": "center",
         "text-padding": 1,
         "text-transform": "none",
@@ -6635,7 +6701,8 @@
         "text-field": "{texte}",
         "text-anchor": "center",
         "text-padding": 1,
-        "text-font": ["Noto Sans Bold"]
+        "text-font": ["Noto Sans Bold"],
+        "text-size": 20
       },
       "paint": {
         "text-color": "#222222",
@@ -6667,7 +6734,7 @@
         "visibility": "visible",
         "symbol-placement": "point",
         "text-field": ["concat", "• ", ["get", "texte"]],
-        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 10, 7, 14],
+        "text-size": ["interpolate", ["linear"], ["zoom"], 5, 12, 7, 16],
         "text-anchor": "left",
         "text-padding": 1,
         "text-font": ["Noto Sans Bold"],

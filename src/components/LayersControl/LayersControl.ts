@@ -1,28 +1,44 @@
-import { LayerGroup, LayerGroupType, LayerConfig } from '../../maps/types';
+import { LayerGroupType, LayerConfig } from '../../maps/types';
 import { showLayer, hideLayer } from '../../maps/maps';
 import '../../themes/styles/dsfr.css';
 import '../Button/Button.css';
 import './LayersControl.css';
 
 export interface LayersControlOptions {
-    /** Layer groups to display in the control (default: all groups) */
-    groups?: LayerGroupType[];
+    /** Filter to specific layer groups. If omitted, all groups found in the style are shown. */
+    groups?: string[];
     /** Whether the panel is open on first render (default: false) */
     open?: boolean;
+    /** Custom label resolver for group names not in the built-in list */
+    getLabel?: (group: string) => string;
 }
 
-const LAYER_LABELS: Record<LayerGroupType, string> = {
+/** Labels for known built-in layer groups */
+const LAYER_LABELS: Record<string, string> = {
+    land: 'Terres',
+    ocean: 'Océans et mers',
+    water_polygons: 'Plans d\'eau',
+    water_lines: 'Cours d\'eau',
+    water_polygons_labels: 'Noms des plans d\'eau',
+    water_lines_labels: 'Noms des cours d\'eau',
+    streets: 'Routes et réseaux de transport',
+    street_polygons: 'Zones de voirie',
+    street_labels: 'Noms des routes',
+    public_transport: 'Transports en commun',
+    buildings: 'Bâtiments',
+    sites: 'Sites et zones d\'activité',
+    dam_lines: 'Barrages',
+    pier_lines: 'Jetées et pontons',
+    boundaries: 'Limites des pays',
+    boundaries_regions: 'Limites des régions',
+    boundaries_departments: 'Limites des départements',
+    boundaries_departements: 'Limites des départements',
+    boundaries_epcis: 'Limites des EPCIs',
+    boundaries_communes: 'Limites des communes',
     cadastral_sections: 'Sections cadastrales',
     cadastral_parcels: 'Parcelles cadastrales',
-    boundaries_communes: 'Limites des communes',
-    boundaries_epcis: 'Limites des EPCIs',
-    boundaries_departements: 'Limites des départements',
-    boundaries_regions: 'Limites des régions',
-    boundaries: 'Limites des pays',
-    buildings: 'Bâtiments',
-    streets: 'Routes et réseaux de transport',
-    street_labels: 'Noms des routes',
 };
+
 
 function createFromTemplate(template: string): HTMLElement {
     const wrapper = document.createElement('div');
@@ -70,11 +86,12 @@ const TEMPLATES = {
 };
 
 /**
- * MapLibre control for toggling layer group visibility with checkboxes
+ * MapLibre control for toggling layer group visibility with checkboxes.
+ * Groups are discovered dynamically from the map style — no static list required.
  */
 export class LayersControl implements maplibregl.IControl {
     private _map?: maplibregl.Map;
-    private _options: Required<LayersControlOptions>;
+    private _options: { groups?: string[]; open: boolean; getLabel?: (group: string) => string };
     private _panel?: HTMLDivElement;
     private _toggleButton?: HTMLButtonElement;
     private _keydownHandler?: (event: KeyboardEvent) => void;
@@ -85,8 +102,9 @@ export class LayersControl implements maplibregl.IControl {
 
     constructor(options: LayersControlOptions = {}) {
         this._options = {
-            groups: options.groups ?? (Object.values(LayerGroup) as LayerGroupType[]),
+            groups: options.groups,
             open: options.open ?? false,
+            getLabel: options.getLabel,
         };
     }
 
@@ -95,7 +113,7 @@ export class LayersControl implements maplibregl.IControl {
 
         const container = createFromTemplate(TEMPLATES.container);
         this._toggleButton = createFromTemplate(TEMPLATES.toggleButton) as HTMLButtonElement;
-        this._panel = this._createPanel();
+        this._panel = createFromTemplate(TEMPLATES.panel) as HTMLDivElement;
 
         map.getContainer().appendChild(this._panel);
         this._setupEventHandlers();
@@ -106,8 +124,8 @@ export class LayersControl implements maplibregl.IControl {
         };
         map.on('styledata', this._styledataHandler);
 
-        // `idle` fires after addLayer/removeLayer finishes rendering — filet de sécurité
-        // si styledata ne se déclenche pas sur les ajouts programmatiques de couches.
+        // `idle` fires after addLayer/removeLayer completes rendering — catches overlay changes
+        // that may not trigger styledata in all MapLibre versions.
         this._idleHandler = () => this._syncAvailableGroups();
         map.on('idle', this._idleHandler);
 
@@ -124,27 +142,19 @@ export class LayersControl implements maplibregl.IControl {
         container.appendChild(this._toggleButton);
 
         if (this._options.open) {
-            // Defer until the container is in the DOM so position can be resolved
             setTimeout(() => this._openPanel(), 0);
-        } else {
-            this._toggleButton.setAttribute('aria-expanded', 'false');
         }
 
         return container;
     }
 
-    private _createPanel(): HTMLDivElement {
-        const panel = createFromTemplate(TEMPLATES.panel) as HTMLDivElement;
-        const list = panel.querySelector('.cartefacile-ctrl-layers-list') as HTMLUListElement;
-
-        this._options.groups.forEach(group => {
-            list.appendChild(this._createCheckboxItem(group));
-        });
-
-        return panel;
+    private _resolveLabel(group: string): string {
+        if (group in LAYER_LABELS) return LAYER_LABELS[group];
+        if (this._options.getLabel) return this._options.getLabel(group);
+        return group.replace(/_/g, ' ');
     }
 
-    private _createCheckboxItem(group: LayerGroupType): HTMLLIElement {
+    private _createCheckboxItem(group: string, checked: boolean = true): HTMLLIElement {
         const item = document.createElement('li');
 
         const label = document.createElement('label');
@@ -152,43 +162,63 @@ export class LayersControl implements maplibregl.IControl {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = true;
+        checkbox.checked = checked;
         checkbox.dataset.group = group;
 
         checkbox.addEventListener('change', () => {
             if (!this._map) return;
             if (checkbox.checked) {
-                showLayer(this._map, group);
+                showLayer(this._map, group as LayerGroupType);
             } else {
-                hideLayer(this._map, group);
+                hideLayer(this._map, group as LayerGroupType);
             }
         });
 
         label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(LAYER_LABELS[group]));
+        label.appendChild(document.createTextNode(this._resolveLabel(group)));
         item.appendChild(label);
 
         return item;
     }
 
-    /** Shows only list items whose group has at least one layer in the current style */
+    /**
+     * Discovers layer groups present in the current style and rebuilds the list.
+     * Groups are ordered by their first appearance in the layer stack.
+     */
     private _syncAvailableGroups(): void {
         if (!this._map || !this._panel) return;
 
         try {
             const layers = this._map.getStyle().layers ?? [];
-            const presentGroups = new Set(
-                layers.map(layer => (layer as LayerConfig).metadata?.['cartefacile:group']).filter(Boolean)
-            );
 
-            // Évite les mises à jour DOM inutiles (idle fire fréquemment)
-            const key = [...presentGroups].sort().join(',');
+            // Collect unique groups in layer order
+            const presentGroups: string[] = [];
+            const seen = new Set<string>();
+            for (const layer of layers) {
+                const group = (layer as LayerConfig).metadata?.['cartefacile:group'] as string | undefined;
+                if (group && !seen.has(group)) {
+                    if (!this._options.groups || this._options.groups.includes(group)) {
+                        presentGroups.push(group);
+                        seen.add(group);
+                    }
+                }
+            }
+
+            // Short-circuit if groups haven't changed (idle fires frequently)
+            const key = presentGroups.join(',');
             if (key === this._knownGroupsKey) return;
             this._knownGroupsKey = key;
 
-            this._panel.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach(checkbox => {
-                const item = checkbox.closest('li') as HTMLLIElement;
-                if (item) item.style.display = presentGroups.has(checkbox.dataset.group) ? '' : 'none';
+            // Preserve current checkbox states across rebuilds
+            const savedStates = new Map<string, boolean>();
+            this._panel.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach(cb => {
+                if (cb.dataset.group) savedStates.set(cb.dataset.group, cb.checked);
+            });
+
+            const list = this._panel.querySelector('.cartefacile-ctrl-layers-list') as HTMLUListElement;
+            list.innerHTML = '';
+            presentGroups.forEach(group => {
+                list.appendChild(this._createCheckboxItem(group, savedStates.get(group) ?? true));
             });
         } catch (error) {
             console.warn('LayersControl: failed to sync available groups:', error);
@@ -203,7 +233,7 @@ export class LayersControl implements maplibregl.IControl {
             const layers = this._map.getStyle().layers ?? [];
 
             this._panel.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach(checkbox => {
-                const group = checkbox.dataset.group as LayerGroupType;
+                const group = checkbox.dataset.group;
                 if (!group) return;
 
                 const matchingLayer = layers.find(layer =>
