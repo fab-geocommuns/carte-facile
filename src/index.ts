@@ -5,4 +5,5 @@ export { MapSelectorControl } from './components/MapSelectorControl/MapSelectorC
 export { SearchControl } from './components/SearchControl/SearchControl';
 export type { SearchResult, SearchProvider } from './components/SearchControl/SearchControl';
 export { GeopfGeocoder } from './components/SearchControl/providers/GeopfGeocoder';
+export type { GeopfResultData } from './components/SearchControl/providers/GeopfGeocoder';
 export { setTheme } from './themes/manager';
