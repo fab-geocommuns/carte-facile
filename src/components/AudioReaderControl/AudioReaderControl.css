@@ -1,0 +1,23 @@
+/* Speaker icon */
+.cartefacile-btn-icon--volume-up::before {
+  mask-image: url('../../assets/icons/speak-fill.svg');
+  -webkit-mask-image: url('../../assets/icons/speak-fill.svg');
+}
+
+/* Active state: tinted button */
+.cartefacile-btn-icon--volume-up[aria-pressed="true"]::before {
+  background-color: #3ea0eb;
+}
+
+/* SR-only live region */
+.cartefacile-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

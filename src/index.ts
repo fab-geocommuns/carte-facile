@@ -5,6 +5,8 @@ export { MapSelectorControl } from './components/MapSelectorControl/MapSelectorC
 export { SearchControl } from './components/SearchControl/SearchControl';
 export { LayersControl } from './components/LayersControl/LayersControl';
 export type { LayersControlOptions } from './components/LayersControl/LayersControl';
+export { AudioReaderControl } from './components/AudioReaderControl/AudioReaderControl';
+export type { AudioReaderControlOptions } from './components/AudioReaderControl/AudioReaderControl';
 export type { SearchResult, SearchProvider } from './components/SearchControl/SearchControl';
 export { GeopfGeocoder } from './components/SearchControl/providers/GeopfGeocoder';
 export type { GeopfResultData } from './components/SearchControl/providers/GeopfGeocoder';

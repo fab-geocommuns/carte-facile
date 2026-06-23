@@ -53,6 +53,8 @@
       map.addControl(new maplibregl.GeolocateControl(), 'top-left');
 
       map.addControl(new CarteFacile.LayersControl);
+
+      map.addControl(new CarteFacile.AudioReaderControl(), 'top-left');
       
 
       //CarteFacile.addOverlay(map, [CarteFacile.Overlay.cadastre, CarteFacile.Overlay.administrativeBoundaries]);
