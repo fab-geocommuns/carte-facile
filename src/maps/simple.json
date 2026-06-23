@@ -27,6 +27,7 @@
       "attribution": "© IGN"
     }
   },
+  "sprite": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sprite/PlanIgn",
   "glyphs": "https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf",
   "transition": {"duration": 300, "delay": 0},
   "layers": [

@@ -55,7 +55,46 @@
       map.addControl(new CarteFacile.LayersControl);
 
       map.addControl(new CarteFacile.AudioReaderControl(), 'top-left');
-      
+
+      map.on('load', () => {
+        map.addSource('epr', {
+          type: 'geojson',
+          data: 'https://raw.githubusercontent.com/simon-dejaeghere/PAUDA/main/etablissements-labellises-tourisme-et-handicap.geojson'
+        });
+
+        map.addLayer({
+          id: 'epr',
+          type: 'symbol',
+          metadata: { 'cartefacile:group': 'data' },
+          source: 'epr',
+          minzoom: 12,
+          layout: {
+          "visibility": "visible",
+          "symbol-placement": "point",
+          "text-field": "{nom_du_professionnel}",
+          "text-size": 14,
+          "text-allow-overlap": false,
+          "text-offset": [0.3, -0.25],
+          "text-padding": 3,
+          "text-anchor": "bottom-left",
+          "text-font": [
+            "Source Sans Pro Bold"
+          ],
+          "icon-image": "Abri",
+          "icon-size": {
+            "stops": [[15, 0.33], [17, 1]]
+          },
+          "icon-anchor": "left"
+        },
+        "paint": {
+          "text-color": "rgba(35, 110, 34, 1)",
+          "text-halo-width": 1,
+          "text-halo-blur": 1,
+          "text-halo-color": "rgba(255, 255, 255, 1)"
+  
+        }
+        });
+      });
 
       //CarteFacile.addOverlay(map, [CarteFacile.Overlay.cadastre, CarteFacile.Overlay.administrativeBoundaries]);
 

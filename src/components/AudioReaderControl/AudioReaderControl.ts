@@ -35,7 +35,7 @@ const GROUP_LABELS: Record<string, string> = {
     cadastral_parcels: 'Parcelles cadastrales',
 };
 
-const NAME_PROPS = ['texte', 'designation', 'name', 'nom', 'name:fr', 'toponyme', 'libelle', 'NOM'];
+const NAME_PROPS = ['texte', 'designation', 'nom_du_professionnel', 'name', 'nom', 'name:fr', 'toponyme', 'libelle', 'NOM'];
 const PLACE_NAME_PROPS = ['nom_com', 'nom_dep', 'nom_reg', 'libelle_com', 'nom_lieu', 'toponyme', 'libelle'];
 
 export class AudioReaderControl implements IControl {
