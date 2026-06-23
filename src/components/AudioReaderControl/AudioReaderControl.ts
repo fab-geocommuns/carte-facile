@@ -35,7 +35,8 @@ const GROUP_LABELS: Record<string, string> = {
     cadastral_parcels: 'Parcelles cadastrales',
 };
 
-const NAME_PROPS = ['name', 'nom', 'name:fr', 'toponyme', 'libelle', 'NOM'];
+const NAME_PROPS = ['texte', 'designation', 'name', 'nom', 'name:fr', 'toponyme', 'libelle', 'NOM'];
+const PLACE_NAME_PROPS = ['nom_com', 'nom_dep', 'nom_reg', 'libelle_com', 'nom_lieu', 'toponyme', 'libelle'];
 
 export class AudioReaderControl implements IControl {
     private _map?: Map;
@@ -104,9 +105,12 @@ export class AudioReaderControl implements IControl {
             return;
         }
 
-        // Fallback: read the symbo property of the first feature
-        const symbo = features[0].properties?.['symbo'];
-        if (symbo) this._speak(String(symbo));
+        // Fallback: read symbo + place name if available
+        const props = features[0].properties ?? {};
+        const symbo = props['symbo'] ? String(props['symbo']) : null;
+        const placeName = PLACE_NAME_PROPS.map(p => props[p]).find(v => typeof v === 'string' && v.trim()) ?? null;
+        const text = [symbo, placeName].filter(Boolean).join(', ');
+        if (text) this._speak(text);
     }
 
     private _speak(text: string): void {
