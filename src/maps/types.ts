@@ -52,7 +52,7 @@ export const LayerGroup = {
   cadastral_parcels: 'cadastral_parcels',
   boundaries_communes: 'boundaries_communes',
   boundaries_epcis: 'boundaries_epcis',
-  boundaries_departments: 'boundaries_departments',
+  boundaries_departements: 'boundaries_departements',
   boundaries_regions: 'boundaries_regions',
   boundaries: 'boundaries',
   buildings: 'buildings',
