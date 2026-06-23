@@ -10,30 +10,6 @@ export interface AudioReaderControlOptions {
     lang?: string;
 }
 
-const GROUP_LABELS: Record<string, string> = {
-    land: 'Terres',
-    ocean: 'Océans et mers',
-    water_polygons: 'Plans d\'eau',
-    water_lines: 'Cours d\'eau',
-    water_polygons_labels: 'Noms des plans d\'eau',
-    water_lines_labels: 'Noms des cours d\'eau',
-    streets: 'Routes et réseaux de transport',
-    street_polygons: 'Zones de voirie',
-    street_labels: 'Noms des routes',
-    public_transport: 'Transports en commun',
-    buildings: 'Bâtiments',
-    sites: 'Sites et zones d\'activité',
-    dam_lines: 'Barrages',
-    pier_lines: 'Jetées et pontons',
-    boundaries: 'Limites des pays',
-    boundaries_regions: 'Limites des régions',
-    boundaries_departments: 'Limites des départements',
-    boundaries_departements: 'Limites des départements',
-    boundaries_epcis: 'Limites des EPCIs',
-    boundaries_communes: 'Limites des communes',
-    cadastral_sections: 'Sections cadastrales',
-    cadastral_parcels: 'Parcelles cadastrales',
-};
 
 const NAME_PROPS = ['texte', 'designation', 'nom_du_professionnel', 'name', 'nom', 'name:fr', 'toponyme', 'libelle', 'NOM'];
 const PLACE_NAME_PROPS = ['nom_com', 'nom_dep', 'nom_reg', 'libelle_com', 'nom_lieu', 'toponyme', 'libelle'];
@@ -100,8 +76,8 @@ export class AudioReaderControl implements IControl {
         for (const feature of features) {
             const name = this._resolveName(feature);
             if (!name) continue;
-            const group = this._resolveGroup(feature);
-            this._speak(group ? `${name}, ${group}` : name);
+            this._speak(name);
+            this._flashAt(point);
             return;
         }
 
@@ -110,7 +86,24 @@ export class AudioReaderControl implements IControl {
         const symbo = props['symbo'] ? String(props['symbo']) : null;
         const placeName = PLACE_NAME_PROPS.map(p => props[p]).find(v => typeof v === 'string' && v.trim()) ?? null;
         const text = [symbo, placeName].filter(Boolean).join(', ');
-        if (text) this._speak(text);
+        if (text) {
+            this._speak(text);
+            this._flashAt(point);
+        }
+    }
+
+    private _flashAt(point: maplibregl.PointLike): void {
+        const container = this._map?.getCanvasContainer();
+        if (!container) return;
+        const p = point as { x: number; y: number };
+        for (let i = 0; i < 2; i++) {
+            const ring = document.createElement('div');
+            ring.className = `cartefacile-sonar-ring${i === 1 ? ' cartefacile-sonar-ring--delayed' : ''}`;
+            ring.style.left = `${p.x}px`;
+            ring.style.top = `${p.y}px`;
+            container.appendChild(ring);
+            ring.addEventListener('animationend', () => ring.remove(), { once: true });
+        }
     }
 
     private _speak(text: string): void {
@@ -131,13 +124,6 @@ export class AudioReaderControl implements IControl {
         return null;
     }
 
-    private _resolveGroup(feature: MapGeoJSONFeature): string {
-        const styleLayer = this._map?.getStyle().layers?.find(l => l.id === feature.layer.id) as any;
-        const group = styleLayer?.metadata?.['cartefacile:group'];
-        if (group && GROUP_LABELS[group]) return GROUP_LABELS[group];
-        if (group) return group.replace(/_/g, ' ');
-        return '';
-    }
 
     onRemove(): void {
         if (this._clickHandler) this._map?.off('click', this._clickHandler);

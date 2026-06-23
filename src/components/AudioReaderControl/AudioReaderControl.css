@@ -9,6 +9,27 @@
   background-color: #3ea0eb;
 }
 
+/* Sonar ring animation */
+@keyframes cartefacile-sonar {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
+}
+
+.cartefacile-sonar-ring {
+  position: absolute;
+  pointer-events: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #3ea0eb;
+  animation: cartefacile-sonar 700ms ease-out forwards;
+}
+
+.cartefacile-sonar-ring--delayed {
+  animation-delay: 150ms;
+  opacity: 0;
+}
+
 /* SR-only live region */
 .cartefacile-sr-only {
   position: absolute;
