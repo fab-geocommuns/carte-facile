@@ -1,3 +1,4 @@
+import type { Map as MapLibreMap, IControl, ControlPosition } from 'maplibre-gl';
 import { LayerGroupType, LayerConfig } from '../../maps/types';
 import { showLayer, hideLayer } from '../../maps/maps';
 import '../../themes/styles/dsfr.css';
@@ -39,7 +40,6 @@ const LAYER_LABELS: Record<string, string> = {
     cadastral_parcels: 'Parcelles cadastrales',
 };
 
-
 function createFromTemplate(template: string): HTMLElement {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = template.trim();
@@ -57,20 +57,20 @@ const TEMPLATES = {
         <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--eye-off"
                 title="Couches"
                 aria-label="Ouvrir le panneau de visibilité des couches"
-                aria-expanded="false"
-                aria-controls="layers-control-panel">
+                aria-expanded="false">
         </button>
     `,
 
-    panel: `
+    panel: (panelId: string, headingId: string) => `
         <div class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-layers-panel"
-             id="layers-control-panel"
+             id="${panelId}"
              role="dialog"
-             aria-label="Visibilité des couches"
+             aria-modal="true"
+             aria-labelledby="${headingId}"
              style="display: none;">
 
           <div class="cartefacile-ctrl-layers-panel-header">
-            <h3 id="layers-heading">Couches</h3>
+            <h3 id="${headingId}">Couches</h3>
             <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close"
                     title="Fermer"
                     aria-label="Fermer le panneau des couches">
@@ -79,7 +79,7 @@ const TEMPLATES = {
 
           <ul class="cartefacile-ctrl-layers-list"
               role="group"
-              aria-labelledby="layers-heading">
+              aria-labelledby="${headingId}">
           </ul>
         </div>
     `,
@@ -89,8 +89,10 @@ const TEMPLATES = {
  * MapLibre control for toggling layer group visibility with checkboxes.
  * Groups are discovered dynamically from the map style — no static list required.
  */
-export class LayersControl implements maplibregl.IControl {
-    private _map?: maplibregl.Map;
+export class LayersControl implements IControl {
+    private static _counter = 0;
+
+    private _map?: MapLibreMap;
     private _options: { groups?: string[]; open: boolean; getLabel?: (group: string) => string };
     private _panel?: HTMLDivElement;
     private _toggleButton?: HTMLButtonElement;
@@ -99,8 +101,15 @@ export class LayersControl implements maplibregl.IControl {
     private _styledataHandler?: () => void;
     private _idleHandler?: () => void;
     private _knownGroupsKey: string = '';
+    private _isOpen = false;
+    private _positionClass?: string;
+    private readonly _panelId: string;
+    private readonly _headingId: string;
 
     constructor(options: LayersControlOptions = {}) {
+        const id = ++LayersControl._counter;
+        this._panelId = `cartefacile-layers-panel-${id}`;
+        this._headingId = `cartefacile-layers-heading-${id}`;
         this._options = {
             groups: options.groups,
             open: options.open ?? false,
@@ -108,12 +117,13 @@ export class LayersControl implements maplibregl.IControl {
         };
     }
 
-    onAdd(map: maplibregl.Map): HTMLElement {
+    onAdd(map: MapLibreMap): HTMLElement {
         this._map = map;
 
         const container = createFromTemplate(TEMPLATES.container);
         this._toggleButton = createFromTemplate(TEMPLATES.toggleButton) as HTMLButtonElement;
-        this._panel = createFromTemplate(TEMPLATES.panel) as HTMLDivElement;
+        this._toggleButton.setAttribute('aria-controls', this._panelId);
+        this._panel = createFromTemplate(TEMPLATES.panel(this._panelId, this._headingId)) as HTMLDivElement;
 
         map.getContainer().appendChild(this._panel);
         this._setupEventHandlers();
@@ -141,6 +151,8 @@ export class LayersControl implements maplibregl.IControl {
 
         container.appendChild(this._toggleButton);
 
+        // Deferred until after MapLibre appends the container to the DOM,
+        // so _getPositionClass() can walk up to the correct parent element.
         if (this._options.open) {
             setTimeout(() => this._openPanel(), 0);
         }
@@ -257,7 +269,7 @@ export class LayersControl implements maplibregl.IControl {
         this._panel.querySelector('.cartefacile-btn--close')?.addEventListener('click', () => this._closePanel());
 
         this._keydownHandler = (event: KeyboardEvent) => {
-            if (this._panel!.style.display === 'none') return;
+            if (!this._isOpen) return;
 
             if (event.key === 'Escape') {
                 event.preventDefault();
@@ -280,7 +292,7 @@ export class LayersControl implements maplibregl.IControl {
 
         this._clickHandler = (event: MouseEvent) => {
             if (
-                this._panel!.style.display !== 'none' &&
+                this._isOpen &&
                 !this._panel!.contains(event.target as Node) &&
                 !this._toggleButton!.contains(event.target as Node)
             ) {
@@ -293,40 +305,40 @@ export class LayersControl implements maplibregl.IControl {
     }
 
     private _togglePanel(): void {
-        if (this._panel!.style.display === 'none') {
-            this._openPanel();
-        } else {
+        if (this._isOpen) {
             this._closePanel();
+        } else {
+            this._openPanel();
         }
+    }
+
+    private _getPositionClass(): string {
+        const parent = this._toggleButton?.closest('.maplibregl-ctrl-group')?.parentElement;
+        if (parent?.classList.contains('maplibregl-ctrl-top-left')) return 'cartefacile-ctrl-top-left';
+        if (parent?.classList.contains('maplibregl-ctrl-bottom-right')) return 'cartefacile-ctrl-bottom-right';
+        if (parent?.classList.contains('maplibregl-ctrl-bottom-left')) return 'cartefacile-ctrl-bottom-left';
+        return 'cartefacile-ctrl-top-right';
     }
 
     private _openPanel(): void {
         if (!this._panel || !this._toggleButton) return;
 
-        const container = this._toggleButton.closest('.maplibregl-ctrl-group');
-        const parent = container?.parentElement;
-        let positionClass = 'cartefacile-ctrl-top-right';
+        if (!this._positionClass) {
+            this._positionClass = this._getPositionClass();
+            this._panel.classList.add(this._positionClass);
+        }
 
-        if (parent?.classList.contains('maplibregl-ctrl-top-left')) positionClass = 'cartefacile-ctrl-top-left';
-        else if (parent?.classList.contains('maplibregl-ctrl-bottom-right')) positionClass = 'cartefacile-ctrl-bottom-right';
-        else if (parent?.classList.contains('maplibregl-ctrl-bottom-left')) positionClass = 'cartefacile-ctrl-bottom-left';
-
-        this._panel.classList.add(positionClass);
         this._panel.style.display = 'block';
         this._toggleButton.setAttribute('aria-expanded', 'true');
+        this._isOpen = true;
+        this._panel.querySelector<HTMLElement>('button, input')?.focus();
     }
 
     private _closePanel(): void {
         if (!this._panel || !this._toggleButton) return;
-
         this._panel.style.display = 'none';
         this._toggleButton.setAttribute('aria-expanded', 'false');
-        this._panel.classList.remove(
-            'cartefacile-ctrl-top-left',
-            'cartefacile-ctrl-top-right',
-            'cartefacile-ctrl-bottom-left',
-            'cartefacile-ctrl-bottom-right'
-        );
+        this._isOpen = false;
     }
 
     onRemove(): void {
@@ -341,7 +353,7 @@ export class LayersControl implements maplibregl.IControl {
         this._toggleButton = undefined;
     }
 
-    getDefaultPosition(): maplibregl.ControlPosition {
+    getDefaultPosition(): ControlPosition {
         return 'top-left';
     }
 }

@@ -3,7 +3,6 @@
   padding-bottom: 16px;
   width: 280px;
   box-sizing: border-box;
-  max-width: calc(100% - 20px);
   overflow-y: auto;
   position: absolute;
   z-index: 1000;
@@ -46,7 +45,8 @@
   user-select: none;
 }
 
-.cartefacile-ctrl-layers-label:hover {
+.cartefacile-ctrl-layers-label:hover,
+.cartefacile-ctrl-layers-label:focus-within {
   background-color: rgb(0 0 0 / 5%);
 }
 
