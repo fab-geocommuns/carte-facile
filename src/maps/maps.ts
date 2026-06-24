@@ -1,12 +1,19 @@
-import { OverlayType, OverlayVariant, MapOverlays, OverlayConfig, LayerConfig, LayerGroupType } from './types';
-import type { StyleSpecification, LayerSpecification } from 'maplibre-gl';
+import type {
+	OverlayType,
+	OverlayVariant,
+	MapOverlays,
+	OverlayConfig,
+	LayerConfig,
+	LayerGroupType,
+} from "./types"
+import type { StyleSpecification, LayerSpecification } from "maplibre-gl"
 
 // Import IGN map styles
-import desaturatedIgn from './desaturated.json';
-import simpleIgn from './simple.json';
-import aerialIgn from './aerial.json';
+import desaturatedIgn from "./desaturated.json"
+import simpleIgn from "./simple.json"
+import aerialIgn from "./aerial.json"
 // Import OSM map styles
-import simpleOsm from './simple-osm.json';
+import simpleOsm from "./simple-osm.json"
 /* import desaturatedOsm from './desaturated-osm.json';*/
 
 /**
@@ -14,51 +21,51 @@ import simpleOsm from './simple-osm.json';
  * Each style is a complete MapLibre style configuration
  */
 export const mapStyles = {
-  simple: simpleIgn as StyleSpecification,
-  simpleOsm: simpleOsm as StyleSpecification,
-  aerial: aerialIgn as StyleSpecification,
-  desaturated: desaturatedIgn as StyleSpecification
-};
+	simple: simpleIgn as unknown as StyleSpecification,
+	simpleOsm: simpleOsm as unknown as StyleSpecification,
+	aerial: aerialIgn as unknown as StyleSpecification,
+	desaturated: desaturatedIgn as unknown as StyleSpecification,
+}
 
 /**
  * @deprecated Use mapStyles instead. This will be removed in the next major version.
  */
-export const mapStyle = mapStyles;
+export const mapStyle: typeof mapStyles = mapStyles
 
 // Import map thumbnails
-import simpleThumb from '../assets/thumbnails/simple.webp';
-import aerialThumb from '../assets/thumbnails/aerial.webp';
-import desaturatedThumb from '../assets/thumbnails/desaturated.webp';
-import cadastreThumb from '../assets/thumbnails/cadastre.webp';
-import administrativeBoundariesThumb from '../assets/thumbnails/administrative-boundaries.webp';
-import levelCurvesThumb from '../assets/thumbnails/level-curves.webp';
+import simpleThumb from "../assets/thumbnails/simple.webp"
+import aerialThumb from "../assets/thumbnails/aerial.webp"
+import desaturatedThumb from "../assets/thumbnails/desaturated.webp"
+import cadastreThumb from "../assets/thumbnails/cadastre.webp"
+import administrativeBoundariesThumb from "../assets/thumbnails/administrative-boundaries.webp"
+import levelCurvesThumb from "../assets/thumbnails/level-curves.webp"
 
 /**
  * Map thumbnails configuration
  * Used for style selection UI
  */
 export const mapThumbnails = {
-  simple: simpleThumb,
-  simpleOsm: simpleThumb,
-  aerial: aerialThumb,
-  desaturated: desaturatedThumb,
-  cadastre: cadastreThumb,
-  administrativeBoundaries: administrativeBoundariesThumb,
-  levelCurves: levelCurvesThumb,
-} as const;
+	simple: simpleThumb as string,
+	simpleOsm: simpleThumb as string,
+	aerial: aerialThumb as string,
+	desaturated: desaturatedThumb as string,
+	cadastre: cadastreThumb as string,
+	administrativeBoundaries: administrativeBoundariesThumb as string,
+	levelCurves: levelCurvesThumb as string,
+} as const
 
 // Import shared overlay configurations
-import cadastreCommon from './overlays/cadastre/common.json';
-import cadastreNeutralLayers from './overlays/cadastre/neutral.layers.json';
-import cadastreColorLayers from './overlays/cadastre/color.layers.json';
+import cadastreCommon from "./overlays/cadastre/common.json"
+import cadastreNeutralLayers from "./overlays/cadastre/neutral.layers.json"
+import cadastreColorLayers from "./overlays/cadastre/color.layers.json"
 
-import adminCommon from './overlays/administrative-boundaries/common.json';
-import adminNeutralLayers from './overlays/administrative-boundaries/neutral.layers.json';
-import adminColorLayers from './overlays/administrative-boundaries/color.layers.json';
+import adminCommon from "./overlays/administrative-boundaries/common.json"
+import adminNeutralLayers from "./overlays/administrative-boundaries/neutral.layers.json"
+import adminColorLayers from "./overlays/administrative-boundaries/color.layers.json"
 
-import levelsCommon from './overlays/level-curves/common.json';
-import levelsNeutralLayers from './overlays/level-curves/neutral.layers.json';
-import levelsColorLayers from './overlays/level-curves/color.layers.json';
+import levelsCommon from "./overlays/level-curves/common.json"
+import levelsNeutralLayers from "./overlays/level-curves/neutral.layers.json"
+import levelsColorLayers from "./overlays/level-curves/color.layers.json"
 
 /**
  * Map overlays configuration
@@ -67,29 +74,50 @@ import levelsColorLayers from './overlays/level-curves/color.layers.json';
  * - color: for aerial map style
  */
 export const mapOverlays: MapOverlays = {
-  cadastre: {
-    neutral: { ...(cadastreCommon as Omit<OverlayConfig, 'layers'>), layers: cadastreNeutralLayers as LayerSpecification[] },
-    color:   { ...(cadastreCommon as Omit<OverlayConfig, 'layers'>), layers: cadastreColorLayers as LayerSpecification[] }
-  },
-  administrativeBoundaries: {
-    neutral: { ...(adminCommon as Omit<OverlayConfig, 'layers'>), layers: adminNeutralLayers as LayerSpecification[] },
-    color:   { ...(adminCommon as Omit<OverlayConfig, 'layers'>), layers: adminColorLayers as LayerSpecification[] }
-  },
-  levelCurves: {
-    neutral: { ...(levelsCommon as Omit<OverlayConfig, 'layers'>), layers: levelsNeutralLayers as LayerSpecification[] },
-    color:   { ...(levelsCommon as Omit<OverlayConfig, 'layers'>), layers: levelsColorLayers as LayerSpecification[] }
-  }
-};
+	cadastre: {
+		neutral: {
+			...(cadastreCommon as Omit<OverlayConfig, "layers">),
+			layers: cadastreNeutralLayers as LayerSpecification[],
+		},
+		color: {
+			...(cadastreCommon as Omit<OverlayConfig, "layers">),
+			layers: cadastreColorLayers as LayerSpecification[],
+		},
+	},
+	administrativeBoundaries: {
+		neutral: {
+			...(adminCommon as Omit<OverlayConfig, "layers">),
+			layers: adminNeutralLayers as LayerSpecification[],
+		},
+		color: {
+			...(adminCommon as Omit<OverlayConfig, "layers">),
+			layers: adminColorLayers as LayerSpecification[],
+		},
+	},
+	levelCurves: {
+		neutral: {
+			...(levelsCommon as Omit<OverlayConfig, "layers">),
+			layers: levelsNeutralLayers as LayerSpecification[],
+		},
+		color: {
+			...(levelsCommon as Omit<OverlayConfig, "layers">),
+			layers: levelsColorLayers as LayerSpecification[],
+		},
+	},
+}
 
 /**
  * Gets the appropriate overlay variant based on the current map style
  */
 function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
-  return map.getStyle().name === 'aerial' ? 'color' : 'neutral';
+	return map.getStyle().name === "aerial" ? "color" : "neutral"
 }
 
 /** Stores styledata update callbacks per map instance, keyed by overlay type */
-const overlayUpdaters = new WeakMap<maplibregl.Map, Map<OverlayType, () => void>>();
+const overlayUpdaters = new WeakMap<
+	maplibregl.Map,
+	Map<OverlayType, () => void>
+>()
 
 /**
  * Adds one or more overlays to the map
@@ -97,30 +125,30 @@ const overlayUpdaters = new WeakMap<maplibregl.Map, Map<OverlayType, () => void>
  * @param type - The type of overlay(s) to add (cadastre, administrative-boundaries, or level-curves)
  */
 export function addOverlay(
-  map: maplibregl.Map,
-  type: OverlayType | OverlayType[]
+	map: maplibregl.Map,
+	type: OverlayType | OverlayType[],
 ): void {
-  const types = Array.isArray(type) ? type : [type];
+	const types = Array.isArray(type) ? type : [type]
 
-  const update = () => {
-    types.forEach(singleType => {
-      const overlay = mapOverlays[singleType][getOverlayVariant(map)];
-      Object.entries(overlay.sources).forEach(([id, source]) => {
-        if (!map.getSource(id)) map.addSource(id, source);
-      });
-      overlay.layers.forEach(layer => {
-        if (!map.getLayer(layer.id)) map.addLayer(layer);
-      });
-    });
-  };
+	const update = () => {
+		types.forEach((singleType) => {
+			const overlay = mapOverlays[singleType][getOverlayVariant(map)]
+			Object.entries(overlay.sources).forEach(([id, source]) => {
+				if (!map.getSource(id)) map.addSource(id, source)
+			})
+			overlay.layers.forEach((layer) => {
+				if (!map.getLayer(layer.id)) map.addLayer(layer)
+			})
+		})
+	}
 
-  if (map.loaded()) update();
-  else map.once('load', update);
+	if (map.loaded()) update()
+	else map.once("load", update)
 
-  if (!overlayUpdaters.has(map)) overlayUpdaters.set(map, new Map());
-  const updaters = overlayUpdaters.get(map)!;
-  types.forEach(singleType => updaters.set(singleType, update));
-  map.on('styledata', update);
+	if (!overlayUpdaters.has(map)) overlayUpdaters.set(map, new Map())
+	const updaters = overlayUpdaters.get(map)!
+	types.forEach((singleType) => updaters.set(singleType, update))
+	map.on("styledata", update)
 }
 
 /**
@@ -129,35 +157,35 @@ export function addOverlay(
  * @param type - The type of overlay(s) to remove (cadastre, administrative-boundaries, or level-curves)
  */
 export function removeOverlay(
-  map: maplibregl.Map, 
-  type: OverlayType | OverlayType[]
+	map: maplibregl.Map,
+	type: OverlayType | OverlayType[],
 ): void {
-  const types = Array.isArray(type) ? type : [type];
-  
-  types.forEach(singleType => {
-    const overlay = mapOverlays[singleType][getOverlayVariant(map)];
-    
-    // Remove all layers from this overlay
-    overlay.layers.forEach(layer => {
-      if (map.getLayer(layer.id)) {
-        map.removeLayer(layer.id);
-      }
-    });
+	const types = Array.isArray(type) ? type : [type]
 
-    // Remove all sources from this overlay
-    Object.keys(overlay.sources).forEach(sourceId => {
-      if (map.getSource(sourceId)) {
-        map.removeSource(sourceId);
-      }
-    });
+	types.forEach((singleType) => {
+		const overlay = mapOverlays[singleType][getOverlayVariant(map)]
 
-    // Remove the styledata event listener for this overlay
-    const update = overlayUpdaters.get(map)?.get(singleType);
-    if (update) {
-      map.off('styledata', update);
-      overlayUpdaters.get(map)?.delete(singleType);
-    }
-  });
+		// Remove all layers from this overlay
+		overlay.layers.forEach((layer) => {
+			if (map.getLayer(layer.id)) {
+				map.removeLayer(layer.id)
+			}
+		})
+
+		// Remove all sources from this overlay
+		Object.keys(overlay.sources).forEach((sourceId) => {
+			if (map.getSource(sourceId)) {
+				map.removeSource(sourceId)
+			}
+		})
+
+		// Remove the styledata event listener for this overlay
+		const update = overlayUpdaters.get(map)?.get(singleType)
+		if (update) {
+			map.off("styledata", update)
+			overlayUpdaters.get(map)?.delete(singleType)
+		}
+	})
 }
 
 /**
@@ -166,22 +194,22 @@ export function removeOverlay(
  * @param groups - List of layer groups to show
  */
 export function showLayer(
-  map: maplibregl.Map,
-  groups: LayerGroupType | LayerGroupType[]
+	map: maplibregl.Map,
+	groups: LayerGroupType | LayerGroupType[],
 ): void {
-  const groupList = Array.isArray(groups) ? groups : [groups];
+	const groupList = Array.isArray(groups) ? groups : [groups]
 
-  if (!map.loaded()) {
-    map.once('load', () => showLayer(map, groupList));
-    return;
-  }
+	if (!map.loaded()) {
+		map.once("load", () => showLayer(map, groupList))
+		return
+	}
 
-  map.getStyle().layers?.forEach(layer => {
-    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groupList.includes(group as LayerGroupType)) {
-      map.setLayoutProperty(layer.id, 'visibility', 'visible');
-    }
-  });
+	map.getStyle().layers?.forEach((layer) => {
+		const group = (layer as LayerConfig).metadata?.["cartefacile:group"]
+		if (group && groupList.includes(group as LayerGroupType)) {
+			map.setLayoutProperty(layer.id, "visibility", "visible")
+		}
+	})
 }
 
 /**
@@ -190,20 +218,20 @@ export function showLayer(
  * @param groups - List of layer groups to hide
  */
 export function hideLayer(
-  map: maplibregl.Map,
-  groups: LayerGroupType | LayerGroupType[]
+	map: maplibregl.Map,
+	groups: LayerGroupType | LayerGroupType[],
 ): void {
-  const groupList = Array.isArray(groups) ? groups : [groups];
+	const groupList = Array.isArray(groups) ? groups : [groups]
 
-  if (!map.loaded()) {
-    map.once('load', () => hideLayer(map, groupList));
-    return;
-  }
+	if (!map.loaded()) {
+		map.once("load", () => hideLayer(map, groupList))
+		return
+	}
 
-  map.getStyle().layers?.forEach(layer => {
-    const group = (layer as LayerConfig).metadata?.['cartefacile:group'];
-    if (group && groupList.includes(group as LayerGroupType)) {
-      map.setLayoutProperty(layer.id, 'visibility', 'none');
-    }
-  });
+	map.getStyle().layers?.forEach((layer) => {
+		const group = (layer as LayerConfig).metadata?.["cartefacile:group"]
+		if (group && groupList.includes(group as LayerGroupType)) {
+			map.setLayoutProperty(layer.id, "visibility", "none")
+		}
+	})
 }

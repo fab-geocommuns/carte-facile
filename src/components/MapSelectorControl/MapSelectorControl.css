@@ -1,13 +1,8 @@
 .cartefacile-ctrl-map-selector-panel {
-  padding: 12px;
-  padding-bottom: 16px;
-  width: 240px;
-  box-sizing: border-box;
-  max-width: calc(100% - 20px);
+  padding: 1rem;
+  border-width: 1px;
   overflow-y: auto;
-  position: absolute;
   z-index: 1000;
-  max-height: calc(100% - 20px);
 }
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
@@ -25,7 +20,8 @@
   margin-bottom: 16px;
 }
 
-.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list:last-child {
+.cartefacile-ctrl-map-selector-panel
+  .cartefacile-ctrl-map-selector-card-list:last-child {
   margin-bottom: 0;
 }
 
@@ -37,7 +33,9 @@
 
 .cartefacile-ctrl-map-selector-card {
   cursor: pointer;
-  transition: border-color 0.2s, transform 0.1s;
+  transition:
+    border-color 0.2s,
+    transform 0.1s;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -63,24 +61,24 @@
 
 /* Position top-right (par défaut) */
 .cartefacile-ctrl-top-right {
-    top: 10px;
-    right: 10px;
+  top: 10px;
+  right: 10px;
 }
 
 /* Position top-left */
 .cartefacile-ctrl-top-left {
-    top: 10px;
-    left: 10px;
+  top: 10px;
+  left: 10px;
 }
 
 /* Position bottom-right */
 .cartefacile-ctrl-bottom-right {
-    bottom: 10px;
-    right: 10px;
+  bottom: 10px;
+  right: 10px;
 }
 
 /* Position bottom-left */
 .cartefacile-ctrl-bottom-left {
-    bottom: 10px;
-    left: 10px;
+  bottom: 10px;
+  left: 10px;
 }
