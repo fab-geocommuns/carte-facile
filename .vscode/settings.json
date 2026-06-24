@@ -1,5 +1,8 @@
 {
-    "claudeCode.environmentVariables": [
-        
-    ]
+	"claudeCode.environmentVariables": [],
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
+	"editor.insertSpaces": false,
+	"editor.indentSize": 2,
+	"editor.detectIndentation": false,
+	"editor.formatOnSave": true
 }
