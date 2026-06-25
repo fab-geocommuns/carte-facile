@@ -4,5 +4,10 @@
 	"editor.insertSpaces": false,
 	"editor.indentSize": 2,
 	"editor.detectIndentation": false,
-	"editor.formatOnSave": true
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "biomejs.biome",
+	"editor.codeActionsOnSave": {
+		"source.organizeImports.biome": "explicit",
+		"source.fixAll.biome": "explicit"
+	}
 }

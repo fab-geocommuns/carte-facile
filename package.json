@@ -18,9 +18,8 @@
 	],
 	"scripts": {
 		"dev": "vite",
-		"build": "tsdown",
-		"vite": "vite build",
-		"watch": "tsdown --watch",
+		"build": "vite build",
+		"format": "biome check --write",
 		"preview": "vite preview --outDir preview",
 		"test": "jest",
 		"test:watch": "jest --watch"
@@ -43,6 +42,7 @@
 		"maplibre-gl": "^5.0.0"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "2.5.1",
 		"@types/geojson": "^7946.0.16",
 		"@types/jest": "^29.5.12",
 		"@types/jsdom": "^21.1.6",
