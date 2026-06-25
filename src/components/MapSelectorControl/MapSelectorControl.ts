@@ -1,10 +1,15 @@
-import type { ControlPosition, IControl, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
+import type {
+	ControlPosition,
+	IControl,
+	Map as MapLibreMap,
+	StyleSpecification
+} from "maplibre-gl"
 import {
+	addOverlay,
+	mapOverlays,
 	mapStyles,
 	mapThumbnails,
-	addOverlay,
-	removeOverlay,
-	mapOverlays,
+	removeOverlay
 } from "../../maps/maps"
 import type { OverlayType } from "../../maps/types"
 import { Overlay } from "../../maps/types"
@@ -76,7 +81,7 @@ const TEMPLATES = {
             <span id="label-text"></span>
           </label>
         </div>
-    `,
+    `
 }
 
 /**
@@ -94,7 +99,7 @@ export class MapSelectorControl implements IControl {
 			styles:
 				options.styles ||
 				(Object.keys(mapStyles) as (keyof typeof mapStyles)[]),
-			overlays: options.overlays || Object.values(Overlay),
+			overlays: options.overlays || Object.values(Overlay)
 		}
 	}
 
@@ -107,7 +112,7 @@ export class MapSelectorControl implements IControl {
 
 		// Create the toggle button to open/close the selector panel
 		this._toggleButton = createFromTemplate(
-			TEMPLATES.toggleButton,
+			TEMPLATES.toggleButton
 		) as HTMLButtonElement
 
 		// Create the panel for selecting map styles and overlays
@@ -133,7 +138,7 @@ export class MapSelectorControl implements IControl {
 		const panel = createFromTemplate(TEMPLATES.panel) as HTMLDialogElement
 
 		const [stylesContainer, overlaysContainer] = panel.querySelectorAll(
-			".cartefacile-ctrl-map-selector-card-list",
+			".cartefacile-ctrl-map-selector-card-list"
 		)
 		this._populateCards(stylesContainer as HTMLDivElement, "style")
 		this._populateCards(overlaysContainer as HTMLDivElement, "overlay")
@@ -147,7 +152,7 @@ export class MapSelectorControl implements IControl {
 		title: string,
 		thumbnail: string,
 		type: "style" | "overlay",
-		onChange: () => void,
+		onChange: () => void
 	): HTMLElement {
 		const card = createFromTemplate(TEMPLATES.card)
 		const input = card.querySelector("input") as HTMLInputElement
@@ -176,12 +181,12 @@ export class MapSelectorControl implements IControl {
 	/** Populates containers with cards based on type */
 	private _populateCards(
 		container: HTMLDivElement,
-		type: "style" | "overlay",
+		type: "style" | "overlay"
 	): void {
 		if (type === "style") {
 			Object.entries(mapStyles)
 				.filter(([key]) =>
-					this._options.styles.includes(key as keyof typeof mapStyles),
+					this._options.styles.includes(key as keyof typeof mapStyles)
 				)
 				.forEach(([key, styleObj]) => {
 					const title =
@@ -190,7 +195,7 @@ export class MapSelectorControl implements IControl {
 					const thumbnail =
 						mapThumbnails[key as keyof typeof mapThumbnails] || ""
 					const card = this._createCard(key, title, thumbnail, "style", () =>
-						this._onStyleChange(key, styleObj, container, card),
+						this._onStyleChange(key, styleObj, container, card)
 					)
 					container.appendChild(card)
 				})
@@ -205,7 +210,7 @@ export class MapSelectorControl implements IControl {
 					const thumbnail =
 						mapThumbnails[id as keyof typeof mapThumbnails] || ""
 					const card = this._createCard(id, title, thumbnail, "overlay", () =>
-						this._onOverlayClick(id, card),
+						this._onOverlayClick(id, card)
 					)
 					container.appendChild(card)
 				})
@@ -267,7 +272,7 @@ export class MapSelectorControl implements IControl {
 				if (!overlay) return
 
 				const hasOverlay = Object.keys(overlay.neutral.sources).some(
-					(sourceId) => this._map!.getSource(sourceId),
+					(sourceId) => this._map!.getSource(sourceId)
 				)
 				cardElement.classList.toggle("active", hasOverlay)
 				cardElement.setAttribute("aria-checked", hasOverlay.toString())
@@ -278,10 +283,15 @@ export class MapSelectorControl implements IControl {
 	}
 
 	/** Handles style card click - changes map style */
-	private _onStyleChange(styleKey: string, styleObj: StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
+	private _onStyleChange(
+		styleKey: string,
+		styleObj: StyleSpecification,
+		container: HTMLDivElement,
+		card: HTMLElement
+	): void {
 		if (!this._map?.getContainer()) {
-			console.warn('Map is not available');
-			return;
+			console.warn("Map is not available")
+			return
 		}
 
 		try {
