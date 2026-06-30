@@ -1,10 +1,10 @@
-import { defineConfig } from "vite"
-import { resolve } from "path"
+import { resolve } from "node:path"
 import dts from "unplugin-dts/vite"
+import { defineConfig } from "vite"
 
 export default defineConfig({
 	oxc: {
-		exclude: [/\.js$/, /\.d\.[cm]?ts$/],
+		exclude: [/\.js$/, /\.d\.[cm]?ts$/]
 	},
 	build: {
 		sourcemap: true,
@@ -12,7 +12,7 @@ export default defineConfig({
 			entry: resolve(__dirname, "src/index.ts"),
 			name: "carte-facile",
 			fileName: "carte-facile",
-			formats: ["es", "umd"],
+			formats: ["es", "umd"]
 		},
 
 		rolldownOptions: {
@@ -20,10 +20,10 @@ export default defineConfig({
 			output: {
 				name: "CarteFacile",
 				globals: {
-					"maplibre-gl": "maplibregl",
-				},
+					"maplibre-gl": "maplibregl"
+				}
 			},
-			plugins: [dts()],
-		},
-	},
+			plugins: [dts()]
+		}
+	}
 })

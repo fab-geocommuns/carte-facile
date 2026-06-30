@@ -43,45 +43,45 @@ function createFromTemplate(template: string): HTMLElement {
  */
 const TEMPLATES = {
 	container: `
-        <div class="maplibregl-ctrl maplibregl-ctrl-group"
-            aria-label="Sélecteur de carte">
-        </div>
-    `,
+		<div class="maplibregl-ctrl maplibregl-ctrl-group"
+				aria-label="Sélecteur de carte">
+		</div>
+	`,
 
 	toggleButton: `
-        <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" 
-                aria-expanded="false"
-                aria-controls="map-selector-panel">
-                <span class="visually-hidden">Ouvrir le sélecteur de cartes et surcouches</span>
-        </button>
-    `,
+		<button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" 
+						aria-expanded="false"
+						aria-controls="map-selector-panel">
+						<span class="visually-hidden">Ouvrir le sélecteur de cartes et surcouches</span>
+		</button>
+	`,
 
 	panel: `
-        <dialog id="map-selector-panel" class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel">
-          
-          <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close">
-              <span class="visually-hidden">Fermer le sélecteur de cartes</span>
-          </button>
-          
-          <h2 id="styles-heading">Cartes</h2>
-          <fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="styles-heading">
-          </fieldset>
-          
-          <h2 id="overlays-heading">Surcouches</h2>
-          <fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="overlays-heading">
-          </fieldset>
-        </dialog>
-    `,
+		<dialog id="map-selector-panel" class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel">
+			
+			<button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close">
+					<span class="visually-hidden">Fermer le sélecteur de cartes</span>
+			</button>
+			
+			<h2 id="styles-heading">Cartes</h2>
+			<fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="styles-heading">
+			</fieldset>
+			
+			<h2 id="overlays-heading">Surcouches</h2>
+			<fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="overlays-heading">
+			</fieldset>
+		</dialog>
+	`,
 
 	card: `
-        <div>
-          <label class="cartefacile-ctrl-map-selector-card">
-            <input></input>
-            <img alt="" width="40" height="40">
-            <span id="label-text"></span>
-          </label>
-        </div>
-    `
+		<div>
+			<label class="cartefacile-ctrl-map-selector-card">
+				<input></input>
+				<img alt="" width="40" height="40">
+				<span id="label-text"></span>
+			</label>
+		</div>
+	`
 }
 
 /**
@@ -272,7 +272,7 @@ export class MapSelectorControl implements IControl {
 				if (!overlay) return
 
 				const hasOverlay = Object.keys(overlay.neutral.sources).some(
-					(sourceId) => this._map!.getSource(sourceId)
+					(sourceId) => this._map?.getSource(sourceId)
 				)
 				cardElement.classList.toggle("active", hasOverlay)
 				cardElement.setAttribute("aria-checked", hasOverlay.toString())
