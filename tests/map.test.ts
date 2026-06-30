@@ -5,190 +5,227 @@
  * - Map thumbnails availability
  * - Style metadata and accessibility
  */
-import { mapStyles, mapThumbnails, addOverlay, removeOverlay, showLayer, hideLayer, mapOverlays } from '../src/maps/maps';
-import { OverlayType, LayerGroup, Overlay } from '../src/maps/types';
-import maplibregl from 'maplibre-gl';
 
-describe('mapStyle', () => {
-  // Test each map style configuration and its properties
-  it('should have simple style', () => {
-    const map = mapStyles.simple;
-    expect(map).toBeDefined();
-    expect(map.name).toBe('simple');
-  });
+import type maplibregl from "maplibre-gl"
+import {
+	addOverlay,
+	hideLayer,
+	mapOverlays,
+	mapStyles,
+	mapThumbnails,
+	removeOverlay,
+	showLayer
+} from "../src/maps/maps"
+import { LayerGroup, Overlay, type OverlayType } from "../src/maps/types"
 
-  it('should have desaturated style', () => {
-    const map = mapStyles.desaturated;
-    expect(map).toBeDefined();
-    expect(map.name).toBe('desaturated');
-  });
+describe("mapStyle", () => {
+	// Test each map style configuration and its properties
+	it("should have simple style", () => {
+		const map = mapStyles.simple
+		expect(map).toBeDefined()
+		expect(map.name).toBe("simple")
+	})
 
-  it('should have aerial style', () => {
-    const map = mapStyles.aerial;
-    expect(map).toBeDefined();
-    expect(map.name).toBe('aerial');
-  });
+	it("should have desaturated style", () => {
+		const map = mapStyles.desaturated
+		expect(map).toBeDefined()
+		expect(map.name).toBe("desaturated")
+	})
 
-  it('should have simple OSM style', () => {
-    const map = mapStyles.simpleOsm;
-    expect(map).toBeDefined();
-    expect(map.name).toBe('simple-osm');
-  });
-});
+	it("should have aerial style", () => {
+		const map = mapStyles.aerial
+		expect(map).toBeDefined()
+		expect(map.name).toBe("aerial")
+	})
 
-describe('mapThumbnails', () => {
-  // Verify that thumbnails are available for all map styles
-  it('should have all required thumbnails', () => {
-    expect(mapThumbnails.simple).toBeDefined();
-    expect(mapThumbnails.desaturated).toBeDefined();
-    expect(mapThumbnails.aerial).toBeDefined();
-    expect(mapThumbnails.simpleOsm).toBeDefined();
-    expect(mapThumbnails.cadastre).toBeDefined();
-    expect(mapThumbnails.administrativeBoundaries).toBeDefined();
-    expect(mapThumbnails.levelCurves).toBeDefined();
-  });
-});
+	it("should have simple OSM style", () => {
+		const map = mapStyles.simpleOsm
+		expect(map).toBeDefined()
+		expect(map.name).toBe("simple-osm")
+	})
+})
 
-describe('mapOverlays', () => {
-  let map: maplibregl.Map;
+describe("mapThumbnails", () => {
+	// Verify that thumbnails are available for all map styles
+	it("should have all required thumbnails", () => {
+		expect(mapThumbnails.simple).toBeDefined()
+		expect(mapThumbnails.desaturated).toBeDefined()
+		expect(mapThumbnails.aerial).toBeDefined()
+		expect(mapThumbnails.simpleOsm).toBeDefined()
+		expect(mapThumbnails.cadastre).toBeDefined()
+		expect(mapThumbnails.administrativeBoundaries).toBeDefined()
+		expect(mapThumbnails.levelCurves).toBeDefined()
+	})
+})
 
-  beforeEach(() => {
-    map = {
-      getStyle: jest.fn().mockReturnValue({ name: 'simple' }),
-      getSource: jest.fn().mockReturnValue(false),
-      getLayer: jest.fn().mockReturnValue(false),
-      addSource: jest.fn(),
-      addLayer: jest.fn(),
-      removeLayer: jest.fn(),
-      removeSource: jest.fn(),
-      loaded: jest.fn().mockReturnValue(true),
-      on: jest.fn(),
-      off: jest.fn(),
-      once: jest.fn()
-    } as unknown as maplibregl.Map;
-  });
+describe("mapOverlays", () => {
+	let map: maplibregl.Map
 
-  const testOverlay = (type: OverlayType, expectedLayers: number) => {
-    describe(`${type} overlay`, () => {
-      it('should add single overlay with correct number of layers', () => {
-        addOverlay(map, type);
-        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers);
-        expect(map.addSource).toHaveBeenCalled();
-      });
+	beforeEach(() => {
+		map = {
+			getStyle: jest.fn().mockReturnValue({ name: "simple" }),
+			getSource: jest.fn().mockReturnValue(false),
+			getLayer: jest.fn().mockReturnValue(false),
+			addSource: jest.fn(),
+			addLayer: jest.fn(),
+			removeLayer: jest.fn(),
+			removeSource: jest.fn(),
+			loaded: jest.fn().mockReturnValue(true),
+			on: jest.fn(),
+			off: jest.fn(),
+			once: jest.fn()
+		} as unknown as maplibregl.Map
+	})
 
-      it('should add multiple overlays with correct number of layers', () => {
-        addOverlay(map, [type, Overlay.administrativeBoundaries]);
-        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers + 8); // 8 is the number of layers in administrativeBoundaries
-        expect(map.addSource).toHaveBeenCalled();
-      });
+	const testOverlay = (type: OverlayType, expectedLayers: number) => {
+		describe(`${type} overlay`, () => {
+			it("should add single overlay with correct number of layers", () => {
+				addOverlay(map, type)
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers)
+				expect(map.addSource).toHaveBeenCalled()
+			})
 
-      it('should update overlay when style changes', () => {
-        addOverlay(map, type);
-        map.getStyle = jest.fn().mockReturnValue({ name: 'aerial' });
-        const styledataCallback = (map.on as jest.Mock).mock.calls.find(
-          call => call[0] === 'styledata'
-        )[1];
-        styledataCallback();
-        expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2); // Called twice: initial + style change
-      });
+			it("should add multiple overlays with correct number of layers", () => {
+				addOverlay(map, [type, Overlay.administrativeBoundaries])
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers + 8) // 8 is the number of layers in administrativeBoundaries
+				expect(map.addSource).toHaveBeenCalled()
+			})
 
-      it('should remove single overlay completely', () => {
-        addOverlay(map, type);
-        map.getLayer = jest.fn().mockReturnValue(true);
-        map.getSource = jest.fn().mockReturnValue(true);
-        
-        removeOverlay(map, type);
-        
-        expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers);
-        expect(map.removeSource).toHaveBeenCalled();
-        expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
-      });
+			it("should update overlay when style changes", () => {
+				addOverlay(map, type)
+				map.getStyle = jest.fn().mockReturnValue({ name: "aerial" })
+				const styledataCallback = (map.on as jest.Mock).mock.calls.find(
+					(call) => call[0] === "styledata"
+				)[1]
+				styledataCallback()
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2) // Called twice: initial + style change
+			})
 
-      it('should remove multiple overlays completely', () => {
-        addOverlay(map, [type, Overlay.administrativeBoundaries]);
-        map.getLayer = jest.fn().mockReturnValue(true);
-        map.getSource = jest.fn().mockReturnValue(true);
-        
-        removeOverlay(map, [type, Overlay.administrativeBoundaries]);
-        
-        expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers + 8); // 8 is the number of layers in administrativeBoundaries
-        expect(map.removeSource).toHaveBeenCalled();
-        expect(map.off).toHaveBeenCalledWith('styledata', expect.any(Function));
-      });
+			it("should remove single overlay completely", () => {
+				addOverlay(map, type)
+				map.getLayer = jest.fn().mockReturnValue(true)
+				map.getSource = jest.fn().mockReturnValue(true)
 
-      it('should not add duplicate layers or sources', () => {
-        map.getLayer = jest.fn().mockReturnValue(true);
-        map.getSource = jest.fn().mockReturnValue(true);
-        
-        addOverlay(map, type);
-        
-        expect(map.addLayer).not.toHaveBeenCalled();
-        expect(map.addSource).not.toHaveBeenCalled();
-      });
-    });
-  };
+				removeOverlay(map, type)
 
-  testOverlay('cadastre', 6);
-  testOverlay('administrativeBoundaries', 8);
-  testOverlay('levelCurves', 3);
-});
+				expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers)
+				expect(map.removeSource).toHaveBeenCalled()
+				expect(map.off).toHaveBeenCalledWith("styledata", expect.any(Function))
+			})
 
-describe('Layer visibility', () => {
-  let map: maplibregl.Map;
+			it("should remove multiple overlays completely", () => {
+				addOverlay(map, [type, Overlay.administrativeBoundaries])
+				map.getLayer = jest.fn().mockReturnValue(true)
+				map.getSource = jest.fn().mockReturnValue(true)
 
-  beforeEach(() => {
-    // Create a mock MapLibre map with two layers:
-    // - A buildings layer
-    // - A streets layer
-    map = {
-      getStyle: jest.fn().mockReturnValue({
-        layers: [
-          { id: 'layer1', metadata: { 'cartefacile:group': 'buildings' } },
-          { id: 'layer2', metadata: { 'cartefacile:group': 'streets' } }
-        ]
-      }),
-      setLayoutProperty: jest.fn(),
-      loaded: jest.fn().mockReturnValue(true),
-      once: jest.fn()
-    } as unknown as maplibregl.Map;
-  });
+				removeOverlay(map, [type, Overlay.administrativeBoundaries])
 
-  it('should show and hide single layer', () => {
-    // Test showing a single layer
-    showLayer(map, LayerGroup.buildings);
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'visible');
+				expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers + 8) // 8 is the number of layers in administrativeBoundaries
+				expect(map.removeSource).toHaveBeenCalled()
+				expect(map.off).toHaveBeenCalledWith("styledata", expect.any(Function))
+			})
 
-    // Test hiding a single layer
-    hideLayer(map, LayerGroup.streets);
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer2', 'visibility', 'none');
-  });
+			it("should not add duplicate layers or sources", () => {
+				map.getLayer = jest.fn().mockReturnValue(true)
+				map.getSource = jest.fn().mockReturnValue(true)
 
-  it('should show and hide multiple layers', () => {
-    // Test showing multiple layers
-    showLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'visible');
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer2', 'visibility', 'visible');
+				addOverlay(map, type)
 
-    // Test hiding multiple layers
-    hideLayer(map, [LayerGroup.buildings, LayerGroup.streets]);
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'none');
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer2', 'visibility', 'none');
-  });
+				expect(map.addLayer).not.toHaveBeenCalled()
+				expect(map.addSource).not.toHaveBeenCalled()
+			})
+		})
+	}
 
-  it('should wait for map to load', () => {
-    // Simulate map not being loaded
-    map.loaded = jest.fn().mockReturnValue(false);
-    showLayer(map, LayerGroup.buildings);
-    
-    // Verify that we wait for the load event
-    expect(map.once).toHaveBeenCalledWith('load', expect.any(Function));
-    expect(map.setLayoutProperty).not.toHaveBeenCalled();
-    
-    // Simulate map being loaded and trigger the load callback
-    map.loaded = jest.fn().mockReturnValue(true);
-    (map.once as jest.Mock).mock.calls[0][1]();
-    
-    // Verify that the layer visibility is set after loading
-    expect(map.setLayoutProperty).toHaveBeenCalledWith('layer1', 'visibility', 'visible');
-  });
-});
+	testOverlay("cadastre", 6)
+	testOverlay("administrativeBoundaries", 8)
+	testOverlay("levelCurves", 3)
+})
+
+describe("Layer visibility", () => {
+	let map: maplibregl.Map
+
+	beforeEach(() => {
+		// Create a mock MapLibre map with two layers:
+		// - A buildings layer
+		// - A streets layer
+		map = {
+			getStyle: jest.fn().mockReturnValue({
+				layers: [
+					{ id: "layer1", metadata: { "cartefacile:group": "buildings" } },
+					{ id: "layer2", metadata: { "cartefacile:group": "streets" } }
+				]
+			}),
+			setLayoutProperty: jest.fn(),
+			loaded: jest.fn().mockReturnValue(true),
+			once: jest.fn()
+		} as unknown as maplibregl.Map
+	})
+
+	it("should show and hide single layer", () => {
+		// Test showing a single layer
+		showLayer(map, LayerGroup.buildings)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+
+		// Test hiding a single layer
+		hideLayer(map, LayerGroup.streets)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"none"
+		)
+	})
+
+	it("should show and hide multiple layers", () => {
+		// Test showing multiple layers
+		showLayer(map, [LayerGroup.buildings, LayerGroup.streets])
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"visible"
+		)
+
+		// Test hiding multiple layers
+		hideLayer(map, [LayerGroup.buildings, LayerGroup.streets])
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"none"
+		)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"none"
+		)
+	})
+
+	it("should wait for map to load", () => {
+		// Simulate map not being loaded
+		map.loaded = jest.fn().mockReturnValue(false)
+		showLayer(map, LayerGroup.buildings)
+
+		// Verify that we wait for the load event
+		expect(map.once).toHaveBeenCalledWith("load", expect.any(Function))
+		expect(map.setLayoutProperty).not.toHaveBeenCalled()
+
+		// Simulate map being loaded and trigger the load callback
+		map.loaded = jest.fn().mockReturnValue(true)
+		;(map.once as jest.Mock).mock.calls[0][1]()
+
+		// Verify that the layer visibility is set after loading
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+	})
+})

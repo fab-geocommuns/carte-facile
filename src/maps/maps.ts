@@ -1,19 +1,19 @@
-import type {
-	OverlayType,
-	OverlayVariant,
-	MapOverlays,
-	OverlayConfig,
-	LayerConfig,
-	LayerGroupType,
-} from "./types"
-import type { StyleSpecification, LayerSpecification } from "maplibre-gl"
+import type { LayerSpecification, StyleSpecification } from "maplibre-gl"
+import aerialIgn from "./aerial.json"
 
 // Import IGN map styles
 import desaturatedIgn from "./desaturated.json"
 import simpleIgn from "./simple.json"
-import aerialIgn from "./aerial.json"
 // Import OSM map styles
 import simpleOsm from "./simple-osm.json"
+import type {
+	LayerConfig,
+	LayerGroupType,
+	MapOverlays,
+	OverlayConfig,
+	OverlayType,
+	OverlayVariant
+} from "./types"
 /* import desaturatedOsm from './desaturated-osm.json';*/
 
 /**
@@ -24,7 +24,7 @@ export const mapStyles = {
 	simple: simpleIgn as unknown as StyleSpecification,
 	simpleOsm: simpleOsm as unknown as StyleSpecification,
 	aerial: aerialIgn as unknown as StyleSpecification,
-	desaturated: desaturatedIgn as unknown as StyleSpecification,
+	desaturated: desaturatedIgn as unknown as StyleSpecification
 }
 
 /**
@@ -32,13 +32,13 @@ export const mapStyles = {
  */
 export const mapStyle: typeof mapStyles = mapStyles
 
+import administrativeBoundariesThumb from "../assets/thumbnails/administrative-boundaries.webp"
+import aerialThumb from "../assets/thumbnails/aerial.webp"
+import cadastreThumb from "../assets/thumbnails/cadastre.webp"
+import desaturatedThumb from "../assets/thumbnails/desaturated.webp"
+import levelCurvesThumb from "../assets/thumbnails/level-curves.webp"
 // Import map thumbnails
 import simpleThumb from "../assets/thumbnails/simple.webp"
-import aerialThumb from "../assets/thumbnails/aerial.webp"
-import desaturatedThumb from "../assets/thumbnails/desaturated.webp"
-import cadastreThumb from "../assets/thumbnails/cadastre.webp"
-import administrativeBoundariesThumb from "../assets/thumbnails/administrative-boundaries.webp"
-import levelCurvesThumb from "../assets/thumbnails/level-curves.webp"
 
 /**
  * Map thumbnails configuration
@@ -51,21 +51,19 @@ export const mapThumbnails = {
 	desaturated: desaturatedThumb as string,
 	cadastre: cadastreThumb as string,
 	administrativeBoundaries: administrativeBoundariesThumb as string,
-	levelCurves: levelCurvesThumb as string,
+	levelCurves: levelCurvesThumb as string
 } as const
 
+import adminColorLayers from "./overlays/administrative-boundaries/color.layers.json"
+import adminCommon from "./overlays/administrative-boundaries/common.json"
+import adminNeutralLayers from "./overlays/administrative-boundaries/neutral.layers.json"
+import cadastreColorLayers from "./overlays/cadastre/color.layers.json"
 // Import shared overlay configurations
 import cadastreCommon from "./overlays/cadastre/common.json"
 import cadastreNeutralLayers from "./overlays/cadastre/neutral.layers.json"
-import cadastreColorLayers from "./overlays/cadastre/color.layers.json"
-
-import adminCommon from "./overlays/administrative-boundaries/common.json"
-import adminNeutralLayers from "./overlays/administrative-boundaries/neutral.layers.json"
-import adminColorLayers from "./overlays/administrative-boundaries/color.layers.json"
-
+import levelsColorLayers from "./overlays/level-curves/color.layers.json"
 import levelsCommon from "./overlays/level-curves/common.json"
 import levelsNeutralLayers from "./overlays/level-curves/neutral.layers.json"
-import levelsColorLayers from "./overlays/level-curves/color.layers.json"
 
 /**
  * Map overlays configuration
@@ -77,33 +75,33 @@ export const mapOverlays: MapOverlays = {
 	cadastre: {
 		neutral: {
 			...(cadastreCommon as Omit<OverlayConfig, "layers">),
-			layers: cadastreNeutralLayers as LayerSpecification[],
+			layers: cadastreNeutralLayers as LayerSpecification[]
 		},
 		color: {
 			...(cadastreCommon as Omit<OverlayConfig, "layers">),
-			layers: cadastreColorLayers as LayerSpecification[],
-		},
+			layers: cadastreColorLayers as LayerSpecification[]
+		}
 	},
 	administrativeBoundaries: {
 		neutral: {
 			...(adminCommon as Omit<OverlayConfig, "layers">),
-			layers: adminNeutralLayers as LayerSpecification[],
+			layers: adminNeutralLayers as LayerSpecification[]
 		},
 		color: {
 			...(adminCommon as Omit<OverlayConfig, "layers">),
-			layers: adminColorLayers as LayerSpecification[],
-		},
+			layers: adminColorLayers as LayerSpecification[]
+		}
 	},
 	levelCurves: {
 		neutral: {
 			...(levelsCommon as Omit<OverlayConfig, "layers">),
-			layers: levelsNeutralLayers as LayerSpecification[],
+			layers: levelsNeutralLayers as LayerSpecification[]
 		},
 		color: {
 			...(levelsCommon as Omit<OverlayConfig, "layers">),
-			layers: levelsColorLayers as LayerSpecification[],
-		},
-	},
+			layers: levelsColorLayers as LayerSpecification[]
+		}
+	}
 }
 
 /**
@@ -126,7 +124,7 @@ const overlayUpdaters = new WeakMap<
  */
 export function addOverlay(
 	map: maplibregl.Map,
-	type: OverlayType | OverlayType[],
+	type: OverlayType | OverlayType[]
 ): void {
 	const types = Array.isArray(type) ? type : [type]
 
@@ -146,8 +144,8 @@ export function addOverlay(
 	else map.once("load", update)
 
 	if (!overlayUpdaters.has(map)) overlayUpdaters.set(map, new Map())
-	const updaters = overlayUpdaters.get(map)!
-	types.forEach((singleType) => updaters.set(singleType, update))
+	const updaters = overlayUpdaters.get(map)
+	types.map((singleType) => updaters?.set(singleType, update))
 	map.on("styledata", update)
 }
 
@@ -158,7 +156,7 @@ export function addOverlay(
  */
 export function removeOverlay(
 	map: maplibregl.Map,
-	type: OverlayType | OverlayType[],
+	type: OverlayType | OverlayType[]
 ): void {
 	const types = Array.isArray(type) ? type : [type]
 
@@ -195,7 +193,7 @@ export function removeOverlay(
  */
 export function showLayer(
 	map: maplibregl.Map,
-	groups: LayerGroupType | LayerGroupType[],
+	groups: LayerGroupType | LayerGroupType[]
 ): void {
 	const groupList = Array.isArray(groups) ? groups : [groups]
 
@@ -219,7 +217,7 @@ export function showLayer(
  */
 export function hideLayer(
 	map: maplibregl.Map,
-	groups: LayerGroupType | LayerGroupType[],
+	groups: LayerGroupType | LayerGroupType[]
 ): void {
 	const groupList = Array.isArray(groups) ? groups : [groups]
 

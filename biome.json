@@ -14,7 +14,8 @@
 		"rules": {
 			"preset": "recommended",
 			"a11y": {
-				"noRedundantRoles": "info"
+				"noRedundantRoles": "info",
+				"noSvgWithoutTitle": "off"
 			}
 		}
 	},
