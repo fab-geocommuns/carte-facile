@@ -7,16 +7,16 @@
  */
 
 import type maplibregl from "maplibre-gl"
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest"
 import {
 	addOverlay,
 	hideLayer,
-	mapOverlays,
 	mapStyles,
 	mapThumbnails,
 	removeOverlay,
 	showLayer
-} from "../src/maps/maps"
-import { LayerGroup, Overlay, type OverlayType } from "../src/maps/types"
+} from "../../src/maps/maps"
+import { LayerGroup, Overlay, type OverlayType } from "../../src/maps/types"
 
 describe("mapStyle", () => {
 	// Test each map style configuration and its properties
@@ -63,19 +63,25 @@ describe("mapOverlays", () => {
 
 	beforeEach(() => {
 		map = {
-			getStyle: jest.fn().mockReturnValue({ name: "simple" }),
-			getSource: jest.fn().mockReturnValue(false),
-			getLayer: jest.fn().mockReturnValue(false),
-			addSource: jest.fn(),
-			addLayer: jest.fn(),
-			removeLayer: jest.fn(),
-			removeSource: jest.fn(),
-			loaded: jest.fn().mockReturnValue(true),
-			on: jest.fn(),
-			off: jest.fn(),
-			once: jest.fn()
+			getStyle: vi.fn().mockReturnValue({ name: "simple" }),
+			getSource: vi.fn().mockReturnValue(false),
+			getLayer: vi.fn().mockReturnValue(false),
+			addSource: vi.fn(),
+			addLayer: vi.fn(),
+			removeLayer: vi.fn(),
+			removeSource: vi.fn(),
+			loaded: vi.fn().mockReturnValue(true),
+			on: vi.fn(),
+			off: vi.fn(),
+			once: vi.fn()
 		} as unknown as maplibregl.Map
 	})
+
+	function getMockCallback(mockFn: Mock, eventName: string) {
+		const call = mockFn.mock.calls.find((c) => c[0] === eventName)
+		if (!call) throw new Error(`No call found for event "${eventName}"`)
+		return call[1]
+	}
 
 	const testOverlay = (type: OverlayType, expectedLayers: number) => {
 		describe(`${type} overlay`, () => {
@@ -93,18 +99,16 @@ describe("mapOverlays", () => {
 
 			it("should update overlay when style changes", () => {
 				addOverlay(map, type)
-				map.getStyle = jest.fn().mockReturnValue({ name: "aerial" })
-				const styledataCallback = (map.on as jest.Mock).mock.calls.find(
-					(call) => call[0] === "styledata"
-				)[1]
+				map.getStyle = vi.fn().mockReturnValue({ name: "aerial" })
+				const styledataCallback = getMockCallback(map.on as Mock, "styledata")
 				styledataCallback()
 				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2) // Called twice: initial + style change
 			})
 
 			it("should remove single overlay completely", () => {
 				addOverlay(map, type)
-				map.getLayer = jest.fn().mockReturnValue(true)
-				map.getSource = jest.fn().mockReturnValue(true)
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
 
 				removeOverlay(map, type)
 
@@ -115,8 +119,8 @@ describe("mapOverlays", () => {
 
 			it("should remove multiple overlays completely", () => {
 				addOverlay(map, [type, Overlay.administrativeBoundaries])
-				map.getLayer = jest.fn().mockReturnValue(true)
-				map.getSource = jest.fn().mockReturnValue(true)
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
 
 				removeOverlay(map, [type, Overlay.administrativeBoundaries])
 
@@ -126,8 +130,8 @@ describe("mapOverlays", () => {
 			})
 
 			it("should not add duplicate layers or sources", () => {
-				map.getLayer = jest.fn().mockReturnValue(true)
-				map.getSource = jest.fn().mockReturnValue(true)
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
 
 				addOverlay(map, type)
 
@@ -150,15 +154,15 @@ describe("Layer visibility", () => {
 		// - A buildings layer
 		// - A streets layer
 		map = {
-			getStyle: jest.fn().mockReturnValue({
+			getStyle: vi.fn().mockReturnValue({
 				layers: [
 					{ id: "layer1", metadata: { "cartefacile:group": "buildings" } },
 					{ id: "layer2", metadata: { "cartefacile:group": "streets" } }
 				]
 			}),
-			setLayoutProperty: jest.fn(),
-			loaded: jest.fn().mockReturnValue(true),
-			once: jest.fn()
+			setLayoutProperty: vi.fn(),
+			loaded: vi.fn().mockReturnValue(true),
+			once: vi.fn()
 		} as unknown as maplibregl.Map
 	})
 
@@ -210,7 +214,7 @@ describe("Layer visibility", () => {
 
 	it("should wait for map to load", () => {
 		// Simulate map not being loaded
-		map.loaded = jest.fn().mockReturnValue(false)
+		map.loaded = vi.fn().mockReturnValue(false)
 		showLayer(map, LayerGroup.buildings)
 
 		// Verify that we wait for the load event
@@ -218,8 +222,8 @@ describe("Layer visibility", () => {
 		expect(map.setLayoutProperty).not.toHaveBeenCalled()
 
 		// Simulate map being loaded and trigger the load callback
-		map.loaded = jest.fn().mockReturnValue(true)
-		;(map.once as jest.Mock).mock.calls[0][1]()
+		map.loaded = vi.fn().mockReturnValue(true)
+		;(map.once as Mock).mock.calls[0][1]()
 
 		// Verify that the layer visibility is set after loading
 		expect(map.setLayoutProperty).toHaveBeenCalledWith(

@@ -1,15 +1,14 @@
-import { JSDOM } from "jsdom"
-import type { Map } from "maplibre-gl"
+// @vitest-environment jsdom
+
+import type { Map as MapType } from "maplibre-gl"
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest"
 import { ZoomLevelControl } from "../src"
 
-// Set up a minimal DOM environment for testing
 // We only need document for our tests, as we're testing DOM manipulation
-const dom = new JSDOM("<!DOCTYPE html><body></body>")
-;(global as any).document = dom.window.document
 
 describe("ZoomLevelControl", () => {
 	let control: ZoomLevelControl
-	let mockMap: Partial<Map>
+	let mockMap: Partial<MapType>
 	let element: HTMLElement
 
 	beforeEach(() => {
@@ -17,11 +16,11 @@ describe("ZoomLevelControl", () => {
 		// - getZoom: to get the current zoom level
 		// - on: to listen for zoom events
 		mockMap = {
-			getZoom: jest.fn().mockReturnValue(0),
-			on: jest.fn()
+			getZoom: vi.fn().mockReturnValue(0),
+			on: vi.fn()
 		}
 		control = new ZoomLevelControl()
-		element = control.onAdd(mockMap as Map)
+		element = control.onAdd(mockMap as MapType)
 	})
 
 	it("should create control with correct class names", () => {
@@ -38,9 +37,9 @@ describe("ZoomLevelControl", () => {
 
 	it("should update zoom level when map zooms", () => {
 		// Simulate a zoom change to 2.5
-		;(mockMap.getZoom as jest.Mock).mockReturnValue(2.5)
+		;(mockMap.getZoom as Mock).mockReturnValue(2.5)
 		// Trigger the zoom callback that was registered
-		;(mockMap.on as jest.Mock).mock.calls[0][1]()
+		;(mockMap.on as Mock).mock.calls[0][1]()
 
 		// Verify that the displayed zoom level is updated
 		expect(element.querySelector("span")?.textContent).toBe("2.5")
