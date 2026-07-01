@@ -9,16 +9,16 @@ export default defineConfig({
 			}
 		},
 		projects: [
-			// {
-			// 	test: {
-			// 		include: [
-			// 			"tests/unit/**/*.{test,spec}.ts",
-			// 			"tests/**/*.unit.{test,spec}.ts"
-			// 		],
-			// 		name: "unit",
-			// 		environment: "node"
-			// 	}
-			// },
+			{
+				test: {
+					include: [
+						"tests/unit/**/*.{test,spec}.ts",
+						"tests/**/*.unit.{test,spec}.ts"
+					],
+					name: "unit",
+					environment: "node"
+				}
+			},
 			{
 				test: {
 					include: [
