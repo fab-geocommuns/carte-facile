@@ -3,14 +3,18 @@
  * Verifies that the library is correctly exposed and usable in a browser environment
  */
 
-import fs from "fs"
+import fs from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import type { DOMWindow } from "jsdom"
 import { JSDOM } from "jsdom"
-import path from "path"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const BUNDLE_PATH = path.resolve(__dirname, "../dist/carte-facile.js")
 
 describe("UMD Bundle", () => {
-	let window: any
+	let window: DOMWindow
 	let document: Document
 
 	beforeEach(() => {
@@ -22,9 +26,9 @@ describe("UMD Bundle", () => {
 		document = window.document
 
 		window.maplibregl = {
-			Map: jest.fn(),
-			NavigationControl: jest.fn(),
-			ScaleControl: jest.fn()
+			Map: vi.fn(),
+			NavigationControl: vi.fn(),
+			ScaleControl: vi.fn()
 		}
 
 		const bundleCode = fs.readFileSync(BUNDLE_PATH, "utf8")
