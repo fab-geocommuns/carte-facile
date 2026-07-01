@@ -37,27 +37,28 @@ function createFromTemplate(template: string): HTMLElement {
  */
 const TEMPLATES = {
 	container: `
-		<div class="maplibregl-ctrl maplibregl-ctrl-group"
-				aria-label="Sélecteur de carte">
+		<div class="maplibregl-ctrl maplibregl-ctrl-group">
 		</div>
 	`,
 
 	toggleButton: `
-		<button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" 
-						aria-expanded="false"
-						aria-controls="map-selector-panel">
-						<span class="visually-hidden">Ouvrir le sélecteur de cartes et surcouches</span>
+		<button
+			class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack"
+			aria-expanded="false" aria-controls="map-selector-panel">
+				<span class="visually-hidden">Ouvrir le sélecteur de styles et surcouches</span>
 		</button>
 	`,
 
 	panel: `
 		<dialog id="map-selector-panel" class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel">
+
+			<h1 class="visually-hidden">Sélecteur de styles et de surcouches</h1>
 			
 			<button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close">
-					<span class="visually-hidden">Fermer le sélecteur de cartes</span>
+					<span class="visually-hidden">Fermer le sélecteur</span>
 			</button>
 			
-			<h2 id="styles-heading">Cartes</h2>
+			<h2 id="styles-heading">Styles</h2>
 			<fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="styles-heading">
 			</fieldset>
 			
@@ -155,6 +156,7 @@ export class MapSelectorControl implements maplibregl.IControl {
 		// Configure card attributes securely
 		input.setAttribute("id", id)
 		input.setAttribute("data-type", type)
+		input.setAttribute("data-id", id)
 		input.setAttribute("name", type === "style" ? "styles" : "")
 		input.setAttribute("type", type === "style" ? "radio" : "checkbox")
 		label.setAttribute("for", id)
@@ -221,7 +223,7 @@ export class MapSelectorControl implements maplibregl.IControl {
 			?.addEventListener("click", () => this._closePanel())
 	}
 
-	/** Opens the panel with focus management */
+	/** Opens the panel */
 	private _openPanel(): void {
 		if (!this._panel || !this._toggleButton) return
 
@@ -238,39 +240,48 @@ export class MapSelectorControl implements maplibregl.IControl {
 	}
 
 	/** Syncs panel state with current map configuration */
-	// TODO: adapt to the new logic
+
+	private _syncStylesState(): void {
+		if (!this._map || !this._panel) return
+
+		const currentStyle = this._map.getStyle()
+
+		this._panel.querySelectorAll('[data-type="style"]').forEach((card) => {
+			const cardElement = card as HTMLInputElement
+			const styleId = cardElement.dataset.id
+			const isActive =
+				currentStyle.name === styleId ||
+				(styleId === "simple" &&
+					(!currentStyle.name || currentStyle.name === "simple"))
+
+			cardElement.checked = isActive
+			cardElement.ariaChecked = isActive.toString()
+		})
+	}
+
+	private _syncOverlaysState(): void {
+		if (!this._map || !this._panel) return
+
+		this._panel.querySelectorAll('[data-type="overlay"]').forEach((card) => {
+			const cardElement = card as HTMLInputElement
+			const overlayId = cardElement.dataset.id as OverlayType
+			const overlay = mapOverlays[overlayId]
+			if (!overlay) return
+
+			const hasOverlay = Object.keys(overlay.neutral.sources).some((sourceId) =>
+				this._map?.getSource(sourceId)
+			)
+			cardElement.checked = hasOverlay
+			cardElement.ariaChecked = hasOverlay.toString()
+		})
+	}
+
 	private _syncPanelState(): void {
 		if (!this._map || !this._panel) return
 
 		try {
-			const currentStyle = this._map.getStyle()
-
-			// Sync style cards
-			this._panel.querySelectorAll('[data-type="style"]').forEach((card) => {
-				const cardElement = card as HTMLElement
-				const styleId = cardElement.dataset.id
-				const isActive =
-					currentStyle.name === styleId ||
-					(styleId === "simple" &&
-						(!currentStyle.name || currentStyle.name === "simple"))
-
-				cardElement.classList.toggle("active", isActive)
-				cardElement.setAttribute("aria-checked", isActive.toString())
-			})
-
-			// Sync overlay cards
-			this._panel.querySelectorAll('[data-type="overlay"]').forEach((card) => {
-				const cardElement = card as HTMLElement
-				const overlayId = cardElement.dataset.id as OverlayType
-				const overlay = mapOverlays[overlayId]
-				if (!overlay) return
-
-				const hasOverlay = Object.keys(overlay.neutral.sources).some(
-					(sourceId) => this._map?.getSource(sourceId)
-				)
-				cardElement.classList.toggle("active", hasOverlay)
-				cardElement.setAttribute("aria-checked", hasOverlay.toString())
-			})
+			this._syncStylesState()
+			this._syncOverlaysState()
 		} catch (error) {
 			console.warn("Failed to sync panel state:", error)
 		}
@@ -285,6 +296,7 @@ export class MapSelectorControl implements maplibregl.IControl {
 
 		try {
 			this._map.setStyle(styleObj)
+			this._syncStylesState()
 		} catch (error) {
 			console.error("Failed to set map style:", error)
 		}
@@ -305,6 +317,7 @@ export class MapSelectorControl implements maplibregl.IControl {
 			} else {
 				removeOverlay(this._map, overlayId as OverlayType)
 			}
+			this._syncOverlaysState()
 		} catch (error) {
 			console.error("Failed to toggle overlay:", error)
 		}
