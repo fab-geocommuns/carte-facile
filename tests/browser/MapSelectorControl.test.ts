@@ -1,7 +1,7 @@
 import { Map as MapLibre } from "maplibre-gl"
-import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest"
+import { beforeEach, describe, expect, test, vi } from "vitest"
 import { page, userEvent } from "vitest/browser"
-import { MapSelectorControl } from "../../src/components/MapSelectorControl/MapSelectorControl"
+import { MapSelectorControl } from "../../src"
 
 function createTestMap() {
 	document.body.innerHTML = `<div id="map"></div>`

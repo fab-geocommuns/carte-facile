@@ -1,8 +1,6 @@
-// @vitest-environment jsdom
-
 import type { Map as MapType } from "maplibre-gl"
 import { beforeEach, describe, expect, it, type Mock, vi } from "vitest"
-import { ZoomLevelControl } from "../src"
+import { ZoomLevelControl } from "../../src"
 
 // We only need document for our tests, as we're testing DOM manipulation
 

@@ -1,4 +1,8 @@
 /**
+ * @vitest-environment jsdom
+ */
+
+/**
  * Test suite for the UMD bundle
  * Verifies that the library is correctly exposed and usable in a browser environment
  */
@@ -11,16 +15,25 @@ import { JSDOM } from "jsdom"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const BUNDLE_PATH = path.resolve(__dirname, "../dist/carte-facile.js")
+const BUNDLE_PATH = path.resolve(__dirname, "../../dist/carte-facile.umd.cjs")
 
 describe("UMD Bundle", () => {
 	let window: DOMWindow
 	let document: Document
 
 	beforeEach(() => {
-		const dom = new JSDOM(`<!DOCTYPE html><div id="map"></div>`, {
-			runScripts: "dangerously"
-		})
+		const dom = new JSDOM(
+			`
+			<!DOCTYPE html>
+			<html>
+				<body>
+					<div id="map"></div>
+				</body>
+			</html>`,
+			{
+				runScripts: "dangerously"
+			}
+		)
 
 		window = dom.window
 		document = window.document
