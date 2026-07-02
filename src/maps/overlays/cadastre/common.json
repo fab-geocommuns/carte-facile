@@ -1,20 +1,20 @@
 {
-  "name": "cadastre",
-  "metadata": {
-    "fr": {
-      "name": "Cadastre",
-      "description": "Surcouche du cadastre."
-    },
-    "en": {
-      "name": "Cadastre",
-      "description": "Overlay of French cadastre."
-    },
-    "maputnik:renderer": "mlgljs"
-  },
-  "sources": {
-    "cadastre": {
-      "type": "vector",
-      "url": "https://openmaptiles.geo.data.gouv.fr/data/cadastre.json"
-    }
-  }
-} 
+	"name": "cadastre",
+	"metadata": {
+		"fr": {
+			"name": "Cadastre",
+			"description": "Surcouche du cadastre."
+		},
+		"en": {
+			"name": "Cadastre",
+			"description": "Overlay of French cadastre."
+		},
+		"maputnik:renderer": "mlgljs"
+	},
+	"sources": {
+		"cadastre": {
+			"type": "vector",
+			"url": "https://openmaptiles.geo.data.gouv.fr/data/cadastre.json"
+		}
+	}
+}

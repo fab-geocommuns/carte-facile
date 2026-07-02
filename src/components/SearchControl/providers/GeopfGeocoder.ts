@@ -1,19 +1,19 @@
-import maplibregl from 'maplibre-gl';
-import type { Map, LngLatBoundsLike } from 'maplibre-gl';
-import type { SearchProvider, SearchResult } from '../SearchControl';
+import type { LngLatBoundsLike, Map as MapType } from "maplibre-gl";
+import maplibregl from "maplibre-gl";
+import type { SearchProvider, SearchResult } from "../SearchControl";
 
-const API_URL = 'https://data.geopf.fr/geocodage/search';
+const API_URL = "https://data.geopf.fr/geocodage/search";
 
-const OUTLINE_SOURCE_ID = 'search-outline-source';
-const OUTLINE_FILL_ID = 'search-outline-fill';
-const OUTLINE_LINE_BORDER_ID = 'search-outline-line-border';
-const OUTLINE_LINE_ID = 'search-outline-line';
+const OUTLINE_SOURCE_ID = "search-outline-source";
+const OUTLINE_FILL_ID = "search-outline-fill";
+const OUTLINE_LINE_BORDER_ID = "search-outline-line-border";
+const OUTLINE_LINE_ID = "search-outline-line";
 
-const MASK_COLOR = '#000000';
+const MASK_COLOR = "#000000";
 const MASK_OPACITY = 0.075;
 const OUTLINE_FILL_OPACITY = 0.1;
-const OUTLINE_COLOR = '#4e80ee';
-const OUTLINE_BORDER_COLOR = '#395FB1';
+const OUTLINE_COLOR = "#4e80ee";
+const OUTLINE_BORDER_COLOR = "#395FB1";
 const OUTLINE_WIDTH = 1;
 const OUTLINE_BORDER_WIDTH = OUTLINE_WIDTH + 1; // 1px border on each side
 const FIT_PADDING_RATIO = 0.08;
@@ -26,32 +26,32 @@ const MIN_CONTOUR_VERTICES = 8;
 
 /** Raw feature shape returned by the Geoplateforme POI index */
 interface GeopfPoiProperties {
-    toponym: string;
-    id: string;
-    category?: string[];
-    citycode?: string[];
-    postcode?: string[];
-    city?: string[];
-    truegeometry?: string | GeoJSON.Polygon | GeoJSON.MultiPolygon;
+	toponym: string;
+	id: string;
+	category?: string[];
+	citycode?: string[];
+	postcode?: string[];
+	city?: string[];
+	truegeometry?: string | GeoJSON.Polygon | GeoJSON.MultiPolygon;
 }
-interface GeopfPoiFeature {
-    geometry: { coordinates: [number, number] };
-    properties: GeopfPoiProperties;
+export interface GeopfPoiFeature {
+	geometry: { coordinates: [number, number] };
+	properties: GeopfPoiProperties;
 }
 
 /** Raw feature shape returned by the Geoplateforme address index */
 interface GeopfAddressProperties {
-    id: string;
-    name?: string;
-    label: string;
-    citycode?: string;
-    postcode?: string;
-    city?: string;
-    type?: string;
+	id: string;
+	name?: string;
+	label: string;
+	citycode?: string;
+	postcode?: string;
+	city?: string;
+	type?: string;
 }
-interface GeopfAddressFeature {
-    geometry: { coordinates: [number, number] };
-    properties: GeopfAddressProperties;
+export interface GeopfAddressFeature {
+	geometry: { coordinates: [number, number] };
+	properties: GeopfAddressProperties;
 }
 
 /**
@@ -76,25 +76,25 @@ interface GeopfAddressFeature {
  * });
  */
 export interface GeopfResultData {
-    /** Full raw feature properties from the API response */
-    properties: Record<string, unknown>;
-    /**
-     * INSEE municipality code.
-     * Reliable for address results (5-digit string, e.g. "75056").
-     * For POI/admin results, first value from the `citycode` array — may be
-     * a department code rather than the full commune code.
-     */
-    citycode?: string;
-    /** First postal code */
-    postcode?: string;
-    /** City name (populated for POI results) */
-    cityName?: string;
-    /** Raw API categories (e.g. ["administratif", "commune"]) */
-    category?: string[];
-    /** Geometry polygon for contour display (when available) */
-    geometry?: GeoJSON.Polygon | GeoJSON.MultiPolygon;
-    /** If true, geometry is rendered as inverted mask (admin boundaries) */
-    invertedMask?: boolean;
+	/** Full raw feature properties from the API response */
+	properties: Record<string, unknown>;
+	/**
+	 * INSEE municipality code.
+	 * Reliable for address results (5-digit string, e.g. "75056").
+	 * For POI/admin results, first value from the `citycode` array — may be
+	 * a department code rather than the full commune code.
+	 */
+	citycode?: string;
+	/** First postal code */
+	postcode?: string;
+	/** City name (populated for POI results) */
+	cityName?: string;
+	/** Raw API categories (e.g. ["administratif", "commune"]) */
+	category?: string[];
+	/** Geometry polygon for contour display (when available) */
+	geometry?: GeoJSON.Polygon | GeoJSON.MultiPolygon;
+	/** If true, geometry is rendered as inverted mask (admin boundaries) */
+	invertedMask?: boolean;
 }
 
 /**
@@ -104,328 +104,406 @@ export interface GeopfResultData {
  * @see https://data.geopf.fr/geocodage/openapi
  */
 class GeopfGeocoderProvider implements SearchProvider {
-    readonly name = 'geopf';
-    readonly placeholder = 'Rechercher...';
+	readonly name = "geopf";
+	readonly placeholder = "Rechercher...";
 
-    private _marker: maplibregl.Marker | null = null;
-    private _styledataHandler: (() => void) | null = null;
+	private _marker: maplibregl.Marker | null = null;
+	private _styledataHandler: (() => void) | null = null;
 
-    async search(query: string): Promise<SearchResult[]> {
-        // allSettled: a single failing endpoint doesn't block the others
-        const results = await Promise.allSettled([
-            searchAdminPoi(query),
-            searchOtherPoi(query),
-            searchAddresses(query)
-        ]);
-        return results.flatMap(r => r.status === 'fulfilled' ? r.value : []);
-    }
+	async search(query: string): Promise<SearchResult[]> {
+		// allSettled: a single failing endpoint doesn't block the others
+		const results = await Promise.allSettled([
+			searchAdminPoi(query),
+			searchOtherPoi(query),
+			searchAddresses(query),
+		]);
+		return results.flatMap((r) => (r.status === "fulfilled" ? r.value : []));
+	}
 
-    onClear(map: Map): void {
-        this._clearResult(map);
-    }
+	onClear(map: MapType): void {
+		this._clearResult(map);
+	}
 
-    async onSelect(result: SearchResult, map: Map): Promise<void> {
-        this._clearResult(map);
+	async onSelect(result: SearchResult, map: MapType): Promise<void> {
+		this._clearResult(map);
 
-        const { geometry, invertedMask = false } = (result.data as GeopfResultData) ?? {};
+		const { geometry, invertedMask = false } =
+			(result.data as GeopfResultData) ?? {};
 
-        // Center the map on the bounding box of the contour when available.
-        // Padding is computed as a fraction of the smaller viewport dimension.
-        // fitBounds is wrapped in try/catch because it throws when padding >= viewport/2.
-        if (geometry) {
-            const bbox = computeBbox(geometry);
-            let fitted = false;
-            if (bbox) {
-                try {
-                    const container = map.getContainer();
-                    const padding = Math.floor(
-                        Math.min(container.offsetWidth, container.offsetHeight) * FIT_PADDING_RATIO
-                    );
-                    map.fitBounds(bbox as LngLatBoundsLike, {
-                        padding,
-                        animate: false,
-                        // omit maxZoom for admin (no upper limit), cap at 18 for POI
-                        ...(invertedMask ? {} : { maxZoom: 18 })
-                    });
-                    fitted = true;
-                } catch {
-                    // fallthrough to jumpTo below
-                }
-            }
-            if (!fitted && result.center) {
-                map.jumpTo({ center: result.center, zoom: 15 });
-            }
-        } else if (result.center) {
-            map.jumpTo({ center: result.center, zoom: 17 });
-        }
+		// Center the map on the bounding box of the contour when available.
+		// Padding is computed as a fraction of the smaller viewport dimension.
+		// fitBounds is wrapped in try/catch because it throws when padding >= viewport/2.
+		if (geometry) {
+			const bbox = computeBbox(geometry);
+			let fitted = false;
+			if (bbox) {
+				try {
+					const container = map.getContainer();
+					const padding = Math.floor(
+						Math.min(container.offsetWidth, container.offsetHeight) *
+							FIT_PADDING_RATIO,
+					);
+					map.fitBounds(bbox as LngLatBoundsLike, {
+						padding,
+						animate: false,
+						// omit maxZoom for admin (no upper limit), cap at 18 for POI
+						...(invertedMask ? {} : { maxZoom: 18 }),
+					});
+					fitted = true;
+				} catch {
+					// fallthrough to jumpTo below
+				}
+			}
+			if (!fitted && result.center) {
+				map.jumpTo({ center: result.center, zoom: 15 });
+			}
+		} else if (result.center) {
+			map.jumpTo({ center: result.center, zoom: 17 });
+		}
 
-        // Display contour — isolated so that a rendering failure never prevents map movement
-        if (geometry) {
-            try {
-                this._styledataHandler = showContour(map, geometry, invertedMask);
-            } catch (e) {
-                console.warn('GeopfGeocoder: showContour failed', e);
-            }
-        }
+		// Display contour — isolated so that a rendering failure never prevents map movement
+		if (geometry) {
+			try {
+				this._styledataHandler = showContour(map, geometry, invertedMask);
+			} catch (e) {
+				console.warn("GeopfGeocoder: showContour failed", e);
+			}
+		}
 
-        // Display pin marker — not shown for admin boundaries (contour is sufficient)
-        if (result.center && !invertedMask) {
-            this._marker = new maplibregl.Marker({ color: OUTLINE_COLOR })
-                .setLngLat(result.center)
-                .addTo(map);
-        }
-    }
+		// Display pin marker — not shown for admin boundaries (contour is sufficient)
+		if (result.center && !invertedMask) {
+			this._marker = new maplibregl.Marker({ color: OUTLINE_COLOR })
+				.setLngLat(result.center)
+				.addTo(map);
+		}
+	}
 
-    private _clearResult(map: Map): void {
-        if (this._styledataHandler) {
-            map.off('styledata', this._styledataHandler);
-            this._styledataHandler = null;
-        }
-        this._marker?.remove();
-        this._marker = null;
-        if (map.getLayer(OUTLINE_FILL_ID)) map.removeLayer(OUTLINE_FILL_ID);
-        if (map.getLayer(OUTLINE_LINE_ID)) map.removeLayer(OUTLINE_LINE_ID);
-        if (map.getLayer(OUTLINE_LINE_BORDER_ID)) map.removeLayer(OUTLINE_LINE_BORDER_ID);
-        if (map.getSource(OUTLINE_SOURCE_ID)) map.removeSource(OUTLINE_SOURCE_ID);
-    }
+	private _clearResult(map: MapType): void {
+		if (this._styledataHandler) {
+			map.off("styledata", this._styledataHandler);
+			this._styledataHandler = null;
+		}
+		this._marker?.remove();
+		this._marker = null;
+		if (map.getLayer(OUTLINE_FILL_ID)) map.removeLayer(OUTLINE_FILL_ID);
+		if (map.getLayer(OUTLINE_LINE_ID)) map.removeLayer(OUTLINE_LINE_ID);
+		if (map.getLayer(OUTLINE_LINE_BORDER_ID))
+			map.removeLayer(OUTLINE_LINE_BORDER_ID);
+		if (map.getSource(OUTLINE_SOURCE_ID)) map.removeSource(OUTLINE_SOURCE_ID);
+	}
 }
 
 export const GeopfGeocoder: SearchProvider = new GeopfGeocoderProvider();
 
 /** Search administrative boundaries (communes, régions, etc.) */
 async function searchAdminPoi(query: string): Promise<SearchResult[]> {
-    try {
-        const params = new URLSearchParams({
-            q: query,
-            index: 'poi',
-            category: 'administratif',
-            returntruegeometry: 'true',
-            limit: String(POI_LIMIT)
-        });
-        const response = await fetch(`${API_URL}?${params}`, { signal: AbortSignal.timeout(5000) });
-        if (!response.ok) return [];
+	try {
+		const params = new URLSearchParams({
+			q: query,
+			index: "poi",
+			category: "administratif",
+			returntruegeometry: "true",
+			limit: String(POI_LIMIT),
+		});
+		const response = await fetch(`${API_URL}?${params}`, {
+			signal: AbortSignal.timeout(5000),
+		});
+		if (!response.ok) return [];
 
-        const data = await response.json();
-        if (!Array.isArray(data.features)) return [];
+		const data = await response.json();
+		if (!Array.isArray(data.features)) return [];
 
-        return (data.features as GeopfPoiFeature[]).map(f => {
-            const geometry = f.properties.truegeometry ? parseGeometry(f.properties.truegeometry) : undefined;
-            return mapPoiFeature(f, geometry, true);
-        });
-    } catch {
-        return [];
-    }
+		return (data.features as GeopfPoiFeature[]).map((f) => {
+			const geometry = f.properties.truegeometry
+				? parseGeometry(f.properties.truegeometry)
+				: undefined;
+			return mapPoiFeature(f, geometry, true);
+		});
+	} catch {
+		return [];
+	}
 }
 
 /** Search all other POI (transport, monuments, etc.) excluding admin and habitat duplicates */
 async function searchOtherPoi(query: string): Promise<SearchResult[]> {
-    try {
-        const params = new URLSearchParams({
-            q: query,
-            index: 'poi',
-            returntruegeometry: 'true',
-            limit: String(POI_LIMIT)
-        });
-        const response = await fetch(`${API_URL}?${params}`, { signal: AbortSignal.timeout(5000) });
-        if (!response.ok) return [];
+	try {
+		const params = new URLSearchParams({
+			q: query,
+			index: "poi",
+			returntruegeometry: "true",
+			limit: String(POI_LIMIT),
+		});
+		const response = await fetch(`${API_URL}?${params}`, {
+			signal: AbortSignal.timeout(5000),
+		});
+		if (!response.ok) return [];
 
-        const data = await response.json();
-        if (!Array.isArray(data.features)) return [];
+		const data = await response.json();
+		if (!Array.isArray(data.features)) return [];
 
-        return (data.features as GeopfPoiFeature[])
-            .filter(f => {
-                const cats = f.properties.category ?? [];
-                // Exclude admin (handled by searchAdminPoi) and habitat types
-                // that merely duplicate commune results (e.g. "lieu-dit habité")
-                return !cats.includes('administratif') && !cats.includes('lieu-dit habité');
-            })
-            .map(f => {
-                const rawGeometry = f.properties.truegeometry ? parseGeometry(f.properties.truegeometry) : undefined;
-                const geometry = rawGeometry && countVertices(rawGeometry) >= MIN_CONTOUR_VERTICES ? rawGeometry : undefined;
-                const cats: string[] = f.properties.category ?? [];
-                const isTerritory = cats.includes('quartier');
-                return mapPoiFeature(f, geometry, isTerritory);
-            });
-    } catch {
-        return [];
-    }
+		return (data.features as GeopfPoiFeature[])
+			.filter((f) => {
+				const cats = f.properties.category ?? [];
+				// Exclude admin (handled by searchAdminPoi) and habitat types
+				// that merely duplicate commune results (e.g. "lieu-dit habité")
+				return (
+					!cats.includes("administratif") && !cats.includes("lieu-dit habité")
+				);
+			})
+			.map((f) => {
+				const rawGeometry = f.properties.truegeometry
+					? parseGeometry(f.properties.truegeometry)
+					: undefined;
+				const geometry =
+					rawGeometry && countVertices(rawGeometry) >= MIN_CONTOUR_VERTICES
+						? rawGeometry
+						: undefined;
+				const cats: string[] = f.properties.category ?? [];
+				const isTerritory = cats.includes("quartier");
+				return mapPoiFeature(f, geometry, isTerritory);
+			});
+	} catch {
+		return [];
+	}
 }
 
 async function searchAddresses(query: string): Promise<SearchResult[]> {
-    try {
-        const params = new URLSearchParams({ q: query, index: 'address', limit: String(ADDRESS_LIMIT) });
-        const response = await fetch(`${API_URL}?${params}`, { signal: AbortSignal.timeout(5000) });
-        if (!response.ok) return [];
+	try {
+		const params = new URLSearchParams({
+			q: query,
+			index: "address",
+			limit: String(ADDRESS_LIMIT),
+		});
+		const response = await fetch(`${API_URL}?${params}`, {
+			signal: AbortSignal.timeout(5000),
+		});
+		if (!response.ok) return [];
 
-        const data = await response.json();
-        if (!Array.isArray(data.features)) return [];
+		const data = await response.json();
+		if (!Array.isArray(data.features)) return [];
 
-        return (data.features as GeopfAddressFeature[])
-            .filter(f => f.properties.type !== 'municipality')
-            .map(f => {
-                const { id, name, label: fullLabel, citycode, postcode, city, type: addrType } = f.properties;
-                const streetName = name ?? fullLabel;
-                const locationSuffix = city ? (postcode ? `${city}, ${postcode}` : city) : undefined;
-                return {
-                    id,
-                    label: streetName,
-                    locationSuffix,
-                    type: 'address',
-                    icon: 'pin',
-                    center: f.geometry.coordinates,
-                    data: {
-                        properties: f.properties as unknown as Record<string, unknown>,
-                        citycode,
-                        postcode,
-                        cityName: city,
-                        category: addrType ? [addrType] : []
-                    } satisfies GeopfResultData
-                };
-            });
-    } catch {
-        return [];
-    }
+		return (data.features as GeopfAddressFeature[])
+			.filter((f) => f.properties.type !== "municipality")
+			.map((f) => {
+				const {
+					id,
+					name,
+					label: fullLabel,
+					citycode,
+					postcode,
+					city,
+					type: addrType,
+				} = f.properties;
+				const streetName = name ?? fullLabel;
+				const locationSuffix = city
+					? postcode
+						? `${city}, ${postcode}`
+						: city
+					: undefined;
+				return {
+					id,
+					label: streetName,
+					locationSuffix,
+					type: "address",
+					icon: "pin",
+					center: f.geometry.coordinates,
+					data: {
+						properties: f.properties as unknown as Record<string, unknown>,
+						citycode,
+						postcode,
+						cityName: city,
+						category: addrType ? [addrType] : [],
+					} satisfies GeopfResultData,
+				};
+			});
+	} catch {
+		return [];
+	}
 }
 
 /** Maps a raw POI feature to a SearchResult. Shared by searchAdminPoi and searchOtherPoi. */
 function mapPoiFeature(
-    f: GeopfPoiFeature,
-    geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon | undefined,
-    invertedMask = false
+	f: GeopfPoiFeature,
+	geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon | undefined,
+	invertedMask = false,
 ): SearchResult {
-    const props = f.properties;
-    const cats: string[] = props.category ?? [];
+	const props = f.properties;
+	const cats: string[] = props.category ?? [];
 
-    const label = props.toponym;
-    let description: string | undefined;
+	const label = props.toponym;
+	let description: string | undefined;
 
-    let locationSuffix: string | undefined;
-    if (invertedMask) {
-        // Admin POI (commune, région, etc.): keep category description
-        description = buildAdminDescription(props);
-    } else {
-        // Other POI (gare, église, etc.): show city in gray after the name
-        const cityName = props.city?.[0];
-        if (cityName) {
-            locationSuffix = cityName;
-        }
-    }
+	let locationSuffix: string | undefined;
+	if (invertedMask) {
+		// Admin POI (commune, région, etc.): keep category description
+		description = buildAdminDescription(props);
+	} else {
+		// Other POI (gare, église, etc.): show city in gray after the name
+		const cityName = props.city?.[0];
+		if (cityName) {
+			locationSuffix = cityName;
+		}
+	}
 
-    return {
-        id: props.toponym ?? props.id,
-        label,
-        locationSuffix,
-        description,
-        type: resolveType(cats),
-        icon: invertedMask ? undefined : 'pin',
-        center: f.geometry.coordinates,
-        data: {
-            properties: props as unknown as Record<string, unknown>,
-            citycode: props.citycode?.[0],
-            postcode: props.postcode?.[0],
-            cityName: props.city?.[0],
-            category: cats,
-            geometry,
-            invertedMask
-        } satisfies GeopfResultData
-    };
+	return {
+		id: props.toponym ?? props.id,
+		label,
+		locationSuffix,
+		description,
+		type: resolveType(cats),
+		icon: invertedMask ? undefined : "pin",
+		center: f.geometry.coordinates,
+		data: {
+			properties: props as unknown as Record<string, unknown>,
+			citycode: props.citycode?.[0],
+			postcode: props.postcode?.[0],
+			cityName: props.city?.[0],
+			category: cats,
+			geometry,
+			invertedMask,
+		} satisfies GeopfResultData,
+	};
 }
 
 function buildAdminDescription(props: GeopfPoiProperties): string | undefined {
-    const categories: string[] = props.category ?? [];
+	const categories: string[] = props.category ?? [];
 
-    if (categories.includes('région')) return 'région';
-    if (categories.includes('département')) return 'département';
-    if (categories.includes('epci')) return 'intercommunalité';
-    if (categories.includes('arrondissement municipal')) return 'arrondissement';
-    if (categories.includes('commune')) {
-        const postcodes: string[] = props.postcode ?? [];
-        return postcodes.length > 0 ? `commune · ${postcodes[0]}` : 'commune';
-    }
-    if (categories.includes('quartier')) {
-        const city = props.city?.[0];
-        return city ? `quartier · ${city}` : 'quartier';
-    }
+	if (categories.includes("région")) return "région";
+	if (categories.includes("département")) return "département";
+	if (categories.includes("epci")) return "intercommunalité";
+	if (categories.includes("arrondissement municipal")) return "arrondissement";
+	if (categories.includes("commune")) {
+		const postcodes: string[] = props.postcode ?? [];
+		return postcodes.length > 0 ? `commune · ${postcodes[0]}` : "commune";
+	}
+	if (categories.includes("quartier")) {
+		const city = props.city?.[0];
+		return city ? `quartier · ${city}` : "quartier";
+	}
 
-    return undefined;
+	return undefined;
 }
 
 function resolveType(categories: string[]): string {
-    if (categories.includes('région')) return 'region';
-    if (categories.includes('département')) return 'department';
-    if (categories.includes('epci')) return 'community';
-    if (categories.includes('commune') || categories.includes('arrondissement municipal')) return 'city';
-    if (categories.includes('quartier')) return 'neighborhood';
-    if (categories.some(c => c.includes('gare'))) return 'train';
-    if (categories.includes('administratif')) return 'admin';
-    return 'poi';
+	if (categories.includes("région")) return "region";
+	if (categories.includes("département")) return "department";
+	if (categories.includes("epci")) return "community";
+	if (
+		categories.includes("commune") ||
+		categories.includes("arrondissement municipal")
+	)
+		return "city";
+	if (categories.includes("quartier")) return "neighborhood";
+	if (categories.some((c) => c.includes("gare"))) return "train";
+	if (categories.includes("administratif")) return "admin";
+	return "poi";
 }
 
 function parseGeometry(raw: unknown): GeoJSON.Polygon | GeoJSON.MultiPolygon {
-    return typeof raw === 'string' ? JSON.parse(raw) : raw as GeoJSON.Polygon | GeoJSON.MultiPolygon;
+	return typeof raw === "string"
+		? JSON.parse(raw)
+		: (raw as GeoJSON.Polygon | GeoJSON.MultiPolygon);
 }
 
-function countVertices(geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon): number {
-    const rings = geometry.type === 'Polygon' ? geometry.coordinates : geometry.coordinates.flat();
-    return rings.reduce((sum, ring) => sum + ring.length, 0);
+function countVertices(
+	geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+): number {
+	const rings =
+		geometry.type === "Polygon"
+			? geometry.coordinates
+			: geometry.coordinates.flat();
+	return rings.reduce((sum, ring) => sum + ring.length, 0);
 }
 
-function computeBbox(geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon): [number, number, number, number] | null {
-    const rings = geometry.type === 'Polygon' ? geometry.coordinates : geometry.coordinates.flat();
-    const coords = rings.flat() as [number, number][];
-    if (coords.length === 0) return null;
+function computeBbox(
+	geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+): [number, number, number, number] | null {
+	const rings =
+		geometry.type === "Polygon"
+			? geometry.coordinates
+			: geometry.coordinates.flat();
+	const coords = rings.flat() as [number, number][];
+	if (coords.length === 0) return null;
 
-    let minLng = Infinity, minLat = Infinity, maxLng = -Infinity, maxLat = -Infinity;
-    for (const [lng, lat] of coords) {
-        if (lng < minLng) minLng = lng;
-        if (lng > maxLng) maxLng = lng;
-        if (lat < minLat) minLat = lat;
-        if (lat > maxLat) maxLat = lat;
-    }
-    return [minLng, minLat, maxLng, maxLat];
+	let minLng = Infinity,
+		minLat = Infinity,
+		maxLng = -Infinity,
+		maxLat = -Infinity;
+	for (const [lng, lat] of coords) {
+		if (lng < minLng) minLng = lng;
+		if (lng > maxLng) maxLng = lng;
+		if (lat < minLat) minLat = lat;
+		if (lat > maxLat) maxLat = lat;
+	}
+	return [minLng, minLat, maxLng, maxLat];
 }
 
-function showContour(map: Map, geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon, invertedMask: boolean): () => void {
-    const rings = geometry.type === 'Polygon' ? geometry.coordinates : geometry.coordinates.flat();
+function showContour(
+	map: MapType,
+	geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+	invertedMask: boolean,
+): () => void {
+	const rings =
+		geometry.type === "Polygon"
+			? geometry.coordinates
+			: geometry.coordinates.flat();
 
-    const geojson: GeoJSON.Polygon = invertedMask
-        ? { type: 'Polygon', coordinates: [[[-180, -90], [180, -90], [180, 90], [-180, 90], [-180, -90]], ...rings] }
-        : { type: 'Polygon', coordinates: rings };
+	const geojson: GeoJSON.Polygon = invertedMask
+		? {
+				type: "Polygon",
+				coordinates: [
+					[
+						[-180, -90],
+						[180, -90],
+						[180, 90],
+						[-180, 90],
+						[-180, -90],
+					],
+					...rings,
+				],
+			}
+		: { type: "Polygon", coordinates: rings };
 
-    const update = () => {
-        if (!map.getSource(OUTLINE_SOURCE_ID)) {
-            map.addSource(OUTLINE_SOURCE_ID, {
-                type: 'geojson',
-                data: { type: 'Feature', geometry: geojson, properties: {} }
-            });
-        }
-        if (!map.getLayer(OUTLINE_FILL_ID)) {
-            map.addLayer({
-                id: OUTLINE_FILL_ID,
-                type: 'fill',
-                source: OUTLINE_SOURCE_ID,
-                paint: { 'fill-color': invertedMask ? MASK_COLOR : OUTLINE_COLOR, 'fill-opacity': invertedMask ? MASK_OPACITY : OUTLINE_FILL_OPACITY }
-            });
-        }
-        if (!map.getLayer(OUTLINE_LINE_BORDER_ID)) {
-            map.addLayer({
-                id: OUTLINE_LINE_BORDER_ID,
-                type: 'line',
-                source: OUTLINE_SOURCE_ID,
-                paint: { 'line-color': OUTLINE_BORDER_COLOR, 'line-width': OUTLINE_BORDER_WIDTH }
-            });
-        }
-        if (!map.getLayer(OUTLINE_LINE_ID)) {
-            map.addLayer({
-                id: OUTLINE_LINE_ID,
-                type: 'line',
-                source: OUTLINE_SOURCE_ID,
-                paint: { 'line-color': OUTLINE_COLOR, 'line-width': OUTLINE_WIDTH }
-            });
-        }
-    };
+	const update = () => {
+		if (!map.getSource(OUTLINE_SOURCE_ID)) {
+			map.addSource(OUTLINE_SOURCE_ID, {
+				type: "geojson",
+				data: { type: "Feature", geometry: geojson, properties: {} },
+			});
+		}
+		if (!map.getLayer(OUTLINE_FILL_ID)) {
+			map.addLayer({
+				id: OUTLINE_FILL_ID,
+				type: "fill",
+				source: OUTLINE_SOURCE_ID,
+				paint: {
+					"fill-color": invertedMask ? MASK_COLOR : OUTLINE_COLOR,
+					"fill-opacity": invertedMask ? MASK_OPACITY : OUTLINE_FILL_OPACITY,
+				},
+			});
+		}
+		if (!map.getLayer(OUTLINE_LINE_BORDER_ID)) {
+			map.addLayer({
+				id: OUTLINE_LINE_BORDER_ID,
+				type: "line",
+				source: OUTLINE_SOURCE_ID,
+				paint: {
+					"line-color": OUTLINE_BORDER_COLOR,
+					"line-width": OUTLINE_BORDER_WIDTH,
+				},
+			});
+		}
+		if (!map.getLayer(OUTLINE_LINE_ID)) {
+			map.addLayer({
+				id: OUTLINE_LINE_ID,
+				type: "line",
+				source: OUTLINE_SOURCE_ID,
+				paint: { "line-color": OUTLINE_COLOR, "line-width": OUTLINE_WIDTH },
+			});
+		}
+	};
 
-    update();
-    map.on('styledata', update);
-    return update;
+	update();
+	map.on("styledata", update);
+	return update;
 }

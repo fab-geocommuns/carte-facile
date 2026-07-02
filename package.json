@@ -1,66 +1,63 @@
 {
-  "name": "carte-facile",
-  "version": "0.9.0",
-  "description": "Une librairie de styles de cartes et surcouches prêtes à l'emploi, pour ajouter des cartes rapidement à votre application avec MapLibre ou d'autres librairies cartographiques.",
-  "type": "module",
-  "main": "dist/carte-facile.cjs.js",
-  "module": "dist/carte-facile.esm.js",
-  "exports": {
-    ".": {
-      "import": "./dist/carte-facile.esm.js",
-      "require": "./dist/carte-facile.cjs.js",
-      "default": "./dist/carte-facile.esm.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./carte-facile.css": {
-      "default": "./dist/carte-facile.css"
-    }
-  },
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "prepare": "npm run build"
-  },
-  "keywords": [
-    "maplibre",
-    "map",
-    "styles",
-    "components",
-    "ign",
-    "osm"
-  ],
-  "author": "Carte facile, IGN",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fab-geocommuns/carte-facile"
-  },
-  "peerDependencies": {
-    "maplibre-gl": "^5.0.0"
-  },
-  "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.0",
-    "@rollup/plugin-image": "^3.0.3",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-typescript": "^12.0.0",
-    "@types/jest": "^29.5.12",
-    "@types/jsdom": "^21.1.6",
-    "@types/node": "^22.0.0",
-    "jest": "^29.7.0",
-    "jsdom": "^24.0.0",
-    "postcss-url": "^10.1.3",
-    "rollup": "^4.0.0",
-    "rollup-plugin-css-only": "^4.5.2",
-    "rollup-plugin-postcss": "^4.0.2",
-    "ts-jest": "^29.1.2",
-    "tslib": "^2.6.0",
-    "typescript": "^5.0.0"
-  }
+	"name": "carte-facile",
+	"version": "0.9.0",
+	"description": "Une librairie de styles de cartes et surcouches prêtes à l'emploi, pour ajouter des cartes rapidement à votre application avec MapLibre ou d'autres librairies cartographiques.",
+	"type": "module",
+	"main": "./dist/carte-facile.umd.cjs",
+	"module": "./dist/carte-facile.js",
+	"types": "./dist/index.d.ts",
+	"packageManager": "pnpm@11.7.0",
+	"exports": {
+		".": {
+			"import": "./dist/carte-facile.js",
+			"require": "./dist/carte-facile.umd.cjs"
+		},
+		"./themes/styles/style.css": "./dist/carte-facile.css"
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"format": "biome check --write",
+		"preview": "vite preview --outDir preview",
+		"test": "vitest",
+		"test:watch": "jest --watch"
+	},
+	"keywords": [
+		"maplibre",
+		"map",
+		"styles",
+		"components",
+		"ign",
+		"osm"
+	],
+	"author": "Carte facile, IGN",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/fab-geocommuns/carte-facile"
+	},
+	"peerDependencies": {
+		"maplibre-gl": "^5.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.1",
+		"@types/geojson": "^7946.0.16",
+		"@types/jest": "^29.5.12",
+		"@types/jsdom": "^21.1.6",
+		"@types/node": "^22.0.0",
+		"@vitest/browser-playwright": "^4.1.9",
+		"jest": "^29.7.0",
+		"jsdom": "^24.0.0",
+		"playwright": "^1.61.1",
+		"postcss-url": "^10.1.3",
+		"ts-jest": "^29.1.2",
+		"tslib": "^2.6.0",
+		"typescript": "~6.0.2",
+		"unplugin-dts": "^1.0.2",
+		"vite": "^8.0.12",
+		"vitest": "^4.1.9"
+	}
 }

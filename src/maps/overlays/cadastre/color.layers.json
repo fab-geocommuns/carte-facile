@@ -1,108 +1,108 @@
 [
-  {
-    "id": "Cadastre - Parcelles - Contours",
-    "type": "line",
-    "source": "cadastre",
-    "source-layer": "parcelles",
-    "metadata": {
-      "cartefacile:group": "cadastral_parcels"  
-    },
-    "minzoom": 14.5,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgba(40, 40, 40, 1)",
-      "line-width": {"stops": [[15, 2], [16.5, 2.4], [19, 4]]}
-    }
-  },
-  {
-    "id": "Cadastre - Parcelles",
-    "type": "line",
-    "source": "cadastre",
-    "source-layer": "parcelles",
-    "metadata": {
-      "cartefacile:group": "cadastral_parcels"
-    },
-    "minzoom": 14.5,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgb(255,202,0)",
-      "line-width": {"stops": [[15, 1],[16.5, 1.4], [19, 3]]}
-    }
-  },
-  {
-    "id": "Cadastre - Sections - Bordures",
-    "type": "line",
-    "source": "cadastre",
-    "source-layer": "sections",
-    "metadata": {
-      "cartefacile:group": "cadastral_sections"
-    },
-    "minzoom": 12,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgba(40, 40, 40, 1)",
-      "line-opacity": 1,
-      "line-width": {"stops": [[12, 2], [14, 3], [19, 9]]}
-    }
-  },
-  {
-    "id": "Cadastre - Sections",
-    "type": "line",
-    "source": "cadastre",
-    "source-layer": "sections",
-    "metadata": {
-      "cartefacile:group": "cadastral_sections"
-    },
-    "minzoom": 12,
-    "layout": {"visibility": "visible"},
-    "paint": {
-      "line-color": "rgb(255,202,0)",
-      "line-opacity": 1,
-      "line-width": {"stops": [[12, 1], [14, 2], [19, 6]]}
-    }
-  },
-  {
-    "id": "Cadastre - Parcelles - Label",
-    "type": "symbol",
-    "source": "cadastre",
-    "source-layer": "parcelles",
-    "metadata": {
-      "cartefacile:group": "cadastral_parcels"
-    },
-    "minzoom": 14.5,
-    "layout": {
-      "text-field": "{numero}",
-      "text-font": ["Source Sans Pro Bold"],
-      "text-size": {"stops": [[17, 12], [20, 16]]},
-      "visibility": "visible"
-    },
-    "paint": {
-      "text-color": "rgb(255,202,0)",
-      "text-halo-color": "rgba(40, 40, 40, 1)",
-      "text-halo-width": 1.4,
-      "text-halo-blur": 0.4
-    }
-  },
-  {
-    "id": "Cadastre - Sections - Label",
-    "type": "symbol",
-    "source": "cadastre",
-    "source-layer": "sections",
-    "metadata": {
-      "cartefacile:group": "cadastral_sections"
-    },
-    "minzoom": 12,
-    "layout": {
-      "text-field": "{code}",
-      "text-font": ["Source Sans Pro Bold"],
-      "text-size": {"stops": [[12, 12], [16, 16]]},
-      "visibility": "visible"
-    },
-    "paint": {
-      "text-color": "rgb(255,202,0)",
-      "text-halo-color": "rgba(40, 40, 40, 1)",
-      "text-halo-width": 2,
-      "text-halo-blur": 0.4
-    }
-  }
-] 
+	{
+		"id": "Cadastre - Parcelles - Contours",
+		"type": "line",
+		"source": "cadastre",
+		"source-layer": "parcelles",
+		"metadata": {
+			"cartefacile:group": "cadastral_parcels"
+		},
+		"minzoom": 14.5,
+		"layout": { "visibility": "visible" },
+		"paint": {
+			"line-color": "rgba(40, 40, 40, 1)",
+			"line-width": { "stops": [[15, 2], [16.5, 2.4], [19, 4]] }
+		}
+	},
+	{
+		"id": "Cadastre - Parcelles",
+		"type": "line",
+		"source": "cadastre",
+		"source-layer": "parcelles",
+		"metadata": {
+			"cartefacile:group": "cadastral_parcels"
+		},
+		"minzoom": 14.5,
+		"layout": { "visibility": "visible" },
+		"paint": {
+			"line-color": "rgb(255,202,0)",
+			"line-width": { "stops": [[15, 1], [16.5, 1.4], [19, 3]] }
+		}
+	},
+	{
+		"id": "Cadastre - Sections - Bordures",
+		"type": "line",
+		"source": "cadastre",
+		"source-layer": "sections",
+		"metadata": {
+			"cartefacile:group": "cadastral_sections"
+		},
+		"minzoom": 12,
+		"layout": { "visibility": "visible" },
+		"paint": {
+			"line-color": "rgba(40, 40, 40, 1)",
+			"line-opacity": 1,
+			"line-width": { "stops": [[12, 2], [14, 3], [19, 9]] }
+		}
+	},
+	{
+		"id": "Cadastre - Sections",
+		"type": "line",
+		"source": "cadastre",
+		"source-layer": "sections",
+		"metadata": {
+			"cartefacile:group": "cadastral_sections"
+		},
+		"minzoom": 12,
+		"layout": { "visibility": "visible" },
+		"paint": {
+			"line-color": "rgb(255,202,0)",
+			"line-opacity": 1,
+			"line-width": { "stops": [[12, 1], [14, 2], [19, 6]] }
+		}
+	},
+	{
+		"id": "Cadastre - Parcelles - Label",
+		"type": "symbol",
+		"source": "cadastre",
+		"source-layer": "parcelles",
+		"metadata": {
+			"cartefacile:group": "cadastral_parcels"
+		},
+		"minzoom": 14.5,
+		"layout": {
+			"text-field": "{numero}",
+			"text-font": ["Source Sans Pro Bold"],
+			"text-size": { "stops": [[17, 12], [20, 16]] },
+			"visibility": "visible"
+		},
+		"paint": {
+			"text-color": "rgb(255,202,0)",
+			"text-halo-color": "rgba(40, 40, 40, 1)",
+			"text-halo-width": 1.4,
+			"text-halo-blur": 0.4
+		}
+	},
+	{
+		"id": "Cadastre - Sections - Label",
+		"type": "symbol",
+		"source": "cadastre",
+		"source-layer": "sections",
+		"metadata": {
+			"cartefacile:group": "cadastral_sections"
+		},
+		"minzoom": 12,
+		"layout": {
+			"text-field": "{code}",
+			"text-font": ["Source Sans Pro Bold"],
+			"text-size": { "stops": [[12, 12], [16, 16]] },
+			"visibility": "visible"
+		},
+		"paint": {
+			"text-color": "rgb(255,202,0)",
+			"text-halo-color": "rgba(40, 40, 40, 1)",
+			"text-halo-width": 2,
+			"text-halo-blur": 0.4
+		}
+	}
+]

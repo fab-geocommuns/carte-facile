@@ -1,20 +1,20 @@
 {
-  "name": "administrative-boundaries",
-  "metadata": {
-    "fr": {
-      "name": "Limites administratives",
-      "description": "Surcouche des limites administratives."
-    },
-    "en": {
-      "name": "Administrative boundaries",
-      "description": "Overlay of administrative boundaries."
-    },
-    "maputnik:renderer": "mlgljs"
-  },
-  "sources": {
-    "decoupage-administratif": {
-      "type": "vector",
-      "url": "https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json"
-    }
-  }
-} 
+	"name": "administrative-boundaries",
+	"metadata": {
+		"fr": {
+			"name": "Limites administratives",
+			"description": "Surcouche des limites administratives."
+		},
+		"en": {
+			"name": "Administrative boundaries",
+			"description": "Overlay of administrative boundaries."
+		},
+		"maputnik:renderer": "mlgljs"
+	},
+	"sources": {
+		"decoupage-administratif": {
+			"type": "vector",
+			"url": "https://openmaptiles.geo.data.gouv.fr/data/decoupage-administratif.json"
+		}
+	}
+}

@@ -1,0 +1,34 @@
+/// <reference types="vitest/config" />
+
+import { resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+import dts from "unplugin-dts/vite"
+import { defineConfig } from "vite"
+
+const mocksDir = fileURLToPath(new URL("./tests/__mocks__", import.meta.url))
+
+export default defineConfig({
+	oxc: {
+		exclude: [/\.js$/, /\.d\.[cm]?ts$/]
+	},
+	build: {
+		sourcemap: true,
+		lib: {
+			entry: resolve(__dirname, "src/index.ts"),
+			name: "carte-facile",
+			fileName: "carte-facile",
+			formats: ["es", "umd"]
+		},
+
+		rolldownOptions: {
+			external: ["maplibre-gl"],
+			output: {
+				name: "CarteFacile",
+				globals: {
+					"maplibre-gl": "maplibregl"
+				}
+			},
+			plugins: [dts()]
+		}
+	}
+})
