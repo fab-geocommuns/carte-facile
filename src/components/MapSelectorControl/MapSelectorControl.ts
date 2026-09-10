@@ -1,3 +1,4 @@
+import type { ControlPosition, IControl, Map as MapLibreMap, StyleSpecification } from 'maplibre-gl';
 import { mapStyles, mapThumbnails, addOverlay, removeOverlay, mapOverlays } from '../../maps/maps';
 import { OverlayType, Overlay, MapOverlays } from '../../maps/types';
 import '../../themes/styles/dsfr.css';
@@ -85,8 +86,8 @@ const TEMPLATES = {
  * MapLibre control for selecting map styles and overlays
  * Provides a toggle button that opens a panel with style and overlay options
  */
-export class MapSelectorControl implements maplibregl.IControl {
-    private _map?: maplibregl.Map;
+export class MapSelectorControl implements IControl {
+    private _map?: MapLibreMap;
     private _options: Required<MapSelectorOptions>;
     private _panel?: HTMLDivElement;
     private _toggleButton?: HTMLButtonElement;
@@ -101,7 +102,7 @@ export class MapSelectorControl implements maplibregl.IControl {
     }
 
     /** Creates and initializes the control structure */
-    onAdd(map: maplibregl.Map): HTMLElement {
+    onAdd(map: MapLibreMap): HTMLElement {
         this._map = map;
         
         // Create the main control container from the HTML template
@@ -311,7 +312,7 @@ export class MapSelectorControl implements maplibregl.IControl {
     }
 
     /** Handles style card click - changes map style */
-    private _onStyleClick(styleKey: string, styleObj: maplibregl.StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
+    private _onStyleClick(styleKey: string, styleObj: StyleSpecification, container: HTMLDivElement, card: HTMLElement): void {
         if (!this._map?.getContainer()) {
             console.warn('Map is not available');
             return;
@@ -373,7 +374,7 @@ export class MapSelectorControl implements maplibregl.IControl {
     }
 
     /** Default position for the control */
-    getDefaultPosition(): maplibregl.ControlPosition {
+    getDefaultPosition(): ControlPosition {
         return 'top-right';
     }
 }   
