@@ -218,9 +218,11 @@ Les tests sont écrits avec Jest. Pour ajouter de nouveaux tests :
 
 ### Publication
 
-Pour publier une nouvelle version du package :
+La publication sur npm est entièrement automatisée par GitHub Actions ([.github/workflows/publish.yml](.github/workflows/publish.yml)) : dès qu'une Pull Request est mergée sur `main`, le workflow exécute les tests, compile le projet, publie le package sur npm et crée un tag ainsi qu'une release GitHub (`v<version>`) — à partir de la version présente dans `package.json` à ce moment-là.
 
-1. Mettre à jour la version sur la branche development :
+La seule chose à faire manuellement est de mettre à jour cette version **avant** de merger :
+
+1. Sur votre branche, mettez à jour la version dans `package.json` :
 ```bash
 npm version patch  # pour un bugfix (0.0.X)
 # ou
@@ -229,31 +231,9 @@ npm version minor  # pour une nouvelle fonctionnalité (0.X.0)
 npm version major  # pour un changement majeur (X.0.0)
 ```
 
-2. Pousser les changements et le tag sur development :
-```bash
-git push origin development
-git push origin --tags
-```
+2. Poussez votre branche et ouvrez une [Pull Request](https://github.com/fab-geocommuns/carte-facile/pulls) vers `main`
 
-3. Créer une Pull Request pour fusionner development dans main :
-```bash
-# Aller sur https://github.com/fab-geocommuns/carte-facile/pulls
-# Cliquer sur "New pull request"
-# Sélectionner development comme branche source et main comme branche cible
-# Attendre que les checks passent et merger la PR
-```
-
-> **Note**: Une fois la PR mergée sur main, le workflow GitHub Actions va automatiquement :
-> - Exécuter les tests
-> - Publier le package sur npm
-> - Créer une release sur GitHub
-
-> **Note**: Après chaque publication, il est recommandé de mettre à jour la branche development avec les changements de main :
-> ```bash
-> git checkout development
-> git merge origin/main
-> git push origin development
-> ```
+3. Une fois les checks passés, mergez la PR : la publication se déclenche automatiquement.
 
 ### Standards de code
 

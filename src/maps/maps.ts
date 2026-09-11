@@ -1,5 +1,5 @@
 import { OverlayType, OverlayVariant, MapOverlays, OverlayConfig, LayerConfig, LayerGroupType } from './types';
-import type { StyleSpecification, LayerSpecification } from 'maplibre-gl';
+import type { Map as MapLibreMap, StyleSpecification, LayerSpecification } from 'maplibre-gl';
 
 // Import IGN map styles
 import desaturatedIgn from './desaturated.json';
@@ -14,10 +14,10 @@ import simpleOsm from './simple-osm.json';
  * Each style is a complete MapLibre style configuration
  */
 export const mapStyles = {
-  simple: simpleIgn as StyleSpecification,
-  simpleOsm: simpleOsm as StyleSpecification,
-  aerial: aerialIgn as StyleSpecification,
-  desaturated: desaturatedIgn as StyleSpecification
+  simple: simpleIgn as unknown as StyleSpecification,
+  simpleOsm: simpleOsm as unknown as StyleSpecification,
+  aerial: aerialIgn as unknown as StyleSpecification,
+  desaturated: desaturatedIgn as unknown as StyleSpecification
 };
 
 /**
@@ -84,12 +84,12 @@ export const mapOverlays: MapOverlays = {
 /**
  * Gets the appropriate overlay variant based on the current map style
  */
-function getOverlayVariant(map: maplibregl.Map): OverlayVariant {
+function getOverlayVariant(map: MapLibreMap): OverlayVariant {
   return map.getStyle().name === 'aerial' ? 'color' : 'neutral';
 }
 
 /** Stores styledata update callbacks per map instance, keyed by overlay type */
-const overlayUpdaters = new WeakMap<maplibregl.Map, Map<OverlayType, () => void>>();
+const overlayUpdaters = new WeakMap<MapLibreMap, Map<OverlayType, () => void>>();
 
 /**
  * Adds one or more overlays to the map
@@ -97,7 +97,7 @@ const overlayUpdaters = new WeakMap<maplibregl.Map, Map<OverlayType, () => void>
  * @param type - The type of overlay(s) to add (cadastre, administrative-boundaries, or level-curves)
  */
 export function addOverlay(
-  map: maplibregl.Map,
+  map: MapLibreMap,
   type: OverlayType | OverlayType[]
 ): void {
   const types = Array.isArray(type) ? type : [type];
@@ -129,7 +129,7 @@ export function addOverlay(
  * @param type - The type of overlay(s) to remove (cadastre, administrative-boundaries, or level-curves)
  */
 export function removeOverlay(
-  map: maplibregl.Map, 
+  map: MapLibreMap, 
   type: OverlayType | OverlayType[]
 ): void {
   const types = Array.isArray(type) ? type : [type];
@@ -166,7 +166,7 @@ export function removeOverlay(
  * @param groups - List of layer groups to show
  */
 export function showLayer(
-  map: maplibregl.Map,
+  map: MapLibreMap,
   groups: LayerGroupType | LayerGroupType[]
 ): void {
   const groupList = Array.isArray(groups) ? groups : [groups];
@@ -190,7 +190,7 @@ export function showLayer(
  * @param groups - List of layer groups to hide
  */
 export function hideLayer(
-  map: maplibregl.Map,
+  map: MapLibreMap,
   groups: LayerGroupType | LayerGroupType[]
 ): void {
   const groupList = Array.isArray(groups) ? groups : [groups];

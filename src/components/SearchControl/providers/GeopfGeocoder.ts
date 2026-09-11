@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import { Marker } from 'maplibre-gl';
 import type { Map, LngLatBoundsLike } from 'maplibre-gl';
 import type { SearchProvider, SearchResult } from '../SearchControl';
 
@@ -107,7 +107,7 @@ class GeopfGeocoderProvider implements SearchProvider {
     readonly name = 'geopf';
     readonly placeholder = 'Rechercher...';
 
-    private _marker: maplibregl.Marker | null = null;
+    private _marker: Marker | null = null;
     private _styledataHandler: (() => void) | null = null;
 
     async search(query: string): Promise<SearchResult[]> {
@@ -170,7 +170,7 @@ class GeopfGeocoderProvider implements SearchProvider {
 
         // Display pin marker — not shown for admin boundaries (contour is sufficient)
         if (result.center && !invertedMask) {
-            this._marker = new maplibregl.Marker({ color: OUTLINE_COLOR })
+            this._marker = new Marker({ color: OUTLINE_COLOR })
                 .setLngLat(result.center)
                 .addTo(map);
         }

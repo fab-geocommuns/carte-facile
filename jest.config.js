@@ -4,6 +4,7 @@ export default {
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
+    '^maplibre-gl$': '<rootDir>/tests/__mocks__/maplibre-gl.ts',
     '^(\\.{1,2}/.*)\\.js$': '$1',
     // Mock pour les fichiers d'images
     '\\.(webp|jpg|jpeg|png|gif|svg)$': '<rootDir>/tests/__mocks__/fileMock.js',
