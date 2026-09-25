@@ -24,7 +24,6 @@ jobs:
         with:
           node-version: '26'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
 
       # Ensure npm 11.5.1 or later is installed (required for Trusted Publishers)
       - name: Update npm
@@ -47,7 +46,7 @@ jobs:
         run: npm publish --access public
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
           generate_release_notes: true
