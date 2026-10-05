@@ -9,6 +9,12 @@ body {
 	width: 100%;
 }
 
+/* apply maplibre focus style */
+:focus-visible {
+	outline: none;
+	box-shadow: 0 0 2px 2px #0096ff;
+}
+
 .visually-hidden {
 	border: 0;
 	clip-path: inset(50%);

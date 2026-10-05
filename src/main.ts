@@ -27,9 +27,9 @@ map.addControl(new GeolocateControl({}))
 //map.addControl(new maplibregl.TerrainControl);
 map.addControl(new MapSelectorControl())
 /* map.addControl(new CarteFacile.MapSelectorControl({
-        styles: ['simple', 'aerial'],
-        overlays: ['administrativeBoundaries', 'cadastre']
-      }), 'bottom-left'); */
+				styles: ['simple', 'aerial'],
+				overlays: ['administrativeBoundaries', 'cadastre']
+			}), 'bottom-left'); */
 
 map.addControl(
 	new SearchControl({

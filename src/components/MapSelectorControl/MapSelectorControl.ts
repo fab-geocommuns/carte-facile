@@ -39,23 +39,24 @@ const TEMPLATES = {
   `,
 	toggleButton: `
     <button
-      class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack"
-      aria-expanded="false" aria-controls="map-selector-panel">
-        <span class="visually-hidden">Ouvrir le sélecteur de styles et surcouches</span>
-    </button>
+      class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--stack" popovertarget="map-selector-panel" title="Ouvrir le sélecteur de styles et surcouches" aria-labelledby="panel-title"></button>
   `,
 	panel: `
-    <dialog id="map-selector-panel" class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel">
-      <h1 class="visually-hidden">Sélecteur de styles et de surcouches</h1>
-      <button class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close">
-          <span class="visually-hidden">Fermer le sélecteur</span>
+    <dialog popover="manual" id="map-selector-panel" class="maplibregl-ctrl maplibregl-ctrl-group cartefacile-ctrl-map-selector-panel">
+      <p id="panel-title" class="visually-hidden">Sélecteur de styles et de surcouches</p>
+      <button popovertarget="map-selector-panel" popovertargetaction="hide" class="cartefacile-btn cartefacile-btn-icon cartefacile-btn-icon--close-circle cartefacile-btn--close">
+          Fermer <span class="visually-hidden">le sélecteur de styles et surcouches</span>
       </button>
-      <h2 id="styles-heading">Styles</h2>
-      <fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="styles-heading">
-      </fieldset>
-      <h2 id="overlays-heading">Surcouches</h2>
-      <fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="overlays-heading">
-      </fieldset>
+      <div>
+				<h2 id="styles-heading">Styles</h2>
+				<fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="styles-heading">
+				</fieldset>
+			</div>
+      <div>
+				<h2 id="overlays-heading">Surcouches</h2>
+				<fieldset class="cartefacile-ctrl-map-selector-card-list" aria-labelledby="overlays-heading">
+				</fieldset>
+			</div>
     </dialog>
   `,
 	card: `
@@ -100,7 +101,6 @@ export class MapSelectorControl implements IControl {
 		// Create the panel for selecting map styles and overlays
 		this._panel = this._createPanel()
 		// Add panel to map container
-		map.getContainer().appendChild(this._panel)
 		this._setupEventHandlers()
 		// Sync panel state after map is loaded
 		if (map.loaded()) {
@@ -111,6 +111,7 @@ export class MapSelectorControl implements IControl {
 			})
 		}
 		container.appendChild(this._toggleButton)
+		container.appendChild(this._panel)
 		return container
 	}
 	/** Creates the main selector panel with style and overlay sections */
@@ -191,26 +192,22 @@ export class MapSelectorControl implements IControl {
 				})
 		}
 	}
-	/** Sets up essential event handlers for AAA compliance */
+	/** Sets up essential event handlers for a11y compliance */
 	private _setupEventHandlers(): void {
-		if (!this._panel || !this._toggleButton) return
-		this._toggleButton.addEventListener("click", () => this._openPanel())
-		this._panel
-			.querySelector(".cartefacile-btn--close")
-			?.addEventListener("click", () => this._closePanel())
-		this._panel.addEventListener("close", () =>
-			this._toggleButton?.setAttribute("aria-expanded", "false"))
+		if (!this._panel) return
+		// handle close on escape key
+		this._panel.addEventListener("keydown", (event) => {
+			if (event.code === "Escape")
+				this._closePanel()
+		}
+		)
 	}
-	/** Opens the panel */
-	private _openPanel(): void {
-		if (!this._panel || !this._toggleButton) return
-		this._panel.showModal()
-		this._toggleButton.setAttribute("aria-expanded", "true")
-	}
+	/** Opening the panel is handled by the native popover API */
 	/** Closes the panel */
 	private _closePanel(): void {
-		if (!this._panel || !this._toggleButton) return
-		this._panel.close()
+		if (!this._panel) return
+		this._panel.hidePopover()
+		this._toggleButton?.focus()
 	}
 
 	/** Syncs panel state with current map configuration */

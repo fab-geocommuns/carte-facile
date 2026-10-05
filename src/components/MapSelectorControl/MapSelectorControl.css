@@ -1,18 +1,61 @@
-.cartefacile-ctrl-map-selector-panel {
+.cartefacile-ctrl-map-selector-panel:popover-open {
 	padding: 1rem;
 	border-width: 1px;
-	overflow-y: auto;
-	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* Popover panel positioning */
+[popover] {
+	margin: 0;
+	inset: auto;
+	position-anchor: auto;
+}
+@media screen and (width < 768px) {
+	[popover] {
+		position-anchor: none;
+		inset: 50%;
+		translate: -50% 50%;
+		inline-size: 80vw;
+		block-size: 90vh;
+	}
+}
+.maplibregl-ctrl-top-right [popover] {
+	inset-block-start: anchor(self-end);
+	inset-inline-end: anchor(self-start);
+}
+.maplibregl-ctrl-top-left [popover] {
+	inset-block-start: anchor(self-end);
+	inset-inline-start: anchor(self-end);
+}
+.maplibregl-ctrl-bottom-left [popover] {
+	inset-block-end: anchor(self-start);
+	inset-inline-start: anchor(self-end);
+}
+.maplibregl-ctrl-bottom-right [popover] {
+	inset-block-end: anchor(self-start);
+	inset-inline-end: anchor(self-start);
 }
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
+	padding: 0.2rem;
 	margin-left: auto;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: end;
+	width: max-content;
+
+	&::before {
+		position: static;
+		flex: 0 0 29px;
+	}
 }
 
-.cartefacile-ctrl-map-selector-panel h3 {
-	margin-top: 0;
-	margin-bottom: 12px;
-	font-size: 16px;
+.cartefacile-ctrl-map-selector-panel h2 {
+	margin-block-start: 0;
+	font-size: 1rem;
 	font-weight: 700;
 }
 
@@ -21,20 +64,11 @@
 	flex-direction: column;
 	gap: 4px;
 }
-.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list {
-	margin-bottom: 16px;
-}
-
-.cartefacile-ctrl-map-selector-panel
-	.cartefacile-ctrl-map-selector-card-list:last-child {
-	margin-bottom: 0;
-}
-
 .cartefacile-ctrl-map-selector-card {
 	cursor: pointer;
 	transition:
-		border-color 0.2s,
-		transform 0.1s;
+		border-color 0.2s ease,
+		transform 0.1s ease;
 	display: flex;
 	align-items: center;
 	gap: 12px;
@@ -45,14 +79,17 @@
 .cartefacile-ctrl-map-selector-card:hover {
 	background-color: rgb(0 0 0 / 5%);
 }
+.cartefacile-ctrl-map-selector-card:focus-within {
+	outline: 2px solid #7b7b7b;
+}
 
-.cartefacile-ctrl-map-selector-card.active {
+.cartefacile-ctrl-map-selector-card:has(:checked) {
 	background-color: #3ea0eb60;
 }
 
 .cartefacile-ctrl-map-selector-card img {
-	width: 40px;
-	height: 40px;
+	inline-size: 40px;
+	block-size: 40px;
 	border-radius: 4px;
 	object-fit: cover;
 	border: 2px solid #ffffff;
