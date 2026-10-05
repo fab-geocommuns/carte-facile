@@ -29,7 +29,7 @@ let setOverlaySpy: ReturnType<typeof vi.spyOn>
 
 describe("MapSelectorControl test suite", () => {
 	beforeEach(async () => {
-		;({ map, setStyleSpy, setOverlaySpy } = createTestMap())
+		; ({ map, setStyleSpy, setOverlaySpy } = createTestMap())
 
 		// clean up function, called once after all tests run
 		return async () => {
@@ -38,8 +38,8 @@ describe("MapSelectorControl test suite", () => {
 		}
 	})
 
-	const buttonText = "Ouvrir le sélecteur de styles et surcouches"
-	const openButton = page.getByRole("button", { name: buttonText })
+	const buttonText = "Sélecteur de styles et de surcouches"
+	const openButton = page.getByLabelText(buttonText)
 	const closeButton = page.getByRole("button", {
 		name: "Fermer le sélecteur",
 		includeHidden: true
@@ -49,14 +49,9 @@ describe("MapSelectorControl test suite", () => {
 	test("renders the elements", async () => {
 		// await new Promise((resolve) => map.once("load", resolve))
 
-		const buttonSpan = openButton.getByText(buttonText)
-
 		await expect.element(openButton).toBeVisible()
-		await expect.element(openButton).toHaveAttribute("aria-expanded", "false")
-		await expect
-			.element(openButton)
-			.toHaveAttribute("aria-controls", "map-selector-panel")
-		await expect.element(buttonSpan).toHaveClass("visually-hidden")
+		await expect.element(openButton).toHaveAttribute("popovertarget", "map-selector-panel")
+		await expect.element(openButton).toHaveAccessibleName(buttonText)
 
 		await expect.element(selectorDialog).toBeInTheDocument()
 		await expect.element(selectorDialog).not.toBeVisible()
@@ -65,11 +60,9 @@ describe("MapSelectorControl test suite", () => {
 	test("opens and closes the dialog", async () => {
 		await openButton.click()
 		await expect.element(selectorDialog).toBeVisible()
-		await expect.element(openButton).toHaveAttribute("aria-expanded", "true")
 
 		await closeButton.click()
 		await expect.element(selectorDialog).not.toBeVisible()
-		await expect.element(openButton).toHaveAttribute("aria-expanded", "false")
 	})
 
 	test("renders style and overlay inputs", async () => {
@@ -183,7 +176,6 @@ describe("MapSelectorControl test suite", () => {
 		expect(closeButton).toHaveFocus()
 
 		await expect.element(selectorDialog).toBeVisible()
-		await expect.element(openButton).toHaveAttribute("aria-expanded", "true")
 
 		await userEvent.tab()
 		await userEvent.keyboard("{arrowdown}")
