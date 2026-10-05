@@ -16,8 +16,9 @@ export default defineConfig({
 		lib: {
 			entry: resolve(__dirname, "src/index.ts"),
 			name: "carte-facile",
-			fileName: "carte-facile",
-			formats: ["es", "umd"]
+			fileName: "carte-facile.esm",
+			cssFileName: "carte-facile",
+			formats: ["es"]
 		},
 
 		rolldownOptions: {

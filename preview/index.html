@@ -5,17 +5,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Carte Facile - Test Local</title>
 
-		<!-- MapLibre GL JS -->
-		<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 		<!-- Can we remove the need for the styles to control the overrides and order of import ? -->
 		<!-- <link
 			href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"
 			rel="stylesheet"
 		/> -->
 
+		<script type="importmap">
+			{
+				"imports": {
+					"maplibre-gl": "https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs",
+					"carte-facile": "./dist/carte-facile.esm.js"
+				}
+			}
+		</script>
+
 		<!-- Carte Facile (version locale) -->
 		<link href="./dist/carte-facile.css" rel="stylesheet" />
-		<script src="./dist/carte-facile.umd.cjs"></script>
 
 		<style>
 			body {
@@ -33,31 +39,34 @@
 	<body>
 		<div id="map"></div>
 
-		<script>
+		<script type="module">
+			import { addOverlay, hideLayer, MapSelectorControl, mapStyles, SearchControl, ZoomLevelControl } from "carte-facile";
+			import * as maplibregl from 'maplibre-gl';
+
 			// Création la carte
 			const map = new maplibregl.Map({
 				container: "map", // id du conteneur de la carte
-				style: CarteFacile.mapStyles.simple, // Style de carte
+				style: mapStyles.simple, // Style de carte
 				//minZoom: 1.8, // niveau de zoom minimum (optionnel)
 				maxZoom: 18.9, // niveau de zoom maximum, adapté aux cartes utilisant les données IGN
 			})
 
-			//CarteFacile.setTheme(map, 'dsfr');
-			map.addControl(new CarteFacile.ZoomLevelControl())
+			//setTheme(map, 'dsfr');
+			map.addControl(new ZoomLevelControl())
 			map.addControl(new maplibregl.NavigationControl())
 			map.addControl(new maplibregl.GeolocateControl())
 			//map.addControl(new maplibregl.GlobeControl);
 			//map.addControl(new maplibregl.TerrainControl);
-			map.addControl(new CarteFacile.MapSelectorControl())
-			/* map.addControl(new CarteFacile.MapSelectorControl({
-        styles: ['simple', 'aerial'],
-        overlays: ['administrativeBoundaries', 'cadastre']
-      }), 'bottom-left'); */
+			map.addControl(new MapSelectorControl())
+			/* map.addControl(new MapSelectorControl({
+				styles: ['simple', 'aerial'],
+				overlays: ['administrativeBoundaries', 'cadastre']
+			}), 'bottom-left'); */
 
-			/* map.addControl(new CarteFacile.SearchControl()); */
+			/* map.addControl(new SearchControl()); */
 
 			map.addControl(
-				new CarteFacile.SearchControl({
+				new SearchControl({
 					onSelect: (result) => {
 						const properties = result.data.properties // Données transmises par l'API
 						console.log(properties) // Afficher les données dans la console
@@ -66,16 +75,16 @@
 				}),
 			)
 
-			//CarteFacile.addOverlay(map, [CarteFacile.Overlay.cadastre, CarteFacile.Overlay.administrativeBoundaries]);
+			//addOverlay(map, [Overlay.cadastre, Overlay.administrativeBoundaries]);
 
-			//CarteFacile.hideLayer(map, CarteFacile.LayerGroup.street_labels);
+			//hideLayer(map, LayerGroup.street_labels);
 
-			//map.setStyle(CarteFacile.mapStyles.aerial);
+			//map.setStyle(mapStyles.aerial);
 
 			/* setTimeout(() => {
-        CarteFacile.removeOverlay(map, CarteFacile.Overlay.administrativeBoundaries);
-        CarteFacile.showLayer(map, CarteFacile.LayerGroup.streets);
-      }, 5000); */
+				removeOverlay(map, Overlay.administrativeBoundaries);
+				showLayer(map, LayerGroup.streets);
+			}, 5000); */
 		</script>
 	</body>
 </html>

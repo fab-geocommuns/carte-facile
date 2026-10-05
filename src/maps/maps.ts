@@ -12,16 +12,10 @@ import simpleIgn from "./simple.json"
 import simpleOsm from "./simple-osm.json"
 import type {
 	LayerConfig,
-	LayerConfig,
-	LayerGroupType,
 	LayerGroupType,
 	MapOverlays,
-	MapOverlays,
-	OverlayConfig,
 	OverlayConfig,
 	OverlayType,
-	OverlayType,
-	OverlayVariant,
 	OverlayVariant
 } from "./types"
 /* import desaturatedOsm from './desaturated-osm.json';*/
