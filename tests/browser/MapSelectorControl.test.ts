@@ -1,6 +1,7 @@
+import axe from "axe-core"
 import { Map as MapLibre } from "maplibre-gl"
 import { beforeEach, describe, expect, test, vi } from "vitest"
-import { page, userEvent } from "vitest/browser"
+import { type Locator, page, userEvent } from "vitest/browser"
 import { MapSelectorControl } from "../../src"
 
 function createTestMap() {
@@ -27,11 +28,21 @@ let map: MapLibre
 let setStyleSpy: ReturnType<typeof vi.spyOn>
 let setOverlaySpy: ReturnType<typeof vi.spyOn>
 
+async function tabTo(locator: Locator, maxTabs = 10) {
+	const target = locator.element()
+	for (let i = 0; i < maxTabs; i++) {
+		await userEvent.tab()
+		if (document.activeElement === target) return
+	}
+	throw new Error(`Element not reachable by Tab within ${maxTabs} presses`)
+}
+
 describe("MapSelectorControl test suite", () => {
 	beforeEach(async () => {
 		; ({ map, setStyleSpy, setOverlaySpy } = createTestMap())
 
-		// clean up function, called once after all tests run
+		await new Promise((resolve) => map.once("load", resolve))
+		// clean up function
 		return async () => {
 			map.remove()
 			document.body.innerHTML = ""
@@ -45,12 +56,14 @@ describe("MapSelectorControl test suite", () => {
 		includeHidden: true
 	})
 	const selectorDialog = page.getByRole("dialog", { includeHidden: true })
+	const cadastre = page.getByRole("checkbox", { name: "Cadastre", exact: true })
+	const aerienne = page.getByRole("radio", { name: "Aérienne", exact: true })
 
 	test("renders the elements", async () => {
-		// await new Promise((resolve) => map.once("load", resolve))
-
 		await expect.element(openButton).toBeVisible()
-		await expect.element(openButton).toHaveAttribute("popovertarget", "map-selector-panel")
+		await expect
+			.element(openButton)
+			.toHaveAttribute("popovertarget", "map-selector-panel")
 		await expect.element(openButton).toHaveAccessibleName(buttonText)
 
 		await expect.element(selectorDialog).toBeInTheDocument()
@@ -70,127 +83,119 @@ describe("MapSelectorControl test suite", () => {
 
 		// styles radios
 		await expect
-			.element(page.getByRole("group", { name: "styles" }))
+			.element(page.getByRole("group", { name: "Styles", exact: true }))
 			.toBeInTheDocument()
+		const styles = [
+			["Simple", true],
+			["Simple (OSM)", false],
+			["Aérienne", false],
+			["Désaturée", false]
+		] as const
 
-		await expect
-			.element(page.getByRole("radio", { name: "Simple", exact: true }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("radio", { name: "Simple", exact: true }))
-			.toBeChecked()
-		await expect
-			.element(page.getByRole("radio", { name: "Simple", exact: true }))
-			.toHaveAttribute("aria-checked", "true")
-
-		await expect
-			.element(page.getByRole("radio", { name: "Simple (OSM)", exact: true }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("radio", { name: "Simple (OSM)", exact: true }))
-			.toHaveAttribute("aria-checked", "false")
-
-		await expect
-			.element(page.getByRole("radio", { name: "Aérienne" }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("radio", { name: "Aérienne" }))
-			.toHaveAttribute("aria-checked", "false")
-
-		await expect
-			.element(page.getByRole("radio", { name: "Désaturée" }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("radio", { name: "Désaturée" }))
-			.toHaveAttribute("aria-checked", "false")
+		for (const [name, checked] of styles) {
+			const radio = page.getByRole("radio", { name, exact: true })
+			await expect.element(radio).toBeVisible()
+			if (checked) await expect.element(radio).toBeChecked()
+			else await expect.element(radio).not.toBeChecked()
+		}
 
 		// overlays checkboxes
 		await expect
-			.element(page.getByRole("group", { name: "surcouches" }))
+			.element(page.getByRole("group", { name: "Surcouches", exact: true }))
 			.toBeInTheDocument()
-
-		await expect
-			.element(page.getByRole("checkbox", { name: "cadastre" }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("checkbox", { name: "cadastre" }))
-			.not.toBeChecked()
-		await expect
-			.element(page.getByRole("checkbox", { name: "cadastre" }))
-			.toHaveAttribute("aria-checked", "false")
-
-		await expect
-			.element(page.getByRole("checkbox", { name: "limites administratives" }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("checkbox", { name: "limites administratives" }))
-			.not.toBeChecked()
-		await expect
-			.element(page.getByRole("checkbox", { name: "limites administratives" }))
-			.toHaveAttribute("aria-checked", "false")
-
-		await expect
-			.element(page.getByRole("checkbox", { name: "courbes de niveau" }))
-			.toBeVisible()
-		await expect
-			.element(page.getByRole("checkbox", { name: "courbes de niveau" }))
-			.not.toBeChecked()
-		await expect
-			.element(page.getByRole("checkbox", { name: "courbes de niveau" }))
-			.toHaveAttribute("aria-checked", "false")
+		for (const name of [
+			"Cadastre",
+			"Limites administratives",
+			"Courbes de niveau"
+		]) {
+			const box = page.getByRole("checkbox", { name, exact: true })
+			await expect.element(box).toBeVisible()
+			await expect.element(box).not.toBeChecked()
+		}
 	})
 
+	// need better testing for styles and overlays set
 	test("style updates", async () => {
 		await openButton.click()
-		await page.getByRole("radio", { name: "désaturée" }).click()
+		await page.getByRole("radio", { name: "Désaturée", exact: true }).click()
 		await expect
-			.element(page.getByRole("radio", { name: "désaturée" }))
+			.element(page.getByRole("radio", { name: "Désaturée", exact: true }))
 			.toBeChecked()
-		await expect
-			.element(page.getByRole("radio", { name: "désaturée" }))
-			.toHaveAttribute("aria-checked", "true")
 
 		expect(setStyleSpy).toHaveBeenCalled()
 	})
 
 	test("overlay updates", async () => {
 		await openButton.click()
-		await page.getByRole("checkbox", { name: "cadastre" }).click()
-		await expect
-			.element(page.getByRole("checkbox", { name: "cadastre" }))
-			.toBeChecked()
-		await expect
-			.element(page.getByRole("checkbox", { name: "cadastre" }))
-			.toHaveAttribute("aria-checked", "true")
+		await cadastre.click()
+		await expect.element(cadastre).toBeChecked()
 
 		expect(setOverlaySpy).toHaveBeenCalled()
 	})
 
+	const layersInGroup = (group: string) =>
+		map.getStyle().layers.filter(
+			(l) => (l.metadata as Record<string, unknown> | undefined)?.["cartefacile:group"] === group,
+		)
+
+	test("overlay toggles layers on the map", async () => {
+		const box = page.getByRole("checkbox", { name: "Cadastre", exact: true })
+		await openButton.click()
+
+		await box.click()
+		await expect.poll(() => layersInGroup("cadastral_parcels").length).toBeGreaterThan(0)
+
+		await box.click()
+		await expect.poll(() => layersInGroup("cadastral_parcels").length).toBe(0)
+	})
+
+	test("overlay survives a style change", async () => {
+		await openButton.click()
+		await page.getByRole("checkbox", { name: "Cadastre", exact: true }).click()
+		await expect.poll(() => layersInGroup("cadastral_parcels").length).toBeGreaterThan(0)
+
+		await page.getByRole("radio", { name: "Aérienne", exact: true }).click()
+
+		await expect.poll(() => layersInGroup("cadastral_parcels").length).toBeGreaterThan(0)
+	})
+
+	test("button is keyboard reachable", async () => {
+		tabTo(openButton)
+		await expect.element(openButton).toHaveFocus()
+	})
+
 	test("keyboard actions", async () => {
-		await userEvent.tab()
-		await userEvent.tab()
-		expect(openButton).toHaveFocus()
+		openButton.element().focus()
+		await expect.element(openButton).toHaveFocus()
 
-		await userEvent.keyboard("{enter}")
+		await userEvent.keyboard("{Enter}")
 
-		expect(closeButton).toHaveFocus()
+		await expect.element(closeButton).toHaveFocus()
 
 		await expect.element(selectorDialog).toBeVisible()
 
 		await userEvent.tab()
-		await userEvent.keyboard("{arrowdown}")
-		await userEvent.keyboard("{arrowdown}")
+		await userEvent.keyboard("{ArrowDown}")
+		await userEvent.keyboard("{ArrowDown}")
 
-		expect(page.getByRole("radio", { name: "Aérienne" })).toHaveFocus()
+		await expect.element(aerienne).toHaveFocus()
 
 		await userEvent.tab()
 
-		expect(page.getByRole("checkbox", { name: "cadastre" })).toHaveFocus()
+		await expect.element(cadastre).toHaveFocus()
 
 		// BUG: does not trigger a spacebar press
-		// await userEvent.keyboard(" ")
+		await userEvent.keyboard("[Space]")
+		await expect.element(cadastre).toBeChecked()
 
-		await userEvent.keyboard("{escape}")
-		expect(openButton).toHaveFocus()
+		await userEvent.keyboard("{Escape}")
+		await expect.element(openButton).toHaveFocus()
+	})
+
+	test("dialog axe accessibility checks", async () => {
+		await openButton.click()
+		await expect.element(selectorDialog).toBeVisible()
+		const results = await axe.run(selectorDialog.element())
+		expect(results.violations).toEqual([])
 	})
 })

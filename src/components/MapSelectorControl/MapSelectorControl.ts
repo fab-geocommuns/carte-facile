@@ -224,7 +224,6 @@ export class MapSelectorControl implements IControl {
 			const cardElement = card as HTMLInputElement
 			const isActive = cardElement.dataset.id === this._selectedStyleId
 			cardElement.checked = isActive
-			cardElement.ariaChecked = isActive.toString()
 		})
 	}
 	private _syncOverlaysState(): void {
@@ -241,7 +240,6 @@ export class MapSelectorControl implements IControl {
 				variant.layers.every((layer) => Boolean(this._map?.getLayer(layer.id)))
 			)
 			cardElement.checked = hasOverlay
-			cardElement.ariaChecked = hasOverlay.toString()
 		})
 	}
 	private _syncPanelState(): void {
@@ -285,7 +283,6 @@ export class MapSelectorControl implements IControl {
 		}
 		try {
 			const isActive = input.checked
-			input.ariaChecked = isActive.toString()
 			if (isActive) {
 				addOverlay(this._map, overlayId as OverlayType)
 			} else {
@@ -294,7 +291,6 @@ export class MapSelectorControl implements IControl {
 		} catch (error) {
 			console.error("Failed to toggle overlay:", error)
 			input.checked = !input.checked
-			input.ariaChecked = input.checked.toString()
 		}
 	}
 	/** Cleanup when control is removed */

@@ -59,5 +59,8 @@
 		"unplugin-dts": "^1.0.2",
 		"vite": "^8.0.12",
 		"vitest": "^4.1.9"
+	},
+	"dependencies": {
+		"axe-core": "^4.13.0"
 	}
 }
