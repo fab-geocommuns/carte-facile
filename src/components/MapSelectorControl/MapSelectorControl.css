@@ -1,86 +1,120 @@
-.cartefacile-ctrl-map-selector-panel {
-  padding: 12px;
-  padding-bottom: 16px;
-  width: 240px;
-  box-sizing: border-box;
-  max-width: calc(100% - 20px);
-  overflow-y: auto;
-  position: absolute;
-  z-index: 1000;
-  max-height: calc(100% - 20px);
+.cartefacile-ctrl-map-selector-panel:popover-open {
+	padding: 1rem;
+	border-width: 1px;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* Popover panel positioning */
+[popover] {
+	margin: 0;
+	inset: auto;
+	position-anchor: auto;
+}
+@media screen and (width < 768px) {
+	[popover] {
+		position-anchor: none;
+		inset: 50%;
+		translate: -50% 50%;
+		inline-size: 80vw;
+		block-size: 90vh;
+	}
+}
+.maplibregl-ctrl-top-right [popover] {
+	inset-block-start: anchor(self-end);
+	inset-inline-end: anchor(self-start);
+}
+.maplibregl-ctrl-top-left [popover] {
+	inset-block-start: anchor(self-end);
+	inset-inline-start: anchor(self-end);
+}
+.maplibregl-ctrl-bottom-left [popover] {
+	inset-block-end: anchor(self-start);
+	inset-inline-start: anchor(self-end);
+}
+.maplibregl-ctrl-bottom-right [popover] {
+	inset-block-end: anchor(self-start);
+	inset-inline-end: anchor(self-start);
 }
 
 .cartefacile-ctrl-map-selector-panel .cartefacile-btn--close {
-  margin-left: auto;
+	padding: 0.2rem;
+	margin-left: auto;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: end;
+	width: max-content;
+
+	&::before {
+		position: static;
+		flex: 0 0 29px;
+	}
 }
 
-.cartefacile-ctrl-map-selector-panel h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list {
-  margin-bottom: 16px;
-}
-
-.cartefacile-ctrl-map-selector-panel .cartefacile-ctrl-map-selector-card-list:last-child {
-  margin-bottom: 0;
+.cartefacile-ctrl-map-selector-panel h2 {
+	margin-block-start: 0;
+	font-size: 1rem;
+	font-weight: 700;
 }
 
 .cartefacile-ctrl-map-selector-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 }
-
 .cartefacile-ctrl-map-selector-card {
-  cursor: pointer;
-  transition: border-color 0.2s, transform 0.1s;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-radius: 4px;
-  padding: 4px;
+	cursor: pointer;
+	transition:
+		border-color 0.2s ease,
+		transform 0.1s ease;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	border-radius: 4px;
+	padding: 4px;
 }
 
 .cartefacile-ctrl-map-selector-card:hover {
-  background-color: rgb(0 0 0/5%);
+	background-color: rgb(0 0 0 / 5%);
+}
+.cartefacile-ctrl-map-selector-card:focus-within {
+	outline: 2px solid #7b7b7b;
 }
 
-.cartefacile-ctrl-map-selector-card.active {
-  background-color: #3ea0eb60;
+.cartefacile-ctrl-map-selector-card:has(:checked) {
+	background-color: #3ea0eb60;
 }
 
 .cartefacile-ctrl-map-selector-card img {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  object-fit: cover;
-  border: 2px solid #ffffff;
+	inline-size: 40px;
+	block-size: 40px;
+	border-radius: 4px;
+	object-fit: cover;
+	border: 2px solid #ffffff;
 }
 
 /* Position top-right (par défaut) */
 .cartefacile-ctrl-top-right {
-    top: 10px;
-    right: 10px;
+	top: 10px;
+	right: 10px;
 }
 
 /* Position top-left */
 .cartefacile-ctrl-top-left {
-    top: 10px;
-    left: 10px;
+	top: 10px;
+	left: 10px;
 }
 
 /* Position bottom-right */
 .cartefacile-ctrl-bottom-right {
-    bottom: 10px;
-    right: 10px;
+	bottom: 10px;
+	right: 10px;
 }
 
 /* Position bottom-left */
 .cartefacile-ctrl-bottom-left {
-    bottom: 10px;
-    left: 10px;
+	bottom: 10px;
+	left: 10px;
 }

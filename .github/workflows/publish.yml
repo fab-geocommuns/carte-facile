@@ -13,37 +13,38 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.0-noble
+      options: --user 1001
+    # if: github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
 
-      - uses: actions/setup-node@v7
+      - name: Install pnpm, Node.js and dependencies
+        uses: pnpm/setup@v3
         with:
-          node-version: '26'
-          registry-url: 'https://registry.npmjs.org'
+          runtime: node@26
+          cache: false
 
       # Ensure npm 11.5.1 or later is installed (required for Trusted Publishers)
       - name: Update npm
         run: npm install -g npm@latest
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Run tests
-        run: npm test
+        run: pnpm test
 
       - name: Build
-        run: npm run build
+        run: pnpm run build 
 
       - name: Get package version
         id: package-version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Publish to NPM
-        run: npm publish --access public
+        run: pnpm publish --access public
 
       - name: Create Release
         uses: softprops/action-gh-release@v3

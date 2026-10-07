@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Carte Facile - Test Local</title>
+
+		<!-- Can we remove the need for the styles to control the overrides and order of import ? -->
+		<!-- <link
+			href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+			rel="stylesheet"
+		/> -->
+
+		<script type="importmap">
+			{
+				"imports": {
+					"maplibre-gl": "https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs",
+					"carte-facile": "./dist/carte-facile.esm.js"
+				}
+			}
+		</script>
+
+		<!-- Carte Facile (version locale) -->
+		<link href="./dist/carte-facile.css" rel="stylesheet" />
+
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+			}
+			#map {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="map"></div>
+
+		<script type="module">
+			import { addOverlay, hideLayer, MapSelectorControl, mapStyles, SearchControl, ZoomLevelControl } from "carte-facile";
+			import * as maplibregl from 'maplibre-gl';
+
+			// Création la carte
+			const map = new maplibregl.Map({
+				container: "map", // id du conteneur de la carte
+				style: mapStyles.simple, // Style de carte
+				//minZoom: 1.8, // niveau de zoom minimum (optionnel)
+				maxZoom: 18.9, // niveau de zoom maximum, adapté aux cartes utilisant les données IGN
+			})
+
+			//setTheme(map, 'dsfr');
+			map.addControl(new ZoomLevelControl())
+			map.addControl(new maplibregl.NavigationControl())
+			map.addControl(new maplibregl.GeolocateControl())
+			//map.addControl(new maplibregl.GlobeControl);
+			//map.addControl(new maplibregl.TerrainControl);
+			map.addControl(new MapSelectorControl())
+			/* map.addControl(new MapSelectorControl({
+				styles: ['simple', 'aerial'],
+				overlays: ['administrativeBoundaries', 'cadastre']
+			}), 'bottom-left'); */
+
+			/* map.addControl(new SearchControl()); */
+
+			map.addControl(
+				new SearchControl({
+					onSelect: (result) => {
+						const properties = result.data.properties // Données transmises par l'API
+						console.log(properties) // Afficher les données dans la console
+						console.log(properties.citycode) // Afficher dans la console le code INSEE
+					},
+				}),
+			)
+
+			//addOverlay(map, [Overlay.cadastre, Overlay.administrativeBoundaries]);
+
+			//hideLayer(map, LayerGroup.street_labels);
+
+			//map.setStyle(mapStyles.aerial);
+
+			/* setTimeout(() => {
+				removeOverlay(map, Overlay.administrativeBoundaries);
+				showLayer(map, LayerGroup.streets);
+			}, 5000); */
+		</script>
+	</body>
+</html>

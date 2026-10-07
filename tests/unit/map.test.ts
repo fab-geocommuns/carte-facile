@@ -1,0 +1,235 @@
+/**
+ * Test suite for the map module
+ * These tests verify the core map functionality including:
+ * - Map styles configuration and properties
+ * - Map thumbnails availability
+ * - Style metadata and accessibility
+ */
+
+import type maplibregl from "maplibre-gl"
+import { beforeEach, describe, expect, it, type Mock, vi } from "vitest"
+import {
+	addOverlay,
+	hideLayer,
+	mapStyles,
+	mapThumbnails,
+	removeOverlay,
+	showLayer
+} from "../../src/maps/maps"
+import { LayerGroup, Overlay, type OverlayType } from "../../src/maps/types"
+
+describe("mapStyle", () => {
+	// Test each map style configuration and its properties
+	it("should have simple style", () => {
+		const map = mapStyles.simple
+		expect(map).toBeDefined()
+		expect(map.name).toBe("simple")
+	})
+
+	it("should have desaturated style", () => {
+		const map = mapStyles.desaturated
+		expect(map).toBeDefined()
+		expect(map.name).toBe("desaturated")
+	})
+
+	it("should have aerial style", () => {
+		const map = mapStyles.aerial
+		expect(map).toBeDefined()
+		expect(map.name).toBe("aerial")
+	})
+
+	it("should have simple OSM style", () => {
+		const map = mapStyles.simpleOsm
+		expect(map).toBeDefined()
+		expect(map.name).toBe("simple-osm")
+	})
+})
+
+describe("mapThumbnails", () => {
+	// Verify that thumbnails are available for all map styles
+	it("should have all required thumbnails", () => {
+		expect(mapThumbnails.simple).toBeDefined()
+		expect(mapThumbnails.desaturated).toBeDefined()
+		expect(mapThumbnails.aerial).toBeDefined()
+		expect(mapThumbnails.simpleOsm).toBeDefined()
+		expect(mapThumbnails.cadastre).toBeDefined()
+		expect(mapThumbnails.administrativeBoundaries).toBeDefined()
+		expect(mapThumbnails.levelCurves).toBeDefined()
+	})
+})
+
+describe("mapOverlays", () => {
+	let map: maplibregl.Map
+
+	beforeEach(() => {
+		map = {
+			getStyle: vi.fn().mockReturnValue({ name: "simple" }),
+			getSource: vi.fn().mockReturnValue(false),
+			getLayer: vi.fn().mockReturnValue(false),
+			addSource: vi.fn(),
+			addLayer: vi.fn(),
+			removeLayer: vi.fn(),
+			removeSource: vi.fn(),
+			loaded: vi.fn().mockReturnValue(true),
+			on: vi.fn(),
+			off: vi.fn(),
+			once: vi.fn()
+		} as unknown as maplibregl.Map
+	})
+
+	function getMockCallback(mockFn: Mock, eventName: string) {
+		const call = mockFn.mock.calls.find((c) => c[0] === eventName)
+		if (!call) throw new Error(`No call found for event "${eventName}"`)
+		return call[1]
+	}
+
+	const testOverlay = (type: OverlayType, expectedLayers: number) => {
+		describe(`${type} overlay`, () => {
+			it("should add single overlay with correct number of layers", () => {
+				addOverlay(map, type)
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers)
+				expect(map.addSource).toHaveBeenCalled()
+			})
+
+			it("should add multiple overlays with correct number of layers", () => {
+				addOverlay(map, [type, Overlay.administrativeBoundaries])
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers + 8) // 8 is the number of layers in administrativeBoundaries
+				expect(map.addSource).toHaveBeenCalled()
+			})
+
+			it("should update overlay when style changes", () => {
+				addOverlay(map, type)
+				map.getStyle = vi.fn().mockReturnValue({ name: "aerial" })
+				const styledataCallback = getMockCallback(map.on as Mock, "styledata")
+				styledataCallback()
+				expect(map.addLayer).toHaveBeenCalledTimes(expectedLayers * 2) // Called twice: initial + style change
+			})
+
+			it("should remove single overlay completely", () => {
+				addOverlay(map, type)
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
+
+				removeOverlay(map, type)
+
+				expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers)
+				expect(map.removeSource).toHaveBeenCalled()
+				expect(map.off).toHaveBeenCalledWith("styledata", expect.any(Function))
+			})
+
+			it("should remove multiple overlays completely", () => {
+				addOverlay(map, [type, Overlay.administrativeBoundaries])
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
+
+				removeOverlay(map, [type, Overlay.administrativeBoundaries])
+
+				expect(map.removeLayer).toHaveBeenCalledTimes(expectedLayers + 8) // 8 is the number of layers in administrativeBoundaries
+				expect(map.removeSource).toHaveBeenCalled()
+				expect(map.off).toHaveBeenCalledWith("styledata", expect.any(Function))
+			})
+
+			it("should not add duplicate layers or sources", () => {
+				map.getLayer = vi.fn().mockReturnValue(true)
+				map.getSource = vi.fn().mockReturnValue(true)
+
+				addOverlay(map, type)
+
+				expect(map.addLayer).not.toHaveBeenCalled()
+				expect(map.addSource).not.toHaveBeenCalled()
+			})
+		})
+	}
+
+	testOverlay("cadastre", 6)
+	testOverlay("administrativeBoundaries", 8)
+	testOverlay("levelCurves", 3)
+})
+
+describe("Layer visibility", () => {
+	let map: maplibregl.Map
+
+	beforeEach(() => {
+		// Create a mock MapLibre map with two layers:
+		// - A buildings layer
+		// - A streets layer
+		map = {
+			getStyle: vi.fn().mockReturnValue({
+				layers: [
+					{ id: "layer1", metadata: { "cartefacile:group": "buildings" } },
+					{ id: "layer2", metadata: { "cartefacile:group": "streets" } }
+				]
+			}),
+			setLayoutProperty: vi.fn(),
+			loaded: vi.fn().mockReturnValue(true),
+			once: vi.fn()
+		} as unknown as maplibregl.Map
+	})
+
+	it("should show and hide single layer", () => {
+		// Test showing a single layer
+		showLayer(map, LayerGroup.buildings)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+
+		// Test hiding a single layer
+		hideLayer(map, LayerGroup.streets)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"none"
+		)
+	})
+
+	it("should show and hide multiple layers", () => {
+		// Test showing multiple layers
+		showLayer(map, [LayerGroup.buildings, LayerGroup.streets])
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"visible"
+		)
+
+		// Test hiding multiple layers
+		hideLayer(map, [LayerGroup.buildings, LayerGroup.streets])
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"none"
+		)
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer2",
+			"visibility",
+			"none"
+		)
+	})
+
+	it("should wait for map to load", () => {
+		// Simulate map not being loaded
+		map.loaded = vi.fn().mockReturnValue(false)
+		showLayer(map, LayerGroup.buildings)
+
+		// Verify that we wait for the load event
+		expect(map.once).toHaveBeenCalledWith("load", expect.any(Function))
+		expect(map.setLayoutProperty).not.toHaveBeenCalled()
+
+		// Simulate map being loaded and trigger the load callback
+		map.loaded = vi.fn().mockReturnValue(true)
+		;(map.once as Mock).mock.calls[0][1]()
+
+		// Verify that the layer visibility is set after loading
+		expect(map.setLayoutProperty).toHaveBeenCalledWith(
+			"layer1",
+			"visibility",
+			"visible"
+		)
+	})
+})
